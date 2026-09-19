@@ -61,6 +61,7 @@ from copy import deepcopy
 from math import exp
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Union
+import argparse
 import json
 import sys
 
@@ -1200,16 +1201,32 @@ def recommended_interventions(advisor: Dict) -> Dict:
 # Before / after demo
 # ---------------------------------------------------------------------------
 
+DEFAULT_SCENARIO = {
+    "temperature": 40,
+    "humidity": 80,
+    "rainfall": 80,
+    "population": 100_000,
+}
+
+
+def parse_cli(argv=None):
+    parser = argparse.ArgumentParser(description="Run the UrbanTwin simulation.")
+    parser.add_argument("citizens", type=Path, nargs="?")
+    parser.add_argument("city", type=Path, nargs="?")
+    parser.add_argument("--temperature", type=float, default=DEFAULT_SCENARIO["temperature"])
+    parser.add_argument("--humidity", type=float, default=DEFAULT_SCENARIO["humidity"])
+    parser.add_argument("--rainfall", type=float, default=DEFAULT_SCENARIO["rainfall"])
+    parser.add_argument("--population", type=int, default=DEFAULT_SCENARIO["population"])
+    parser.add_argument("--output", type=Path, default=Path("urbantwin_demo_output.json"))
+    return parser.parse_args(argv)
+
+
 def run_demo(
     citizens: Union[None, str, Path, List[Citizen]] = None,
     city_state: Union[None, str, Path, Dict] = None,
+    scenario=None,
 ) -> Dict:
-    scenario = dict(
-        temperature=40,
-        humidity=80,
-        rainfall=80,
-        population=100_000,
-    )
+    scenario = dict(DEFAULT_SCENARIO if scenario is None else scenario)
 
     before = simulate(**scenario, city_state=city_state, citizens=citizens)
     advisor = urban_advisor(before)
@@ -1567,16 +1584,16 @@ def print_demo_summary(demo: Dict) -> None:
 
 
 if __name__ == "__main__":
-    # Optional: python urbantwin_simulation.py [citizens.json] [city.json]
-    citizens_path = sys.argv[1] if len(sys.argv) > 1 else None
-    city_path = sys.argv[2] if len(sys.argv) > 2 else None
-
+    args = parse_cli()
+    scenario = {
+        "temperature": args.temperature,
+        "humidity": args.humidity,
+        "rainfall": args.rainfall,
+        "population": args.population,
+    }
     run_tests()
-    demo = run_demo(citizens=citizens_path, city_state=city_path)
+    demo = run_demo(citizens=args.citizens, city_state=args.city, scenario=scenario)
     print_demo_summary(demo)
-
-    # Also save machine-readable output for Person 3 / dashboard integration.
-    with open("urbantwin_demo_output.json", "w", encoding="utf-8") as f:
-        json.dump(demo, f, indent=2)
-
-    print("\nSaved: urbantwin_demo_output.json")
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(demo, indent=2) + "\n", encoding="utf-8")
+    print(f"\nSaved: {args.output}")
