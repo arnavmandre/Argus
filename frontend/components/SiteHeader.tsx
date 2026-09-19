@@ -28,7 +28,7 @@ export function SiteHeader({ health }: { health: Health }) {
           <Mark />
           <div className="min-w-0">
             <p className="truncate text-[15px] font-semibold tracking-[-0.02em] text-ink">
-              UrbanTwin AI
+              Argus AI
             </p>
             <p className="truncate text-[12px] text-ink-3">
               Simulate the human experience before building the city

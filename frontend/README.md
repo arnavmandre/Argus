@@ -1,6 +1,6 @@
-# UrbanTwin AI — web frontend
+# Argus AI — web frontend
 
-Next.js App Router + TypeScript + Tailwind dashboard for the UrbanTwin
+Next.js App Router + TypeScript + Tailwind dashboard for the Argus AI
 simulator, built against the API in `docs/FRONTEND_BACKEND_HANDOFF.md`.
 
 **Default = recorded fixtures.** With `URBANTWIN_API_BASE` unset, every `/api/*`

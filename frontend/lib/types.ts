@@ -1,5 +1,5 @@
 /**
- * Types for the UrbanTwin AI web API.
+ * Types for the Argus AI web API.
  *
  * Source of truth: docs/FRONTEND_BACKEND_HANDOFF.md ("Proposed HTTP API —
  * planned, not implemented"). The Python service does not exist yet; these

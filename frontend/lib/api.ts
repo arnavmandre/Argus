@@ -1,5 +1,5 @@
 /**
- * Browser-side client for the UrbanTwin web API.
+ * Browser-side client for the Argus AI web API.
  *
  * Every call goes to this app's own route handlers under `/api`, which either
  * serve the recorded fixtures or forward to the Python service once
