@@ -1,11 +1,11 @@
 """
-Generate presentation/scene/cameras.usda.
+Generate phase9/scene/cameras.usda.
 
 Demo cameras are authored here rather than flown by hand: under time pressure
 a live camera fly-through is the easiest thing to get wrong on stage. Each shot
 is a saved prim you can pick from the viewport camera menu.
 
-Run:  python presentation/make_cameras.py
+Run:  python phase9/make_cameras.py
 """
 from pathlib import Path
 
@@ -66,7 +66,7 @@ def main() -> None:
         cam.MakeMatrixXform().Set(camera_xform(eye, target))
 
     stage.GetRootLayer().documentation = (
-        "UrbanTwin demo cameras. Regenerate with presentation/make_cameras.py."
+        "UrbanTwin demo cameras. Regenerate with phase9/make_cameras.py."
     )
     stage.GetRootLayer().Save()
     print(f"wrote {SCENE}")

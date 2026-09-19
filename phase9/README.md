@@ -8,7 +8,7 @@ a simulation value.
 
 ```powershell
 # in UrbanTwin (Kit): File > Open
-C:\Users\arnav\Argus\presentation\scene\main.usda
+C:\Users\arnav\Argus\phase9\scene\main.usda
 ```
 
 Layer order (top wins):
@@ -59,8 +59,8 @@ RTX Real-Time is enough; Path Traced looks better if the frame rate holds.
 ## Painting results onto the city
 
 ```powershell
-python presentation\recolor_paths.py     <canonical_snapshot.json>
-python presentation\agents_instancer.py  <canonical_snapshot.json>
+python phase9\recolor_paths.py     <canonical_snapshot.json>
+python phase9\agents_instancer.py  <canonical_snapshot.json>
 ```
 
 Both take a **canonical v1 snapshot** (`docs/INTEGRATION_CONTRACT.md`), not the

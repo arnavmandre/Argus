@@ -1,7 +1,7 @@
 #usda 1.0
 (
     defaultPrim = "World"
-    doc = "UrbanTwin demo cameras. Regenerate with presentation/make_cameras.py."
+    doc = "UrbanTwin demo cameras. Regenerate with phase9/make_cameras.py."
     metersPerUnit = 1
     upAxis = "Z"
 )

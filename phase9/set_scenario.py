@@ -4,12 +4,12 @@ Switch the demo lighting between scenario moods.
 The before/after toggle is much more convincing when the light changes with
 the weather, not just the path colours - half the perceived difference in a
 heat demo comes from the sun. This rewrites the Sun/Sky overrides in
-presentation/scene/lighting.usda in place.
+phase9/scene/lighting.usda in place.
 
 Run:
-    python presentation/set_scenario.py baseline
-    python presentation/set_scenario.py heat
-    python presentation/set_scenario.py rain
+    python phase9/set_scenario.py baseline
+    python phase9/set_scenario.py heat
+    python phase9/set_scenario.py rain
 """
 from __future__ import annotations
 

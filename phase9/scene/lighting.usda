@@ -9,7 +9,7 @@
     any data is overlaid. Sun elevation is ~40 degrees, which throws shadows
     long enough to read at the overview camera without flattening street level.
 
-    Switch between scenario moods with presentation/set_scenario.py."""
+    Switch between scenario moods with phase9/set_scenario.py."""
     metersPerUnit = 1
     upAxis = "Z"
 )

@@ -27,14 +27,14 @@ context loss.
 | `Simulation/` | simulation | `main.py` is self-contained, dependency-free, deterministic. `python main.py` runs ~80 asserts then the demo. |
 | `phase1/`–`phase8/` | visualisation | OSM city → semantics → contract → bridges → packaged states. **Treat as frozen.** |
 | `integration/` | boundary | Snapshot loader + route-mapping proposal tooling. |
-| `presentation/` | demo polish | Lighting, materials, cameras, result overlays. Pure `over` layers. |
+| `phase9/` | demo polish | Lighting, materials, cameras, result overlays. Pure `over` layers. |
 | `docs/` | contracts | `INTEGRATION_CONTRACT.md` is authoritative. |
 
 ## Hard rules
 
 1. **Never edit `phase1/`–`phase8/` scene layers.** `city_id` is the SHA-256 of
    the frozen Phase 1 manifest; the scene contract depends on it. Add `over`
-   layers in `presentation/` instead.
+   layers in `phase9/` instead.
 2. **Never write `integration/route_mapping.json` automatically.** That filename
    is reserved for a mapping the *team* has agreed. Tools emit
    `route_mapping.proposal.json`. Auto-chosen anchors are geometrically real but
@@ -66,11 +66,11 @@ Only claim what the code does when executed. Verified as of this writing:
 
 ```powershell
 cd Simulation; python main.py               # tests + demo
-python presentation\set_scenario.py heat    # lighting mood
+python phase9\set_scenario.py heat    # lighting mood
 python phase8\switch_state.py stressed      # packaged demo states
 python phase3\validate_mock_data.py <snapshot.json>
 ```
 
-Open `presentation/scene/main.usda` in Kit for the demo stage.
+Open `phase9/scene/main.usda` in Kit for the demo stage.
 Kit app lives outside the repo: `C:\Users\arnav\omniverse\kit-app-template`,
 launch with `.\repo.bat launch -n urbantwin.kit`.
