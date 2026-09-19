@@ -46,8 +46,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --canvas: #000000;
-    --canvas-tint: #0b0b0d;
+    --canvas: #111113;
+    --canvas-tint: #17171a;
     --surface: #1c1c1e;
     --surface-2: #232325;
     --surface-3: #2c2c2e;

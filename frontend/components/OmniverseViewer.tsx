@@ -163,7 +163,7 @@ export function OmniverseViewer({
         </div>
       </div>
 
-      <div className="relative min-h-[380px] flex-1 lg:min-h-[460px]">
+      <div className="relative min-h-[260px] sm:min-h-[300px] lg:min-h-[340px] flex-1">
         <Backdrop />
         {connected ? (
           <video

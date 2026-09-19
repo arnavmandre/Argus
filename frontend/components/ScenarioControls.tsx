@@ -88,7 +88,7 @@ export function ScenarioControls({
         })}
       </div>
 
-      <div className="mt-5 space-y-5">
+      <div className="mt-5 space-y-5 2xl:grid 2xl:grid-cols-2 2xl:gap-x-5 2xl:gap-y-4 2xl:space-y-0">
         {FIELD_ORDER.map((field) => (
           <ScenarioSlider
             key={field}

@@ -30,8 +30,8 @@ const OmniverseViewer = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="min-h-[460px] rounded-[18px] border border-hairline bg-surface shadow-[var(--shadow-card)]">
-        <div className="shimmer size-full min-h-[460px] rounded-[18px]" />
+      <div className="min-h-[260px] sm:min-h-[300px] lg:min-h-[340px] rounded-[18px] border border-hairline bg-surface shadow-[var(--shadow-card)]">
+        <div className="shimmer size-full min-h-[260px] sm:min-h-[300px] lg:min-h-[340px] rounded-[18px]" />
       </div>
     ),
   },
@@ -176,16 +176,19 @@ export function Dashboard({ bootstrap }: { bootstrap: Bootstrap }) {
                 runner.state.status === "failed" ? null : runner.state.error
               }
             />
-            <RunStatus
-              run={run}
-              attempt={{
-                status: runner.state.status,
-                runId: runner.state.runId,
-                progress: runner.state.progress,
-                error: runner.state.status === "failed" ? runner.state.error : null,
-              }}
-            />
           </div>
+        </div>
+
+        <div className="mt-5 xl:mt-6">
+          <RunStatus
+            run={run}
+            attempt={{
+              status: runner.state.status,
+              runId: runner.state.runId,
+              progress: runner.state.progress,
+              error: runner.state.status === "failed" ? runner.state.error : null,
+            }}
+          />
         </div>
 
         {run && run.before ? (
