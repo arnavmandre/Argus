@@ -1,0 +1,42 @@
+participant_id,age_group,heat_sensitivity,walking_frequency,heat_tolerance,rain_tolerance,crowd_tolerance,walking_speed_kmh,green_preference,transit_preference,env_sensitivity,named_factor
+P001,18-24,High,3-5 times per week,0.02,0.805,0.415,6.7,0.875,0.667,1.0,Extreme heat
+P002,18-24,Low,1-2 times per week,0.775,0.75,0.465,6.7,0.625,0.02,1.0,Heavy rainfall
+P003,45-59,Moderate,Rarely,0.581,0.98,0.299,5.5,0.812,0.02,0.75,Heavy rainfall
+P004,18-24,Moderate,3-5 times per week,0.525,0.22,0.1,3.3,0.98,0.98,1.0,Crowding
+P005,18-24,Moderate,3-5 times per week,0.525,0.98,0.1,4.3,0.625,0.02,1.0,Crowding
+P006,45-59,High,3-5 times per week,0.275,0.98,0.415,4.3,0.875,0.333,1.0,Heavy rainfall
+P007,18-24,High,Daily,0.275,0.415,0.2,6.7,0.98,0.02,1.0,Crowding
+P008,18-24,Low,Daily,0.887,0.02,0.833,6.7,0.75,0.02,0.5,Heavy rainfall
+P009,25-34,Moderate,1-2 times per week,0.25,0.98,0.365,5.5,0.812,0.667,1.0,Extreme heat
+P010,18-24,Moderate,Daily,0.581,0.98,0.399,3.3,0.812,0.98,0.75,Heavy rainfall
+P011,18-24,Moderate,Daily,0.25,0.98,0.265,6.7,0.98,0.02,1.0,Extreme heat
+P012,18-24,Moderate,Daily,0.375,0.415,0.399,6.7,0.812,0.333,0.75,Extreme heat
+P013,45-59,Low,3-5 times per week,0.775,0.415,0.365,3.3,0.98,0.02,1.0,Poor pedestrian infrastructure
+P014,Under 18,High,Daily,0.02,0.22,0.465,3.3,0.98,0.02,1.0,Extreme heat
+P015,18-24,High,1-2 times per week,0.02,0.22,0.165,4.3,0.812,0.02,1.0,Extreme heat
+P016,18-24,Moderate,3-5 times per week,0.375,0.22,0.399,5.5,0.812,0.333,0.75,Extreme heat
+P017,Under 18,Moderate,3-5 times per week,0.525,0.98,0.365,5.5,0.98,0.02,1.0,Heavy rainfall
+P018,Under 18,Low,Daily,0.831,0.415,0.275,5.5,0.98,0.02,0.75,Crowding
+P019,18-24,Moderate,Daily,0.75,0.25,0.4,6.7,0.812,0.02,0.0,Heavy rainfall
+P020,18-24,Moderate,Daily,0.25,0.98,0.415,6.7,0.688,0.333,1.0,Extreme heat
+P021,18-24,Low,Daily,0.831,0.98,0.275,5.5,0.625,0.02,0.75,Crowding
+P022,18-24,Moderate,Rarely,0.75,0.25,0.4,4.3,0.98,0.02,0.0,Lack of shelter
+P023,18-24,Low,Daily,0.625,0.61,0.799,5.5,0.75,0.667,0.75,Extreme heat
+P024,Under 18,Moderate,Daily,0.637,0.25,0.432,5.5,0.812,0.333,0.5,Lack of shelter
+P025,18-24,Moderate,Daily,0.75,0.02,0.8,5.5,0.562,0.02,0.0,Heavy rainfall
+P026,45-59,Moderate,1-2 times per week,0.581,0.415,0.599,5.5,0.375,0.333,0.75,Poor pedestrian infrastructure
+P027,Under 18,Moderate,1-2 times per week,0.375,0.415,0.399,5.5,0.98,0.333,0.75,Extreme heat
+P028,18-24,Low,Daily,0.98,0.98,0.6,5.5,0.98,0.98,0.0,Extreme heat
+P029,Under 18,Moderate,Rarely,0.525,0.25,0.515,4.3,0.5,0.333,1.0,Heavy rainfall
+P030,18-24,Moderate,Daily,0.525,0.98,0.2,6.7,0.98,0.02,1.0,Crowding
+P031,18-24,Low,Daily,0.5,0.98,0.365,4.3,0.98,0.02,1.0,Extreme heat
+P032,Under 18,Low,Daily,0.944,0.805,0.766,6.7,0.375,0.333,0.25,I would not avoid the area
+P033,35-44,Moderate,Daily,0.694,0.75,0.566,6.7,0.25,0.333,0.25,Lack of shelter
+P034,35-44,High,1-2 times per week,0.331,0.02,0.449,4.3,0.875,0.02,0.75,Heavy rainfall
+P035,18-24,Moderate,1-2 times per week,0.581,0.98,0.649,5.5,0.688,0.02,0.75,Heavy rainfall
+P036,60+,Moderate,3-5 times per week,0.75,0.25,0.5,6.7,0.812,0.02,0.0,Lack of shelter
+P037,Under 18,Moderate,1-2 times per week,0.581,0.75,0.649,6.7,0.688,0.333,0.75,Heavy rainfall
+P038,25-34,Moderate,Daily,0.75,0.61,0.8,6.7,0.75,0.333,0.0,Poor pedestrian infrastructure
+P039,60+,Moderate,3-5 times per week,0.75,0.5,0.5,4.3,0.625,0.333,0.0,Lack of shelter
+P040,60+,Moderate,Daily,0.75,0.22,0.8,4.3,0.75,0.02,0.0,Poor pedestrian infrastructure
+P041,18-24,Moderate,1-2 times per week,0.694,0.98,0.266,6.7,0.812,0.02,0.25,Heavy rainfall

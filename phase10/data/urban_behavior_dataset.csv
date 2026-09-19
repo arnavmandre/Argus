@@ -1,0 +1,165 @@
+participant_id,age_group,age_mid,walking_frequency,walking_frequency_code,heat_sensitivity,heat_sensitivity_code,public_transport_usage,public_transport_code,walk_pace_per_km,walking_speed_kmh,travel_time_influence,green_space_influence,quality_of_life,priority_improvement,scenario_id,temperature_c,rain_level,crowd_density,shade_percentage,green_space_level,comfort,stress,walking_likelihood,avoidance_likelihood,route_choice,improvement_choice,avoid_factor
+P001,18-24,21,3-5 times per week,2,High,3,3-5 times per week,2,<10 minutes,6.7,4.0,5.0,7.0,Better pedestrian infrastructure and walkability,S01,28,None,20,80,High,5.0,,4.0,,,,
+P001,18-24,21,3-5 times per week,2,High,3,3-5 times per week,2,<10 minutes,6.7,4.0,5.0,7.0,Better pedestrian infrastructure and walkability,S02,35,None,50,50,Medium,1.0,4.0,,,Depends on the weather,,
+P001,18-24,21,3-5 times per week,2,High,3,3-5 times per week,2,<10 minutes,6.7,4.0,5.0,7.0,Better pedestrian infrastructure and walkability,S03,42,None,85,15,Low,1.0,5.0,1.0,,,Better pedestrian infrastructure,
+P001,18-24,21,3-5 times per week,2,High,3,3-5 times per week,2,<10 minutes,6.7,4.0,5.0,7.0,Better pedestrian infrastructure and walkability,S04,40,Heavy,85,15,Low,,,,2.0,,,Extreme heat
+P002,18-24,21,1-2 times per week,1,Low,1,Never/ Rarely,0,<10 minutes,6.7,5.0,3.0,2.0,More sheltered and weather-protected walking paths,S01,28,None,20,80,High,5.0,,5.0,,,,
+P002,18-24,21,1-2 times per week,1,Low,1,Never/ Rarely,0,<10 minutes,6.7,5.0,3.0,2.0,More sheltered and weather-protected walking paths,S02,35,None,50,50,Medium,3.0,2.0,,,Shaded/less crowded route,,
+P002,18-24,21,1-2 times per week,1,Low,1,Never/ Rarely,0,<10 minutes,6.7,5.0,3.0,2.0,More sheltered and weather-protected walking paths,S03,42,None,85,15,Low,1.0,5.0,1.0,,,More shaded pedestrian paths,
+P002,18-24,21,1-2 times per week,1,Low,1,Never/ Rarely,0,<10 minutes,6.7,5.0,3.0,2.0,More sheltered and weather-protected walking paths,S04,40,Heavy,85,15,Low,,,,2.0,,,Heavy rainfall
+P003,45-59,52,Rarely,0,Moderate,2,Never/ Rarely,0,10-12 minutes,5.5,3.0,4.0,7.0,Better traffic management and reduced congestion,S01,28,None,20,80,High,5.0,,3.0,,,,
+P003,45-59,52,Rarely,0,Moderate,2,Never/ Rarely,0,10-12 minutes,5.5,3.0,4.0,7.0,Better traffic management and reduced congestion,S02,35,None,50,50,Medium,3.0,4.0,,,Shaded/less crowded route,,
+P003,45-59,52,Rarely,0,Moderate,2,Never/ Rarely,0,10-12 minutes,5.5,3.0,4.0,7.0,Better traffic management and reduced congestion,S03,42,None,85,15,Low,2.0,4.0,1.0,,,More trees and green spaces,
+P003,45-59,52,Rarely,0,Moderate,2,Never/ Rarely,0,10-12 minutes,5.5,3.0,4.0,7.0,Better traffic management and reduced congestion,S04,40,Heavy,85,15,Low,,,,1.0,,,Heavy rainfall
+P004,18-24,21,3-5 times per week,2,Moderate,2,Daily,3,16-20 minutes,3.3,5.0,5.0,5.0,Better access to essential facilities and services,S01,28,None,20,80,High,5.0,,4.0,,,,
+P004,18-24,21,3-5 times per week,2,Moderate,2,Daily,3,16-20 minutes,3.3,5.0,5.0,5.0,Better access to essential facilities and services,S02,35,None,50,50,Medium,5.0,4.0,,,Shaded/less crowded route,,
+P004,18-24,21,3-5 times per week,2,Moderate,2,Daily,3,16-20 minutes,3.3,5.0,5.0,5.0,Better access to essential facilities and services,S03,42,None,85,15,Low,1.0,5.0,1.0,,,Better crowd management / wider pedestrian spaces,
+P004,18-24,21,3-5 times per week,2,Moderate,2,Daily,3,16-20 minutes,3.3,5.0,5.0,5.0,Better access to essential facilities and services,S04,40,Heavy,85,15,Low,,,,5.0,,,Crowding
+P005,18-24,21,3-5 times per week,2,Moderate,2,Never/ Rarely,0,13-15 minutes,4.3,4.0,3.0,8.0,Better traffic management and reduced congestion,S01,28,None,20,80,High,5.0,,3.0,,,,
+P005,18-24,21,3-5 times per week,2,Moderate,2,Never/ Rarely,0,13-15 minutes,4.3,4.0,3.0,8.0,Better traffic management and reduced congestion,S02,35,None,50,50,Medium,3.0,4.0,,,Shaded/less crowded route,,
+P005,18-24,21,3-5 times per week,2,Moderate,2,Never/ Rarely,0,13-15 minutes,4.3,4.0,3.0,8.0,Better traffic management and reduced congestion,S03,42,None,85,15,Low,1.0,4.0,2.0,,,More shaded pedestrian paths,
+P005,18-24,21,3-5 times per week,2,Moderate,2,Never/ Rarely,0,13-15 minutes,4.3,4.0,3.0,8.0,Better traffic management and reduced congestion,S04,40,Heavy,85,15,Low,,,,1.0,,,Crowding
+P006,45-59,52,3-5 times per week,2,High,3,1-2 times per week,1,13-15 minutes,4.3,4.0,5.0,4.0,Better public transportation,S01,28,None,20,80,High,5.0,,3.0,,,,
+P006,45-59,52,3-5 times per week,2,High,3,1-2 times per week,1,13-15 minutes,4.3,4.0,5.0,4.0,Better public transportation,S02,35,None,50,50,Medium,2.0,4.0,,,Depends on the weather,,
+P006,45-59,52,3-5 times per week,2,High,3,1-2 times per week,1,13-15 minutes,4.3,4.0,5.0,4.0,Better public transportation,S03,42,None,85,15,Low,1.0,5.0,1.0,,,More trees and green spaces,
+P006,45-59,52,3-5 times per week,2,High,3,1-2 times per week,1,13-15 minutes,4.3,4.0,5.0,4.0,Better public transportation,S04,40,Heavy,85,15,Low,,,,1.0,,,Heavy rainfall
+P007,18-24,21,Daily,3,High,3,Never/ Rarely,0,<10 minutes,6.7,2.0,5.0,6.0,Better public transportation,S01,28,None,20,80,High,5.0,,4.0,,,,
+P007,18-24,21,Daily,3,High,3,Never/ Rarely,0,<10 minutes,6.7,2.0,5.0,6.0,Better public transportation,S02,35,None,50,50,Medium,2.0,3.0,,,Shaded/less crowded route,,
+P007,18-24,21,Daily,3,High,3,Never/ Rarely,0,<10 minutes,6.7,2.0,5.0,6.0,Better public transportation,S03,42,None,85,15,Low,1.0,5.0,1.0,,,More water and public cooling facilities,
+P007,18-24,21,Daily,3,High,3,Never/ Rarely,0,<10 minutes,6.7,2.0,5.0,6.0,Better public transportation,S04,40,Heavy,85,15,Low,,,,4.0,,,Crowding
+P008,18-24,21,Daily,3,Low,1,Never/ Rarely,0,<10 minutes,6.7,3.0,5.0,10.0,Improved drainage and flood management,S01,28,None,20,80,High,3.0,,5.0,,,,
+P008,18-24,21,Daily,3,Low,1,Never/ Rarely,0,<10 minutes,6.7,3.0,5.0,10.0,Improved drainage and flood management,S02,35,None,50,50,Medium,4.0,2.0,,,Either route,,
+P008,18-24,21,Daily,3,Low,1,Never/ Rarely,0,<10 minutes,6.7,3.0,5.0,10.0,Improved drainage and flood management,S03,42,None,85,15,Low,1.0,4.0,1.0,,,Better pedestrian infrastructure,
+P008,18-24,21,Daily,3,Low,1,Never/ Rarely,0,<10 minutes,6.7,3.0,5.0,10.0,Improved drainage and flood management,S04,40,Heavy,85,15,Low,,,,5.0,,,Heavy rainfall
+P009,25-34,29,1-2 times per week,1,Moderate,2,3-5 times per week,2,10-12 minutes,5.5,3.0,4.0,5.0,Better traffic management and reduced congestion,S01,28,None,20,80,High,5.0,,4.0,,,,
+P009,25-34,29,1-2 times per week,1,Moderate,2,3-5 times per week,2,10-12 minutes,5.5,3.0,4.0,5.0,Better traffic management and reduced congestion,S02,35,None,50,50,Medium,2.0,3.0,,,Shaded/less crowded route,,
+P009,25-34,29,1-2 times per week,1,Moderate,2,3-5 times per week,2,10-12 minutes,5.5,3.0,4.0,5.0,Better traffic management and reduced congestion,S03,42,None,85,15,Low,1.0,5.0,1.0,,,More trees and green spaces,
+P009,25-34,29,1-2 times per week,1,Moderate,2,3-5 times per week,2,10-12 minutes,5.5,3.0,4.0,5.0,Better traffic management and reduced congestion,S04,40,Heavy,85,15,Low,,,,1.0,,,Extreme heat
+P010,18-24,21,Daily,3,Moderate,2,Daily,3,16-20 minutes,3.3,5.0,,1.0,Better pedestrian infrastructure and walkability,S01,28,None,20,80,High,5.0,,5.0,,,,
+P010,18-24,21,Daily,3,Moderate,2,Daily,3,16-20 minutes,3.3,5.0,,1.0,Better pedestrian infrastructure and walkability,S02,35,None,50,50,Medium,3.0,3.0,,,Shaded/less crowded route,,
+P010,18-24,21,Daily,3,Moderate,2,Daily,3,16-20 minutes,3.3,5.0,,1.0,Better pedestrian infrastructure and walkability,S03,42,None,85,15,Low,2.0,4.0,2.0,,,"I have 60% disability, have a limp in right leg. Would like to see divyang friendly spaces.",
+P010,18-24,21,Daily,3,Moderate,2,Daily,3,16-20 minutes,3.3,5.0,,1.0,Better pedestrian infrastructure and walkability,S04,40,Heavy,85,15,Low,,,,1.0,,,Heavy rainfall
+P011,18-24,21,Daily,3,Moderate,2,Never/ Rarely,0,<10 minutes,6.7,2.0,5.0,,,S01,28,None,20,80,High,5.0,,4.0,,,,
+P011,18-24,21,Daily,3,Moderate,2,Never/ Rarely,0,<10 minutes,6.7,2.0,5.0,,,S02,35,None,50,50,Medium,2.0,4.0,,,Shaded/less crowded route,,
+P011,18-24,21,Daily,3,Moderate,2,Never/ Rarely,0,<10 minutes,6.7,2.0,5.0,,,S03,42,None,85,15,Low,1.0,5.0,1.0,,,More trees and green spaces,
+P011,18-24,21,Daily,3,Moderate,2,Never/ Rarely,0,<10 minutes,6.7,2.0,5.0,,,S04,40,Heavy,85,15,Low,,,,1.0,,,Extreme heat
+P012,18-24,21,Daily,3,Moderate,2,1-2 times per week,1,<10 minutes,6.7,3.0,4.0,6.0,"More trees, green spaces, and shaded pedestrian areas",S01,28,None,20,80,High,5.0,,5.0,,,,
+P012,18-24,21,Daily,3,Moderate,2,1-2 times per week,1,<10 minutes,6.7,3.0,4.0,6.0,"More trees, green spaces, and shaded pedestrian areas",S02,35,None,50,50,Medium,3.0,3.0,,,Shaded/less crowded route,,
+P012,18-24,21,Daily,3,Moderate,2,1-2 times per week,1,<10 minutes,6.7,3.0,4.0,6.0,"More trees, green spaces, and shaded pedestrian areas",S03,42,None,85,15,Low,2.0,2.0,2.0,,,More trees and green spaces,
+P012,18-24,21,Daily,3,Moderate,2,1-2 times per week,1,<10 minutes,6.7,3.0,4.0,6.0,"More trees, green spaces, and shaded pedestrian areas",S04,40,Heavy,85,15,Low,,,,4.0,,,Extreme heat
+P013,45-59,52,3-5 times per week,2,Low,1,Never/ Rarely,0,16-20 minutes,3.3,4.0,5.0,4.0,Better planned development to reduce overcrowding,S01,28,None,20,80,High,5.0,,5.0,,,,
+P013,45-59,52,3-5 times per week,2,Low,1,Never/ Rarely,0,16-20 minutes,3.3,4.0,5.0,4.0,Better planned development to reduce overcrowding,S02,35,None,50,50,Medium,3.0,3.0,,,Shaded/less crowded route,,
+P013,45-59,52,3-5 times per week,2,Low,1,Never/ Rarely,0,16-20 minutes,3.3,4.0,5.0,4.0,Better planned development to reduce overcrowding,S03,42,None,85,15,Low,1.0,5.0,1.0,,,More water and public cooling facilities,
+P013,45-59,52,3-5 times per week,2,Low,1,Never/ Rarely,0,16-20 minutes,3.3,4.0,5.0,4.0,Better planned development to reduce overcrowding,S04,40,Heavy,85,15,Low,,,,4.0,,,Poor pedestrian infrastructure
+P014,Under 18,16,Daily,3,High,3,Never/ Rarely,0,16-20 minutes,3.3,4.0,5.0,5.0,Better planned development to reduce overcrowding,S01,28,None,20,80,High,5.0,,4.0,,,,
+P014,Under 18,16,Daily,3,High,3,Never/ Rarely,0,16-20 minutes,3.3,4.0,5.0,5.0,Better planned development to reduce overcrowding,S02,35,None,50,50,Medium,3.0,2.0,,,Shaded/less crowded route,,
+P014,Under 18,16,Daily,3,High,3,Never/ Rarely,0,16-20 minutes,3.3,4.0,5.0,5.0,Better planned development to reduce overcrowding,S03,42,None,85,15,Low,1.0,5.0,1.0,,,More water and public cooling facilities,
+P014,Under 18,16,Daily,3,High,3,Never/ Rarely,0,16-20 minutes,3.3,4.0,5.0,5.0,Better planned development to reduce overcrowding,S04,40,Heavy,85,15,Low,,,,5.0,,,Extreme heat
+P015,18-24,21,1-2 times per week,1,High,3,Never/ Rarely,0,13-15 minutes,4.3,4.0,4.0,2.0,More sheltered and weather-protected walking paths,S01,28,None,20,80,High,5.0,,4.0,,,,
+P015,18-24,21,1-2 times per week,1,High,3,Never/ Rarely,0,13-15 minutes,4.3,4.0,4.0,2.0,More sheltered and weather-protected walking paths,S02,35,None,50,50,Medium,2.0,5.0,,,Shaded/less crowded route,,
+P015,18-24,21,1-2 times per week,1,High,3,Never/ Rarely,0,13-15 minutes,4.3,4.0,4.0,2.0,More sheltered and weather-protected walking paths,S03,42,None,85,15,Low,1.0,5.0,1.0,,,More shaded pedestrian paths,
+P015,18-24,21,1-2 times per week,1,High,3,Never/ Rarely,0,13-15 minutes,4.3,4.0,4.0,2.0,More sheltered and weather-protected walking paths,S04,40,Heavy,85,15,Low,,,,5.0,,,Extreme heat
+P016,18-24,21,3-5 times per week,2,Moderate,2,1-2 times per week,1,10-12 minutes,5.5,4.0,4.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S01,28,None,20,80,High,5.0,,3.0,,,,
+P016,18-24,21,3-5 times per week,2,Moderate,2,1-2 times per week,1,10-12 minutes,5.5,4.0,4.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S02,35,None,50,50,Medium,3.0,3.0,,,Shaded/less crowded route,,
+P016,18-24,21,3-5 times per week,2,Moderate,2,1-2 times per week,1,10-12 minutes,5.5,4.0,4.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S03,42,None,85,15,Low,2.0,5.0,1.0,,,More shaded pedestrian paths,
+P016,18-24,21,3-5 times per week,2,Moderate,2,1-2 times per week,1,10-12 minutes,5.5,4.0,4.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S04,40,Heavy,85,15,Low,,,,5.0,,,Extreme heat
+P017,Under 18,16,3-5 times per week,2,Moderate,2,Never/ Rarely,0,10-12 minutes,5.5,4.0,5.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S01,28,None,20,80,High,5.0,,5.0,,,,
+P017,Under 18,16,3-5 times per week,2,Moderate,2,Never/ Rarely,0,10-12 minutes,5.5,4.0,5.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S02,35,None,50,50,Medium,3.0,3.0,,,Shaded/less crowded route,,
+P017,Under 18,16,3-5 times per week,2,Moderate,2,Never/ Rarely,0,10-12 minutes,5.5,4.0,5.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S03,42,None,85,15,Low,1.0,5.0,1.0,,,More trees and green spaces,
+P017,Under 18,16,3-5 times per week,2,Moderate,2,Never/ Rarely,0,10-12 minutes,5.5,4.0,5.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S04,40,Heavy,85,15,Low,,,,1.0,,,Heavy rainfall
+P018,Under 18,16,Daily,3,Low,1,Never/ Rarely,0,10-12 minutes,5.5,4.0,5.0,6.0,Better traffic management and reduced congestion,S01,28,None,20,80,High,5.0,,3.0,,,,
+P018,Under 18,16,Daily,3,Low,1,Never/ Rarely,0,10-12 minutes,5.5,4.0,5.0,6.0,Better traffic management and reduced congestion,S02,35,None,50,50,Medium,3.0,3.0,,,Shaded/less crowded route,,
+P018,Under 18,16,Daily,3,Low,1,Never/ Rarely,0,10-12 minutes,5.5,4.0,5.0,6.0,Better traffic management and reduced congestion,S03,42,None,85,15,Low,2.0,4.0,2.0,,,Better crowd management / wider pedestrian spaces,
+P018,Under 18,16,Daily,3,Low,1,Never/ Rarely,0,10-12 minutes,5.5,4.0,5.0,6.0,Better traffic management and reduced congestion,S04,40,Heavy,85,15,Low,,,,4.0,,,Crowding
+P019,18-24,21,Daily,3,Moderate,2,Never/ Rarely,0,<10 minutes,6.7,4.0,4.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S01,28,None,20,80,High,5.0,,3.0,,,,
+P019,18-24,21,Daily,3,Moderate,2,Never/ Rarely,0,<10 minutes,6.7,4.0,4.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S02,35,None,50,50,Medium,3.0,4.0,,,Shaded/less crowded route,,
+P019,18-24,21,Daily,3,Moderate,2,Never/ Rarely,0,<10 minutes,6.7,4.0,4.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S03,42,None,85,15,Low,5.0,5.0,2.0,,,More trees and green spaces,
+P019,18-24,21,Daily,3,Moderate,2,Never/ Rarely,0,<10 minutes,6.7,4.0,4.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S04,40,Heavy,85,15,Low,,,,4.0,,,Heavy rainfall
+P020,18-24,21,Daily,3,Moderate,2,1-2 times per week,1,<10 minutes,6.7,5.0,4.0,7.0,Better traffic management and reduced congestion,S01,28,None,20,80,High,5.0,,3.0,,,,
+P020,18-24,21,Daily,3,Moderate,2,1-2 times per week,1,<10 minutes,6.7,5.0,4.0,7.0,Better traffic management and reduced congestion,S02,35,None,50,50,Medium,3.0,4.0,,,Depends on the weather,,
+P020,18-24,21,Daily,3,Moderate,2,1-2 times per week,1,<10 minutes,6.7,5.0,4.0,7.0,Better traffic management and reduced congestion,S03,42,None,85,15,Low,1.0,5.0,1.0,,,More water and public cooling facilities,
+P020,18-24,21,Daily,3,Moderate,2,1-2 times per week,1,<10 minutes,6.7,5.0,4.0,7.0,Better traffic management and reduced congestion,S04,40,Heavy,85,15,Low,,,,1.0,,,Extreme heat
+P021,18-24,21,Daily,3,Low,1,Never/ Rarely,0,10-12 minutes,5.5,5.0,3.0,6.0,Better access to essential facilities and services,S01,28,None,20,80,High,5.0,,3.0,,,,
+P021,18-24,21,Daily,3,Low,1,Never/ Rarely,0,10-12 minutes,5.5,5.0,3.0,6.0,Better access to essential facilities and services,S02,35,None,50,50,Medium,3.0,3.0,,,Shaded/less crowded route,,
+P021,18-24,21,Daily,3,Low,1,Never/ Rarely,0,10-12 minutes,5.5,5.0,3.0,6.0,Better access to essential facilities and services,S03,42,None,85,15,Low,2.0,3.0,3.0,,,Better crowd management / wider pedestrian spaces,
+P021,18-24,21,Daily,3,Low,1,Never/ Rarely,0,10-12 minutes,5.5,5.0,3.0,6.0,Better access to essential facilities and services,S04,40,Heavy,85,15,Low,,,,1.0,,,Crowding
+P022,18-24,21,Rarely,0,Moderate,2,Never/ Rarely,0,13-15 minutes,4.3,5.0,5.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S01,28,None,20,80,High,5.0,,3.0,,,,
+P022,18-24,21,Rarely,0,Moderate,2,Never/ Rarely,0,13-15 minutes,4.3,5.0,5.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S02,35,None,50,50,Medium,3.0,4.0,,,Shaded/less crowded route,,
+P022,18-24,21,Rarely,0,Moderate,2,Never/ Rarely,0,13-15 minutes,4.3,5.0,5.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S03,42,None,85,15,Low,5.0,5.0,1.0,,,More trees and green spaces,
+P022,18-24,21,Rarely,0,Moderate,2,Never/ Rarely,0,13-15 minutes,4.3,5.0,5.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S04,40,Heavy,85,15,Low,,,,4.0,,,Lack of shelter
+P023,18-24,21,Daily,3,Low,1,3-5 times per week,2,10-12 minutes,5.5,2.0,5.0,9.0,Better planned development to reduce overcrowding,S01,28,None,20,80,High,5.0,,5.0,,,,
+P023,18-24,21,Daily,3,Low,1,3-5 times per week,2,10-12 minutes,5.5,2.0,5.0,9.0,Better planned development to reduce overcrowding,S02,35,None,50,50,Medium,4.0,2.0,,,Either route,,
+P023,18-24,21,Daily,3,Low,1,3-5 times per week,2,10-12 minutes,5.5,2.0,5.0,9.0,Better planned development to reduce overcrowding,S03,42,None,85,15,Low,2.0,5.0,,,,More trees and green spaces,
+P023,18-24,21,Daily,3,Low,1,3-5 times per week,2,10-12 minutes,5.5,2.0,5.0,9.0,Better planned development to reduce overcrowding,S04,40,Heavy,85,15,Low,,,,3.0,,,Extreme heat
+P024,Under 18,16,Daily,3,Moderate,2,1-2 times per week,1,10-12 minutes,5.5,3.0,4.0,9.0,Better traffic management and reduced congestion,S01,28,None,20,80,High,5.0,,3.0,,,,
+P024,Under 18,16,Daily,3,Moderate,2,1-2 times per week,1,10-12 minutes,5.5,3.0,4.0,9.0,Better traffic management and reduced congestion,S02,35,None,50,50,Medium,3.0,3.0,,,Shaded/less crowded route,,
+P024,Under 18,16,Daily,3,Moderate,2,1-2 times per week,1,10-12 minutes,5.5,3.0,4.0,9.0,Better traffic management and reduced congestion,S03,42,None,85,15,Low,3.0,4.0,3.0,,,More trees and green spaces,
+P024,Under 18,16,Daily,3,Moderate,2,1-2 times per week,1,10-12 minutes,5.5,3.0,4.0,9.0,Better traffic management and reduced congestion,S04,40,Heavy,85,15,Low,,,,4.0,,,Lack of shelter
+P025,18-24,21,Daily,3,Moderate,2,Never/ Rarely,0,10-12 minutes,5.5,5.0,4.0,7.0,More sheltered and weather-protected walking paths,S01,28,None,20,80,High,4.0,,3.0,,,,
+P025,18-24,21,Daily,3,Moderate,2,Never/ Rarely,0,10-12 minutes,5.5,5.0,4.0,7.0,More sheltered and weather-protected walking paths,S02,35,None,50,50,Medium,3.0,3.0,,,Either route,,
+P025,18-24,21,Daily,3,Moderate,2,Never/ Rarely,0,10-12 minutes,5.5,5.0,4.0,7.0,More sheltered and weather-protected walking paths,S03,42,None,85,15,Low,4.0,3.0,3.0,,,More shaded pedestrian paths,
+P025,18-24,21,Daily,3,Moderate,2,Never/ Rarely,0,10-12 minutes,5.5,5.0,4.0,7.0,More sheltered and weather-protected walking paths,S04,40,Heavy,85,15,Low,,,,5.0,,,Heavy rainfall
+P026,45-59,52,1-2 times per week,1,Moderate,2,1-2 times per week,1,10-12 minutes,5.5,4.0,3.0,7.0,Better traffic management and reduced congestion,S01,28,None,20,80,High,4.0,,3.0,,,,
+P026,45-59,52,1-2 times per week,1,Moderate,2,1-2 times per week,1,10-12 minutes,5.5,4.0,3.0,7.0,Better traffic management and reduced congestion,S02,35,None,50,50,Medium,2.0,4.0,,,Either route,,
+P026,45-59,52,1-2 times per week,1,Moderate,2,1-2 times per week,1,10-12 minutes,5.5,4.0,3.0,7.0,Better traffic management and reduced congestion,S03,42,None,85,15,Low,1.0,4.0,1.0,,,More water and public cooling facilities,
+P026,45-59,52,1-2 times per week,1,Moderate,2,1-2 times per week,1,10-12 minutes,5.5,4.0,3.0,7.0,Better traffic management and reduced congestion,S04,40,Heavy,85,15,Low,,,,4.0,,,Poor pedestrian infrastructure
+P027,Under 18,16,1-2 times per week,1,Moderate,2,1-2 times per week,1,10-12 minutes,5.5,4.0,5.0,8.0,Better traffic management and reduced congestion,S01,28,None,20,80,High,4.0,,4.0,,,,
+P027,Under 18,16,1-2 times per week,1,Moderate,2,1-2 times per week,1,10-12 minutes,5.5,4.0,5.0,8.0,Better traffic management and reduced congestion,S02,35,None,50,50,Medium,2.0,3.0,,,Shaded/less crowded route,,
+P027,Under 18,16,1-2 times per week,1,Moderate,2,1-2 times per week,1,10-12 minutes,5.5,4.0,5.0,8.0,Better traffic management and reduced congestion,S03,42,None,85,15,Low,1.0,4.0,1.0,,,More trees and green spaces,
+P027,Under 18,16,1-2 times per week,1,Moderate,2,1-2 times per week,1,10-12 minutes,5.5,4.0,5.0,8.0,Better traffic management and reduced congestion,S04,40,Heavy,85,15,Low,,,,4.0,,,Extreme heat
+P028,18-24,21,Daily,3,Low,1,Daily,3,10-12 minutes,5.5,2.0,5.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S01,28,None,20,80,High,1.0,,2.0,,,,
+P028,18-24,21,Daily,3,Low,1,Daily,3,10-12 minutes,5.5,2.0,5.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S02,35,None,50,50,Medium,2.0,2.0,,,Shaded/less crowded route,,
+P028,18-24,21,Daily,3,Low,1,Daily,3,10-12 minutes,5.5,2.0,5.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S03,42,None,85,15,Low,1.0,3.0,1.0,,,More shaded pedestrian paths,
+P028,18-24,21,Daily,3,Low,1,Daily,3,10-12 minutes,5.5,2.0,5.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S04,40,Heavy,85,15,Low,,,,1.0,,,Extreme heat
+P029,Under 18,16,Rarely,0,Moderate,2,1-2 times per week,1,13-15 minutes,4.3,4.0,3.0,9.0,Better traffic management and reduced congestion,S01,28,None,20,80,High,5.0,,5.0,,,,
+P029,Under 18,16,Rarely,0,Moderate,2,1-2 times per week,1,13-15 minutes,4.3,4.0,3.0,9.0,Better traffic management and reduced congestion,S02,35,None,50,50,Medium,3.0,3.0,,,Depends on the weather,,
+P029,Under 18,16,Rarely,0,Moderate,2,1-2 times per week,1,13-15 minutes,4.3,4.0,3.0,9.0,Better traffic management and reduced congestion,S03,42,None,85,15,Low,1.0,1.0,1.0,,,More trees and green spaces,
+P029,Under 18,16,Rarely,0,Moderate,2,1-2 times per week,1,13-15 minutes,4.3,4.0,3.0,9.0,Better traffic management and reduced congestion,S04,40,Heavy,85,15,Low,,,,4.0,,,Heavy rainfall
+P030,18-24,21,Daily,3,Moderate,2,Never/ Rarely,0,<10 minutes,6.7,2.0,5.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S01,28,None,20,80,High,5.0,,4.0,,,,
+P030,18-24,21,Daily,3,Moderate,2,Never/ Rarely,0,<10 minutes,6.7,2.0,5.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S02,35,None,50,50,Medium,3.0,3.0,,,Shaded/less crowded route,,
+P030,18-24,21,Daily,3,Moderate,2,Never/ Rarely,0,<10 minutes,6.7,2.0,5.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S03,42,None,85,15,Low,1.0,2.0,2.0,,,More shaded pedestrian paths,
+P030,18-24,21,Daily,3,Moderate,2,Never/ Rarely,0,<10 minutes,6.7,2.0,5.0,8.0,"More trees, green spaces, and shaded pedestrian areas",S04,40,Heavy,85,15,Low,,,,1.0,,,Crowding
+P031,18-24,21,Daily,3,Low,1,Never/ Rarely,0,13-15 minutes,4.3,5.0,5.0,6.0,"More trees, green spaces, and shaded pedestrian areas",S01,28,None,20,80,High,5.0,,4.0,,,,
+P031,18-24,21,Daily,3,Low,1,Never/ Rarely,0,13-15 minutes,4.3,5.0,5.0,6.0,"More trees, green spaces, and shaded pedestrian areas",S02,35,None,50,50,Medium,2.0,3.0,,,Shaded/less crowded route,,
+P031,18-24,21,Daily,3,Low,1,Never/ Rarely,0,13-15 minutes,4.3,5.0,5.0,6.0,"More trees, green spaces, and shaded pedestrian areas",S03,42,None,85,15,Low,1.0,5.0,1.0,,,More shaded pedestrian paths,
+P031,18-24,21,Daily,3,Low,1,Never/ Rarely,0,13-15 minutes,4.3,5.0,5.0,6.0,"More trees, green spaces, and shaded pedestrian areas",S04,40,Heavy,85,15,Low,,,,1.0,,,Extreme heat
+P032,Under 18,16,Daily,3,Low,1,1-2 times per week,1,<10 minutes,6.7,4.0,3.0,6.0,"More trees, green spaces, and shaded pedestrian areas",S01,28,None,20,80,High,4.0,,2.0,,,,
+P032,Under 18,16,Daily,3,Low,1,1-2 times per week,1,<10 minutes,6.7,4.0,3.0,6.0,"More trees, green spaces, and shaded pedestrian areas",S02,35,None,50,50,Medium,3.0,3.0,,,Either route,,
+P032,Under 18,16,Daily,3,Low,1,1-2 times per week,1,<10 minutes,6.7,4.0,3.0,6.0,"More trees, green spaces, and shaded pedestrian areas",S03,42,None,85,15,Low,3.0,3.0,3.0,,,More shaded pedestrian paths,
+P032,Under 18,16,Daily,3,Low,1,1-2 times per week,1,<10 minutes,6.7,4.0,3.0,6.0,"More trees, green spaces, and shaded pedestrian areas",S04,40,Heavy,85,15,Low,,,,2.0,,,I would not avoid the area
+P033,35-44,39,Daily,3,Moderate,2,1-2 times per week,1,<10 minutes,6.7,1.0,1.0,3.0,"More trees, green spaces, and shaded pedestrian areas",S01,28,None,20,80,High,2.0,,5.0,,,,
+P033,35-44,39,Daily,3,Moderate,2,1-2 times per week,1,<10 minutes,6.7,1.0,1.0,3.0,"More trees, green spaces, and shaded pedestrian areas",S02,35,None,50,50,Medium,1.0,2.0,,,Shaded/less crowded route,,
+P033,35-44,39,Daily,3,Moderate,2,1-2 times per week,1,<10 minutes,6.7,1.0,1.0,3.0,"More trees, green spaces, and shaded pedestrian areas",S03,42,None,85,15,Low,1.0,3.0,1.0,,,More shaded pedestrian paths,
+P033,35-44,39,Daily,3,Moderate,2,1-2 times per week,1,<10 minutes,6.7,1.0,1.0,3.0,"More trees, green spaces, and shaded pedestrian areas",S04,40,Heavy,85,15,Low,,,,2.0,,,Lack of shelter
+P034,35-44,39,1-2 times per week,1,High,3,Never/ Rarely,0,13-15 minutes,4.3,5.0,5.0,8.0,Improved drainage and flood management,S01,28,None,20,80,High,4.0,,3.0,,,,
+P034,35-44,39,1-2 times per week,1,High,3,Never/ Rarely,0,13-15 minutes,4.3,5.0,5.0,8.0,Improved drainage and flood management,S02,35,None,50,50,Medium,2.0,4.0,,,Depends on the weather,,
+P034,35-44,39,1-2 times per week,1,High,3,Never/ Rarely,0,13-15 minutes,4.3,5.0,5.0,8.0,Improved drainage and flood management,S03,42,None,85,15,Low,1.0,5.0,1.0,,,More shaded pedestrian paths,
+P034,35-44,39,1-2 times per week,1,High,3,Never/ Rarely,0,13-15 minutes,4.3,5.0,5.0,8.0,Improved drainage and flood management,S04,40,Heavy,85,15,Low,,,,5.0,,,Heavy rainfall
+P035,18-24,21,1-2 times per week,1,Moderate,2,Never/ Rarely,0,10-12 minutes,5.5,4.0,4.0,4.0,Improved drainage and flood management,S01,28,None,20,80,High,5.0,,4.0,,,,
+P035,18-24,21,1-2 times per week,1,Moderate,2,Never/ Rarely,0,10-12 minutes,5.5,4.0,4.0,4.0,Improved drainage and flood management,S02,35,None,50,50,Medium,3.0,2.0,,,Depends on the weather,,
+P035,18-24,21,1-2 times per week,1,Moderate,2,Never/ Rarely,0,10-12 minutes,5.5,4.0,4.0,4.0,Improved drainage and flood management,S03,42,None,85,15,Low,2.0,4.0,2.0,,,Better crowd management / wider pedestrian spaces,
+P035,18-24,21,1-2 times per week,1,Moderate,2,Never/ Rarely,0,10-12 minutes,5.5,4.0,4.0,4.0,Improved drainage and flood management,S04,40,Heavy,85,15,Low,,,,1.0,,,Heavy rainfall
+P036,60+,66,3-5 times per week,2,Moderate,2,Never/ Rarely,0,<10 minutes,6.7,3.0,4.0,6.0,Improved drainage and flood management,S01,28,None,20,80,High,4.0,,3.0,,,,
+P036,60+,66,3-5 times per week,2,Moderate,2,Never/ Rarely,0,<10 minutes,6.7,3.0,4.0,6.0,Improved drainage and flood management,S02,35,None,50,50,Medium,2.0,3.0,,,Shaded/less crowded route,,
+P036,60+,66,3-5 times per week,2,Moderate,2,Never/ Rarely,0,<10 minutes,6.7,3.0,4.0,6.0,Improved drainage and flood management,S03,42,None,85,15,Low,5.0,5.0,1.0,,,More shaded pedestrian paths,
+P036,60+,66,3-5 times per week,2,Moderate,2,Never/ Rarely,0,<10 minutes,6.7,3.0,4.0,6.0,Improved drainage and flood management,S04,40,Heavy,85,15,Low,,,,4.0,,,Lack of shelter
+P037,Under 18,16,1-2 times per week,1,Moderate,2,1-2 times per week,1,<10 minutes,6.7,3.0,4.0,9.0,Improved drainage and flood management,S01,28,None,20,80,High,5.0,,4.0,,,,
+P037,Under 18,16,1-2 times per week,1,Moderate,2,1-2 times per week,1,<10 minutes,6.7,3.0,4.0,9.0,Improved drainage and flood management,S02,35,None,50,50,Medium,4.0,2.0,,,Depends on the weather,,
+P037,Under 18,16,1-2 times per week,1,Moderate,2,1-2 times per week,1,<10 minutes,6.7,3.0,4.0,9.0,Improved drainage and flood management,S03,42,None,85,15,Low,2.0,2.0,2.0,,,More trees and green spaces,
+P037,Under 18,16,1-2 times per week,1,Moderate,2,1-2 times per week,1,<10 minutes,6.7,3.0,4.0,9.0,Improved drainage and flood management,S04,40,Heavy,85,15,Low,,,,2.0,,,Heavy rainfall
+P038,25-34,29,Daily,3,Moderate,2,1-2 times per week,1,<10 minutes,6.7,5.0,5.0,6.0,More sheltered and weather-protected walking paths,S01,28,None,20,80,High,3.0,,3.0,,,,
+P038,25-34,29,Daily,3,Moderate,2,1-2 times per week,1,<10 minutes,6.7,5.0,5.0,6.0,More sheltered and weather-protected walking paths,S02,35,None,50,50,Medium,3.0,3.0,,,Either route,,
+P038,25-34,29,Daily,3,Moderate,2,1-2 times per week,1,<10 minutes,6.7,5.0,5.0,6.0,More sheltered and weather-protected walking paths,S03,42,None,85,15,Low,3.0,3.0,3.0,,,More trees and green spaces,
+P038,25-34,29,Daily,3,Moderate,2,1-2 times per week,1,<10 minutes,6.7,5.0,5.0,6.0,More sheltered and weather-protected walking paths,S04,40,Heavy,85,15,Low,,,,3.0,,,Poor pedestrian infrastructure
+P039,60+,66,3-5 times per week,2,Moderate,2,1-2 times per week,1,13-15 minutes,4.3,4.0,3.0,5.0,Improved drainage and flood management,S01,28,None,20,80,High,3.0,,3.0,,,,
+P039,60+,66,3-5 times per week,2,Moderate,2,1-2 times per week,1,13-15 minutes,4.3,4.0,3.0,5.0,Improved drainage and flood management,S02,35,None,50,50,Medium,2.0,3.0,,,Shaded/less crowded route,,
+P039,60+,66,3-5 times per week,2,Moderate,2,1-2 times per week,1,13-15 minutes,4.3,4.0,3.0,5.0,Improved drainage and flood management,S03,42,None,85,15,Low,4.0,4.0,4.0,,,More trees and green spaces,
+P039,60+,66,3-5 times per week,2,Moderate,2,1-2 times per week,1,13-15 minutes,4.3,4.0,3.0,5.0,Improved drainage and flood management,S04,40,Heavy,85,15,Low,,,,3.0,,,Lack of shelter
+P040,60+,66,Daily,3,Moderate,2,Never/ Rarely,0,13-15 minutes,4.3,2.0,5.0,10.0,"More trees, green spaces, and shaded pedestrian areas",S01,28,None,20,80,High,3.0,,4.0,,,,
+P040,60+,66,Daily,3,Moderate,2,Never/ Rarely,0,13-15 minutes,4.3,2.0,5.0,10.0,"More trees, green spaces, and shaded pedestrian areas",S02,35,None,50,50,Medium,3.0,3.0,,,,,
+P040,60+,66,Daily,3,Moderate,2,Never/ Rarely,0,13-15 minutes,4.3,2.0,5.0,10.0,"More trees, green spaces, and shaded pedestrian areas",S03,42,None,85,15,Low,3.0,3.0,3.0,,,Better pedestrian infrastructure,
+P040,60+,66,Daily,3,Moderate,2,Never/ Rarely,0,13-15 minutes,4.3,2.0,5.0,10.0,"More trees, green spaces, and shaded pedestrian areas",S04,40,Heavy,85,15,Low,,,,5.0,,,Poor pedestrian infrastructure
+P041,18-24,21,1-2 times per week,1,Moderate,2,Never/ Rarely,0,<10 minutes,6.7,3.0,4.0,8.0,Better public transportation,S01,28,None,20,80,High,2.0,,2.0,,,,
+P041,18-24,21,1-2 times per week,1,Moderate,2,Never/ Rarely,0,<10 minutes,6.7,3.0,4.0,8.0,Better public transportation,S02,35,None,50,50,Medium,1.0,5.0,,,Shaded/less crowded route,,
+P041,18-24,21,1-2 times per week,1,Moderate,2,Never/ Rarely,0,<10 minutes,6.7,3.0,4.0,8.0,Better public transportation,S03,42,None,85,15,Low,1.0,5.0,1.0,,,Better public transportation,
+P041,18-24,21,1-2 times per week,1,Moderate,2,Never/ Rarely,0,<10 minutes,6.7,3.0,4.0,8.0,Better public transportation,S04,40,Heavy,85,15,Low,,,,1.0,,,Heavy rainfall

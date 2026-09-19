@@ -1,0 +1,5 @@
+scenario_id,temperature_c,rain_level,crowd_density,shade_percentage,green_space_level
+S01,28,None,20,80,High
+S02,35,None,50,50,Medium
+S03,42,None,85,15,Low
+S04,40,Heavy,85,15,Low

@@ -1,0 +1,165 @@
+participant_id,scenario_id,comfort,stress,walking_likelihood,avoidance_likelihood,route_choice,improvement_choice,avoid_factor
+P001,S01,5.0,,4.0,,,,
+P001,S02,1.0,4.0,,,Depends on the weather,,
+P001,S03,1.0,5.0,1.0,,,Better pedestrian infrastructure,
+P001,S04,,,,2.0,,,Extreme heat
+P002,S01,5.0,,5.0,,,,
+P002,S02,3.0,2.0,,,Shaded/less crowded route,,
+P002,S03,1.0,5.0,1.0,,,More shaded pedestrian paths,
+P002,S04,,,,2.0,,,Heavy rainfall
+P003,S01,5.0,,3.0,,,,
+P003,S02,3.0,4.0,,,Shaded/less crowded route,,
+P003,S03,2.0,4.0,1.0,,,More trees and green spaces,
+P003,S04,,,,1.0,,,Heavy rainfall
+P004,S01,5.0,,4.0,,,,
+P004,S02,5.0,4.0,,,Shaded/less crowded route,,
+P004,S03,1.0,5.0,1.0,,,Better crowd management / wider pedestrian spaces,
+P004,S04,,,,5.0,,,Crowding
+P005,S01,5.0,,3.0,,,,
+P005,S02,3.0,4.0,,,Shaded/less crowded route,,
+P005,S03,1.0,4.0,2.0,,,More shaded pedestrian paths,
+P005,S04,,,,1.0,,,Crowding
+P006,S01,5.0,,3.0,,,,
+P006,S02,2.0,4.0,,,Depends on the weather,,
+P006,S03,1.0,5.0,1.0,,,More trees and green spaces,
+P006,S04,,,,1.0,,,Heavy rainfall
+P007,S01,5.0,,4.0,,,,
+P007,S02,2.0,3.0,,,Shaded/less crowded route,,
+P007,S03,1.0,5.0,1.0,,,More water and public cooling facilities,
+P007,S04,,,,4.0,,,Crowding
+P008,S01,3.0,,5.0,,,,
+P008,S02,4.0,2.0,,,Either route,,
+P008,S03,1.0,4.0,1.0,,,Better pedestrian infrastructure,
+P008,S04,,,,5.0,,,Heavy rainfall
+P009,S01,5.0,,4.0,,,,
+P009,S02,2.0,3.0,,,Shaded/less crowded route,,
+P009,S03,1.0,5.0,1.0,,,More trees and green spaces,
+P009,S04,,,,1.0,,,Extreme heat
+P010,S01,5.0,,5.0,,,,
+P010,S02,3.0,3.0,,,Shaded/less crowded route,,
+P010,S03,2.0,4.0,2.0,,,"I have 60% disability, have a limp in right leg. Would like to see divyang friendly spaces.",
+P010,S04,,,,1.0,,,Heavy rainfall
+P011,S01,5.0,,4.0,,,,
+P011,S02,2.0,4.0,,,Shaded/less crowded route,,
+P011,S03,1.0,5.0,1.0,,,More trees and green spaces,
+P011,S04,,,,1.0,,,Extreme heat
+P012,S01,5.0,,5.0,,,,
+P012,S02,3.0,3.0,,,Shaded/less crowded route,,
+P012,S03,2.0,2.0,2.0,,,More trees and green spaces,
+P012,S04,,,,4.0,,,Extreme heat
+P013,S01,5.0,,5.0,,,,
+P013,S02,3.0,3.0,,,Shaded/less crowded route,,
+P013,S03,1.0,5.0,1.0,,,More water and public cooling facilities,
+P013,S04,,,,4.0,,,Poor pedestrian infrastructure
+P014,S01,5.0,,4.0,,,,
+P014,S02,3.0,2.0,,,Shaded/less crowded route,,
+P014,S03,1.0,5.0,1.0,,,More water and public cooling facilities,
+P014,S04,,,,5.0,,,Extreme heat
+P015,S01,5.0,,4.0,,,,
+P015,S02,2.0,5.0,,,Shaded/less crowded route,,
+P015,S03,1.0,5.0,1.0,,,More shaded pedestrian paths,
+P015,S04,,,,5.0,,,Extreme heat
+P016,S01,5.0,,3.0,,,,
+P016,S02,3.0,3.0,,,Shaded/less crowded route,,
+P016,S03,2.0,5.0,1.0,,,More shaded pedestrian paths,
+P016,S04,,,,5.0,,,Extreme heat
+P017,S01,5.0,,5.0,,,,
+P017,S02,3.0,3.0,,,Shaded/less crowded route,,
+P017,S03,1.0,5.0,1.0,,,More trees and green spaces,
+P017,S04,,,,1.0,,,Heavy rainfall
+P018,S01,5.0,,3.0,,,,
+P018,S02,3.0,3.0,,,Shaded/less crowded route,,
+P018,S03,2.0,4.0,2.0,,,Better crowd management / wider pedestrian spaces,
+P018,S04,,,,4.0,,,Crowding
+P019,S01,5.0,,3.0,,,,
+P019,S02,3.0,4.0,,,Shaded/less crowded route,,
+P019,S03,5.0,5.0,2.0,,,More trees and green spaces,
+P019,S04,,,,4.0,,,Heavy rainfall
+P020,S01,5.0,,3.0,,,,
+P020,S02,3.0,4.0,,,Depends on the weather,,
+P020,S03,1.0,5.0,1.0,,,More water and public cooling facilities,
+P020,S04,,,,1.0,,,Extreme heat
+P021,S01,5.0,,3.0,,,,
+P021,S02,3.0,3.0,,,Shaded/less crowded route,,
+P021,S03,2.0,3.0,3.0,,,Better crowd management / wider pedestrian spaces,
+P021,S04,,,,1.0,,,Crowding
+P022,S01,5.0,,3.0,,,,
+P022,S02,3.0,4.0,,,Shaded/less crowded route,,
+P022,S03,5.0,5.0,1.0,,,More trees and green spaces,
+P022,S04,,,,4.0,,,Lack of shelter
+P023,S01,5.0,,5.0,,,,
+P023,S02,4.0,2.0,,,Either route,,
+P023,S03,2.0,5.0,,,,More trees and green spaces,
+P023,S04,,,,3.0,,,Extreme heat
+P024,S01,5.0,,3.0,,,,
+P024,S02,3.0,3.0,,,Shaded/less crowded route,,
+P024,S03,3.0,4.0,3.0,,,More trees and green spaces,
+P024,S04,,,,4.0,,,Lack of shelter
+P025,S01,4.0,,3.0,,,,
+P025,S02,3.0,3.0,,,Either route,,
+P025,S03,4.0,3.0,3.0,,,More shaded pedestrian paths,
+P025,S04,,,,5.0,,,Heavy rainfall
+P026,S01,4.0,,3.0,,,,
+P026,S02,2.0,4.0,,,Either route,,
+P026,S03,1.0,4.0,1.0,,,More water and public cooling facilities,
+P026,S04,,,,4.0,,,Poor pedestrian infrastructure
+P027,S01,4.0,,4.0,,,,
+P027,S02,2.0,3.0,,,Shaded/less crowded route,,
+P027,S03,1.0,4.0,1.0,,,More trees and green spaces,
+P027,S04,,,,4.0,,,Extreme heat
+P028,S01,1.0,,2.0,,,,
+P028,S02,2.0,2.0,,,Shaded/less crowded route,,
+P028,S03,1.0,3.0,1.0,,,More shaded pedestrian paths,
+P028,S04,,,,1.0,,,Extreme heat
+P029,S01,5.0,,5.0,,,,
+P029,S02,3.0,3.0,,,Depends on the weather,,
+P029,S03,1.0,1.0,1.0,,,More trees and green spaces,
+P029,S04,,,,4.0,,,Heavy rainfall
+P030,S01,5.0,,4.0,,,,
+P030,S02,3.0,3.0,,,Shaded/less crowded route,,
+P030,S03,1.0,2.0,2.0,,,More shaded pedestrian paths,
+P030,S04,,,,1.0,,,Crowding
+P031,S01,5.0,,4.0,,,,
+P031,S02,2.0,3.0,,,Shaded/less crowded route,,
+P031,S03,1.0,5.0,1.0,,,More shaded pedestrian paths,
+P031,S04,,,,1.0,,,Extreme heat
+P032,S01,4.0,,2.0,,,,
+P032,S02,3.0,3.0,,,Either route,,
+P032,S03,3.0,3.0,3.0,,,More shaded pedestrian paths,
+P032,S04,,,,2.0,,,I would not avoid the area
+P033,S01,2.0,,5.0,,,,
+P033,S02,1.0,2.0,,,Shaded/less crowded route,,
+P033,S03,1.0,3.0,1.0,,,More shaded pedestrian paths,
+P033,S04,,,,2.0,,,Lack of shelter
+P034,S01,4.0,,3.0,,,,
+P034,S02,2.0,4.0,,,Depends on the weather,,
+P034,S03,1.0,5.0,1.0,,,More shaded pedestrian paths,
+P034,S04,,,,5.0,,,Heavy rainfall
+P035,S01,5.0,,4.0,,,,
+P035,S02,3.0,2.0,,,Depends on the weather,,
+P035,S03,2.0,4.0,2.0,,,Better crowd management / wider pedestrian spaces,
+P035,S04,,,,1.0,,,Heavy rainfall
+P036,S01,4.0,,3.0,,,,
+P036,S02,2.0,3.0,,,Shaded/less crowded route,,
+P036,S03,5.0,5.0,1.0,,,More shaded pedestrian paths,
+P036,S04,,,,4.0,,,Lack of shelter
+P037,S01,5.0,,4.0,,,,
+P037,S02,4.0,2.0,,,Depends on the weather,,
+P037,S03,2.0,2.0,2.0,,,More trees and green spaces,
+P037,S04,,,,2.0,,,Heavy rainfall
+P038,S01,3.0,,3.0,,,,
+P038,S02,3.0,3.0,,,Either route,,
+P038,S03,3.0,3.0,3.0,,,More trees and green spaces,
+P038,S04,,,,3.0,,,Poor pedestrian infrastructure
+P039,S01,3.0,,3.0,,,,
+P039,S02,2.0,3.0,,,Shaded/less crowded route,,
+P039,S03,4.0,4.0,4.0,,,More trees and green spaces,
+P039,S04,,,,3.0,,,Lack of shelter
+P040,S01,3.0,,4.0,,,,
+P040,S02,3.0,3.0,,,,,
+P040,S03,3.0,3.0,3.0,,,Better pedestrian infrastructure,
+P040,S04,,,,5.0,,,Poor pedestrian infrastructure
+P041,S01,2.0,,2.0,,,,
+P041,S02,1.0,5.0,,,Shaded/less crowded route,,
+P041,S03,1.0,5.0,1.0,,,Better public transportation,
+P041,S04,,,,1.0,,,Heavy rainfall
