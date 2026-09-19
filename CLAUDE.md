@@ -28,6 +28,7 @@ context loss.
 | `phase1/`–`phase8/` | visualisation | OSM city → semantics → contract → bridges → packaged states. **Treat as frozen.** |
 | `integration/` | boundary | Snapshot loader + route-mapping proposal tooling. |
 | `phase9/` | realism + demo | Materials, heights, trees, lighting, cameras, overlays — all `over` layers — plus `build_city_from_osm.py`. **Open `phase9/scene/main.usda` for the demo.** |
+| `phase10/` | survey | Real survey -> calibrated synthetic citizens. `data/` holds the four-table dataset. |
 | `docs/` | contracts | `INTEGRATION_CONTRACT.md` is authoritative. |
 
 ## Hard rules
@@ -60,8 +61,11 @@ Only claim what the code does when executed. Verified as of this writing:
 - ✅ Phase 9: 623 buildings carry 12 distinct OSM-derived materials and heights
   spanning 2–39 m; 511 trees at surveyed OSM positions; `city_osm.json` runs the
   simulator on real Russell Square geometry with `osm_edges` on every route.
-- ❌ **No survey pipeline exists yet.** Do not claim citizen profiles are
-  calibrated from real participant responses until it does.
+- ✅ Phase 10: citizen behavioural parameters ARE calibrated from 41 real
+  survey participants (copula-sampled, holdout-validated 5/5). But the scenario
+  design is confounded (temp+crowd+shade move together) - say "calibrated",
+  never "separately measured per factor". home/destination is a heuristic,
+  not survey data.
 - ⚠️ Building heights: only **223 of 623** come from real OSM data
   (`urbantwin:heightSource` records each one). The rest are inferred from
   building class or interpolated from neighbours. Do not call the skyline
@@ -69,8 +73,9 @@ Only claim what the code does when executed. Verified as of this writing:
 - ⚠️ The default 8-building `city.json` is still abstract, and
   `integration/route_mapping.proposal.json` is still provisional. Use
   `city_osm.json` when real geography matters.
-- ❌ Nothing in Omniverse yet displays output from `Simulation/main.py` — the
-  overlays read Phase 3 **mock** snapshots. No exporter exists.
+- ✅ `integration/export_snapshot.py` closes the loop: simulator report ->
+  canonical v1 snapshot -> USD. 9/9 integration tests pass, agents land within
+  1mm of their route geometry, snapshots are `data_kind: simulation`.
 
 ## Commands
 
