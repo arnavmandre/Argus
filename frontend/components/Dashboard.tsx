@@ -193,41 +193,26 @@ export function Dashboard({ bootstrap }: { bootstrap: Bootstrap }) {
 
         {run && run.before ? (
           <>
-            <div className="mt-5 grid gap-5 xl:mt-6 xl:grid-cols-2 xl:gap-6">
-              <div className="contents xl:flex xl:flex-col xl:gap-6">
-                <div className="order-1">
-                  <BeforeAfterChart
-                    before={run.before.metrics}
-                    after={run.after?.metrics}
-                    interventionLabel={interventionLabel(run)}
-                  />
-                </div>
-                {arm ? (
-                  <div className="order-3">
-                    <ProblemAreas summary={arm} state={shown} />
-                  </div>
-                ) : null}
-              </div>
-
-              <div className="contents xl:flex xl:flex-col xl:gap-6">
-                <div className="order-2">
-                  <BehaviorLegend
-                    before={run.before.behavior_counts}
-                    after={run.after?.behavior_counts}
-                  />
-                </div>
-                {run.advisor ? (
-                  <div className="order-4">
-                    <AdvisorPanel
-                      advisor={run.advisor}
-                      source={run.advisor_source}
-                      applied={run.intervention}
-                      canApply={!runner.active}
-                      onApplyRecommended={() => submit({ forceApply: true })}
-                    />
-                  </div>
-                ) : null}
-              </div>
+            <div className="mt-5 grid gap-5 xl:mt-6 xl:gap-6">
+              <BeforeAfterChart
+                before={run.before.metrics}
+                after={run.after?.metrics}
+                interventionLabel={interventionLabel(run)}
+              />
+              <BehaviorLegend
+                before={run.before.behavior_counts}
+                after={run.after?.behavior_counts}
+              />
+              {arm ? <ProblemAreas summary={arm} state={shown} /> : null}
+              {run.advisor ? (
+                <AdvisorPanel
+                  advisor={run.advisor}
+                  source={run.advisor_source}
+                  applied={run.intervention}
+                  canApply={!runner.active}
+                  onApplyRecommended={() => submit({ forceApply: true })}
+                />
+              ) : null}
             </div>
 
             <div className="mt-5 grid gap-5 xl:mt-6 xl:gap-6">
