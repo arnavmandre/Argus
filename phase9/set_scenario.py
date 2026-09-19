@@ -27,6 +27,10 @@ PRESETS = {
     "heat":     (6800, (1.00, 0.90, 0.68), 140, (0.90, 0.85, 0.70), (65, 0, -20)),
     # Overcast: kill the sun, lift the dome, go flat and cold.
     "rain":     (600,  (0.80, 0.84, 0.90), 900, (0.62, 0.66, 0.72), (40, 0, -35)),
+    # Low warm sun raking across the streets. The most photogenic frame
+    # available and it costs nothing - use it for stills and the title shot,
+    # not for the heat scenario (a 42 C claim under dusk light reads wrong).
+    "dusk":     (2600, (1.00, 0.72, 0.45), 260, (0.42, 0.48, 0.72), (14, 0, -62)),
 }
 
 

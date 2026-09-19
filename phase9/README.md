@@ -1,8 +1,13 @@
-# Demo presentation layer
+# Phase 9 — realism, materials, and the real-city simulation
 
-Visual only. Everything here is an `over` on top of the frozen Phase 1/2 scene —
-no geometry, no semantics, no `city_id` is touched, and nothing here contributes
-a simulation value.
+Phase 9 sits on top of the Phase 8 stage and makes the imported city look like a
+city rather than a data dump. It also generates a simulator city built from the
+real OSM geometry, so the simulation and the visualisation finally describe the
+same place.
+
+Everything here is an `over`. No Phase 1–8 layer is modified, so the Phase 1
+manifest hash — and with it `city_id` and the whole Phase 2–8 contract — stays
+valid. All seven upstream validators still pass.
 
 ## Open this for the demo
 
@@ -11,88 +16,154 @@ a simulation value.
 C:\Users\arnav\Argus\phase9\scene\main.usda
 ```
 
-Layer order (top wins):
+Layer order, top wins:
 
 ```
-generated/agents.usda      <- optional, from agents_instancer.py
-generated/path_colors.usda <- optional, from recolor_paths.py
+generated/agents.usda       optional, from agents_instancer.py
+generated/path_colors.usda  optional, from recolor_paths.py
 cameras.usda
-look.usda
-lighting.usda
-../../phase8/scene/main.usda   <- the final city + demoState variants
+materials.usda              OSM-derived materials + cityLook variant set
+streetscape.usda            511 trees, 39 street lamps
+heights.usda                recovered / inferred building heights
+look.usda                   ground, road and fallback building surfaces
+lighting.usda               sun with shadows
+../../phase8/scene/main.usda    the final city + demoState variants
 ```
 
-The stage opens fine without the two generated layers.
+Two variant sets on `/World`:
 
-Phase 8 is the final city. It carries the `Stressed` / `Intervention`
-variants and chains down through Phase 2 semantics to Phase 1 geometry, so
-the presentation stage sits on top of everything:
+| set | variants | switch with |
+|---|---|---|
+| `demoState` | `Stressed`, `Intervention` | `python phase8\switch_state.py <name>` |
+| `cityLook` | `realistic`, `analytic` | Stage panel on `/World`, or the variant dropdown |
+
+Use `realistic` for hero shots and `analytic` when simulation colour is overlaid —
+the desaturated palette stops the two colour systems fighting.
+
+## What changed, and where it came from
+
+### Materials — `build_materials.py` → `scene/materials.usda`
+
+Phase 1 painted all 623 buildings one hardcoded grey `(0.63, 0.69, 0.75)`, and
+every road, path and green space a single flat colour. But it also stored each
+object's **complete OSM tag dictionary** on the prim as `urbantwin:osmTags`. The
+data for a realistic city was already in the file; only the use of it was missing.
+
+Resolution order for walls: explicit `building:colour` / `building:material`
+→ `building` class → `amenity`/`shop` → level count. Roofs come from
+`roof:colour` / `roof:material` via a `UsdGeom.Subset` on face 0 — buildings are
+extruded prisms whose face 0 is the roof cap, so the split needs no new geometry.
+Roads use `surface` and `highway` class; green spaces use `leisure`.
+
+Result: **12 distinct wall materials across 623 buildings, 623 roof subsets.**
+Materials are ~30 shared `UsdPreviewSurface` prims, not one per building.
+
+### Heights — `recover_heights.py` → `scene/heights.usda`
+
+Phase 1 only imports ways tagged `building=*` (`build_city.py:80`). In this
+extract the real 3D massing lives on **425 `building:part` ways**, which carry no
+`building` tag and were therefore never imported. That is why only 3 of 623
+buildings had a surveyed height and 490 sat at the flat 12 m fallback.
+
+Only the top ring's z is rewritten, so footprint XY is provably unchanged —
+`validate_phase9.py` asserts this against the Phase 1 stage.
+
+**Be precise about what is real here.** Every prim records its source in
+`urbantwin:heightSource`:
+
+| source | count | meaning |
+|---|---|---|
+| `osm_height` | 3 | surveyed height tag |
+| `osm_building_part_levels` | 17 | recovered from a `building:part` way |
+| `assumed_3m_per_osm_level` | 203 | real `building:levels`, 3 m assumed per level |
+| `inferred_from_building_type` | 107 | **inferred** from the `building` class |
+| `inferred_from_neighbours` | 174 | **inferred** — median of nearest known-height buildings |
+| `assumed_12m` | 119 | untouched Phase 1 fallback |
+
+So **223 of 623 heights derive from real OSM data**; the rest are documented
+inference. Do not describe the skyline as surveyed.
+
+Only 23 buildings matched a `building:part`: 284 of the 306 unmatched parts sit
+more than 15 m from any footprint, because they belong to buildings Phase 1 never
+imported — the boundary-clipped polygons and unassembled multipolygon relations
+already listed in the manifest's `limitations`.
+
+### Streetscape — `place_trees.py` → `scene/streetscape.usda`
+
+**511 trees and 39 street lamps at their surveyed OSM positions** (498
+`natural=tree` nodes, 3 `natural=tree_row` ways sampled at 8 m, 39
+`highway=street_lamp`). Not a decorative scatter — for a project about shade,
+the trees stand where the trees actually stand.
+
+Two `PointInstancer` prims total, three tree prototypes, with per-tree scale and
+rotation derived deterministically from the OSM node id so the row is not visibly
+cloned but the scene is byte-identical between runs.
+
+### Lighting — `set_scenario.py`
 
 ```powershell
-python phase8\switch_state.py stressed
-python phase8\switch_state.py intervention
+python phase9\set_scenario.py baseline|heat|rain|dusk
 ```
 
-Then **File > Reopen** in Kit. Verified: the variant selection propagates
-through to this stage.
+`dusk` is new: a low warm sun raking across the streets. It is the most
+photogenic frame available and costs nothing — use it for stills, not for the
+heat scenario, since a 42 °C claim under dusk light reads wrong.
 
-## What it adds
-
-| | |
-|---|---|
-| **Sun with real shadows** | `ShadowAPI` with `shadow:enable`, 0.53° angular diameter (the sun's true size, so the penumbra looks right), ~40–50° elevation. This is what makes shade legible before any data is overlaid — the whole project is about heat and shade. |
-| **Scenario lighting** | `set_scenario.py baseline\|heat\|rain`. Use it with the before/after toggle: half the perceived difference in a heat demo comes from the light, not the path colours. |
-| **Matte materials** | Warm off-white buildings (roughness 0.78), dark roads, dark ground. Flat pure white destroyed form readability at overview zoom and blows out next to a bright sun. Bound on the `Buildings`/`Roads` scopes, which inherits to all 623 meshes without per-prim edits. |
-| **Extended ground** | The existing Phase 1 ground is *overridden* and scaled to 2600 m so the tile fades out instead of ending at a hard edge over the viewport grid. |
-| **Saved cameras** | `Overview`, `Corridor`, `ProblemZone`. Flying a camera live on stage is the easiest thing to get wrong. |
-
-## Three settings that are NOT in USD
-
-These live in the app. Set them before recording:
-
-1. **Grid off** — it's on in the current screenshot and is the noisiest thing in frame. *Viewport ⋮ → Show → Grid*.
-2. **HUD off** — the "Process Memory: 1.1 GiB used" readout is visible in the current capture. *Viewport ⋮ → Show → Heads Up Display*.
-3. **Deselect everything**, so the translate gizmo is out of shot.
-
-RTX Real-Time is enough; Path Traced looks better if the frame rate holds.
-
-## Painting results onto the city
+## The real-city simulation — `build_city_from_osm.py`
 
 ```powershell
-python phase9\recolor_paths.py     <canonical_snapshot.json>
-python phase9\agents_instancer.py  <canonical_snapshot.json>
+python phase9\build_city_from_osm.py
+cd Simulation; python main.py citizens_osm.json city_osm.json
 ```
 
-Both take a **canonical v1 snapshot** (`docs/INTEGRATION_CONTRACT.md`), not the
-simulator's raw `urbantwin_demo_output.json`. That boundary is deliberate: the
-exporter owns normalisation and route→edge mapping, so the visualisation never
-has to guess. Output goes to `scene/generated/`, which the demo stage sublayers
-automatically.
+Writes `Simulation/city_osm.json` and `Simulation/citizens_osm.json` in the
+simulator's own schema, where the buildings **are** OSM buildings and the routes
+**are** real walking paths over the Phase 2 pedestrian graph with measured
+lengths. Reuses the graph and pathfinding in
+`integration/propose_route_mapping.py` rather than duplicating them.
 
-Agents are one `PointInstancer` binned into a few coloured prototypes, not one
-prim per citizen — 300+ separate spheres cost real frame time on 8 GB of VRAM,
-and prototype indices render consistently where per-instance colour primvars do
-not.
+Current output: 9 zones, 28 buildings, 92 routes, 240 citizens, runs in ~0.6 s.
+Real named places appear in the output — UCL School of Pharmacy, UCL Institute of
+Education, SOAS Gallery, Imperial Hotel, Waitrose.
 
-## Route mapping — read before demoing
+**Every route carries `osm_edges`**, the ordered Phase 2 edge ids it traverses.
+That is the point: there is no separate route mapping to agree, because the
+simulator's city *is* the OSM city.
+
+The simulator needs no changes — it already accepts
+`python main.py <citizens.json> <city.json>`. The 8-building demo is untouched
+and still passes all its asserts; this is an additional city, not a replacement.
+
+## Regenerate everything
 
 ```powershell
-python integration\propose_route_mapping.py
+python phase9\recover_heights.py
+python phase9\build_materials.py
+python phase9\place_trees.py
+python phase9\build_city_from_osm.py
+python phase9\validate_phase9.py
 ```
 
-This is what connects the simulator's abstract `R1`–`R18` to real `edge_*` IDs.
-It builds a walking graph from the Phase 2 edge registry (2,130 nodes / 2,291
-edges) and computes genuinely distinct walking paths between anchor nodes.
+## Viewport settings that are not in USD
 
-It writes **`integration/route_mapping.proposal.json`**, never
-`route_mapping.json`. That is intentional — `integration/README.md` reserves the
-real filename for a mapping the team has agreed. The graph, paths and distances
-are real, but *which* OSM location stands for "the hospital" has not been agreed
-by anyone, so the anchors are geometrically valid and semantically provisional.
+Set these in Kit before recording — none of them live in the scene file:
 
-Use the proposal for **rendering and for proving the pipeline works**. Do not
-describe it to judges as the real geography of a specific place until someone
-has reviewed the anchors and promoted it to `route_mapping.json`.
+1. **Grid off** — Viewport ⋮ → Show → Grid
+2. **HUD off** — Viewport ⋮ → Show → Heads Up Display
+3. **Deselect**, so the move gizmo is out of shot
+4. **RTX – Real-Time** at minimum; shadows are what make the shade readable
 
-`Simulation/city_osm.proposal.json` holds the same routes with their real
-measured OSM lengths, for whenever you do promote it.
+## Limitations
+
+- Heights: 223 of 623 from real OSM data, the rest inferred or left at the Phase 1
+  fallback. `urbantwin:heightSource` records which is which.
+- Materials: roughly a third of buildings carry explicit colour/material tags; the
+  rest are resolved from building class, which is a convention, not a survey.
+- The tree canopy is geometry only — the simulator's `shade` values are not
+  derived from it.
+- Trees, lamps and the 430 discarded `building:part` ways are visual/height
+  corrections only; the Phase 1 manifest is unchanged and still states its own
+  original limitations.
+- The OSM-derived city does not change the audit status of the behavioural model.
+  The survey pipeline still does not exist, so citizen parameters remain archetype
+  means with a deterministic spread, **not** survey-calibrated.

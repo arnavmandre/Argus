@@ -1,14 +1,14 @@
 #usda 1.0
 (
     defaultPrim = "World"
-    doc = """UrbanTwin presentation lighting.
-
-    Overrides the Phase 1 environment lights with a low sun that casts real
-    shadows across the street network. This is deliberate: the project demos a
-    HEAT and SHADE simulation, so shade must be visible in the geometry before
-    any data is overlaid. Sun elevation is ~40 degrees, which throws shadows
-    long enough to read at the overview camera without flattening street level.
-
+    doc = """UrbanTwin presentation lighting.\r
+\r
+    Overrides the Phase 1 environment lights with a low sun that casts real\r
+    shadows across the street network. This is deliberate: the project demos a\r
+    HEAT and SHADE simulation, so shade must be visible in the geometry before\r
+    any data is overlaid. Sun elevation is ~40 degrees, which throws shadows\r
+    long enough to read at the overview camera without flattening street level.\r
+\r
     Switch between scenario moods with phase9/set_scenario.py."""
     metersPerUnit = 1
     upAxis = "Z"
@@ -23,18 +23,18 @@ over "World"
         )
         {
             float inputs:angle = 0.53
-            color3f inputs:color = (1, 0.95, 0.85)
-            float inputs:intensity = 4200
+            color3f inputs:color = (1, 0.9, 0.68)
+            float inputs:intensity = 6800
             float inputs:shadow:distance = 2000
             bool inputs:shadow:enable = 1
-            float3 xformOp:rotateXYZ = (50, 0, -35)
+            float3 xformOp:rotateXYZ = (65, 0, -20)
             uniform token[] xformOpOrder = ["xformOp:rotateXYZ"]
         }
 
         over "Sky"
         {
-            color3f inputs:color = (0.75, 0.83, 1)
-            float inputs:intensity = 180
+            color3f inputs:color = (0.9, 0.85, 0.7)
+            float inputs:intensity = 140
         }
     }
 }

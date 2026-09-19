@@ -27,7 +27,7 @@ context loss.
 | `Simulation/` | simulation | `main.py` is self-contained, dependency-free, deterministic. `python main.py` runs ~80 asserts then the demo. |
 | `phase1/`–`phase8/` | visualisation | OSM city → semantics → contract → bridges → packaged states. **Treat as frozen.** |
 | `integration/` | boundary | Snapshot loader + route-mapping proposal tooling. |
-| `phase9/` | demo polish | Lighting, materials, cameras, result overlays. Pure `over` layers. |
+| `phase9/` | realism + demo | Materials, heights, trees, lighting, cameras, overlays — all `over` layers — plus `build_city_from_osm.py`. **Open `phase9/scene/main.usda` for the demo.** |
 | `docs/` | contracts | `INTEGRATION_CONTRACT.md` is authoritative. |
 
 ## Hard rules
@@ -57,17 +57,29 @@ Only claim what the code does when executed. Verified as of this writing:
 - ✅ Deterministic; data-driven city and citizens; per-citizen route choice
   responds to heat/rain/crowd/transit/green; emergent corridor congestion
   (MSA-damped iterative assignment); citizen profiles move the HEI.
+- ✅ Phase 9: 623 buildings carry 12 distinct OSM-derived materials and heights
+  spanning 2–39 m; 511 trees at surveyed OSM positions; `city_osm.json` runs the
+  simulator on real Russell Square geometry with `osm_edges` on every route.
 - ❌ **No survey pipeline exists yet.** Do not claim citizen profiles are
   calibrated from real participant responses until it does.
-- ❌ Simulator and Omniverse scene are still different cities; the route mapping
-  is provisional.
+- ⚠️ Building heights: only **223 of 623** come from real OSM data
+  (`urbantwin:heightSource` records each one). The rest are inferred from
+  building class or interpolated from neighbours. Do not call the skyline
+  surveyed.
+- ⚠️ The default 8-building `city.json` is still abstract, and
+  `integration/route_mapping.proposal.json` is still provisional. Use
+  `city_osm.json` when real geography matters.
+- ❌ Nothing in Omniverse yet displays output from `Simulation/main.py` — the
+  overlays read Phase 3 **mock** snapshots. No exporter exists.
 
 ## Commands
 
 ```powershell
-cd Simulation; python main.py               # tests + demo
-python phase9\set_scenario.py heat    # lighting mood
-python phase8\switch_state.py stressed      # packaged demo states
+cd Simulation; python main.py                        # tests + 8-building demo
+cd Simulation; python main.py citizens_osm.json city_osm.json   # real OSM city
+python phase9\set_scenario.py baseline|heat|rain|dusk
+python phase8\switch_state.py stressed|intervention
+python phase9\validate_phase9.py
 python phase3\validate_mock_data.py <snapshot.json>
 ```
 

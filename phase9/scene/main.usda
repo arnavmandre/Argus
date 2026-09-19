@@ -31,6 +31,7 @@
         @generated/path_colors.usda@,
         @cameras.usda@,
         @materials.usda@,
+        @streetscape.usda@,
         @heights.usda@,
         @look.usda@,
         @lighting.usda@,
