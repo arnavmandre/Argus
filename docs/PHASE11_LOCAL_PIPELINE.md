@@ -41,7 +41,7 @@ validation in that order.
 
 ## Run artifacts
 
-Each completed run is self-contained:
+Each completed run directory contains all generated outputs:
 
 ```text
 data/runs/<run-id>/
@@ -69,6 +69,10 @@ data/runs/<run-id>/
         └── <run-id>.citizens.json
 ```
 
+Keep the bundle in this repository layout when opening its runtime stage. The
+generated stage references frozen assets under `phase2/scene/main.usda`, so the
+run directory is not a standalone relocatable USD package.
+
 The snapshots are fixed equilibrium samples used for display. Kit interpolates
 agent positions between those authored samples to display motion; this does not
 make the simulation time-evolving or the viewport a live stream.
@@ -85,6 +89,13 @@ completed `<run-id>` and manifest unchanged. If an interrupted process or
 cleanup failure leaves a `.staging` directory, keep it as diagnostic evidence;
 it is never a completed run. The next invocation clears stale staging before
 starting, so copy any needed evidence first.
+
+After promotion and compatibility publication commit, removal of obsolete
+backup files is best-effort. A cleanup failure leaves the completed run
+successful and records a `warnings` entry in its manifest instead of reporting
+the invocation as failed. A retained `<run-id>.backup` is removed by the next
+run; a warning naming a `.pipeline-backup` file identifies obsolete
+compatibility backup litter that can be inspected and removed manually.
 
 For fixture-only maintenance, without rerunning simulation or USD generation,
 use `python integration\export_api_mocks.py`.

@@ -332,6 +332,49 @@ class PipelineTests(unittest.TestCase):
             )
 
     @patch("integration.run_pipeline.run_stage")
+    def test_compatibility_backup_cleanup_failure_keeps_committed_success(
+        self, run_stage
+    ):
+        run_stage.side_effect = self.complete_stage
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            report = root / "Simulation" / "urbantwin_demo_output.json"
+            report.parent.mkdir(parents=True)
+            report.write_bytes(b"old report bytes\n")
+            real_unlink = Path.unlink
+
+            def fail_transaction_backup(path, *args, **kwargs):
+                if path.name.endswith(".pipeline-backup"):
+                    raise OSError("injected compatibility cleanup failure")
+                return real_unlink(path, *args, **kwargs)
+
+            with patch.object(
+                Path,
+                "unlink",
+                autospec=True,
+                side_effect=fail_transaction_backup,
+            ):
+                manifest = run_pipeline(self.config(root, publish=True))
+
+            persisted = json.loads(
+                (root / "data" / "runs" / "test-run" / "manifest.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            self.assertEqual(manifest, persisted)
+            self.assertEqual(manifest["status"], "complete")
+            self.assertTrue(
+                any(
+                    "compatibility backup cleanup failed" in warning
+                    for warning in manifest["warnings"]
+                )
+            )
+            self.assertTrue(
+                json.loads(report.read_text(encoding="utf-8"))["report"]
+            )
+            self.assertTrue(list(root.rglob("*.pipeline-backup")))
+
+    @patch("integration.run_pipeline.run_stage")
     def test_reserved_scratch_like_run_ids_are_rejected(self, run_stage):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -402,7 +445,7 @@ class PipelineTests(unittest.TestCase):
         self.assertNotIn("Traceback", error.getvalue())
 
     @patch("integration.run_pipeline.run_stage")
-    def test_run_backup_removal_error_is_contextual_pipeline_error(self, run_stage):
+    def test_run_backup_cleanup_failure_keeps_committed_success(self, run_stage):
         run_stage.side_effect = self.complete_stage
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -422,11 +465,27 @@ class PipelineTests(unittest.TestCase):
                 "integration.run_pipeline.shutil.rmtree",
                 side_effect=fail_backup_removal,
             ):
-                with self.assertRaisesRegex(
-                    PipelineError,
-                    "run backup cleanup failed: injected backup cleanup failure",
-                ):
-                    run_pipeline(self.config(root))
+                manifest = run_pipeline(self.config(root))
+
+            persisted = json.loads(
+                (completed / "manifest.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(manifest, persisted)
+            self.assertEqual(manifest["status"], "complete")
+            self.assertIn(
+                "run backup cleanup failed: injected backup cleanup failure",
+                manifest["warnings"],
+            )
+            self.assertTrue(
+                json.loads(
+                    (completed / "simulation_report.json").read_text(
+                        encoding="utf-8"
+                    )
+                )["report"]
+            )
+            self.assertTrue(
+                (root / "data" / "runs" / "test-run.backup").exists()
+            )
 
 
 if __name__ == "__main__":

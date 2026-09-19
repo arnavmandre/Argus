@@ -234,10 +234,17 @@ class _CompatibilityTransaction:
                 errors.append(f"{destination}: {exc}")
         return errors
 
-    def commit(self) -> None:
+    def commit(self) -> list[str]:
+        warnings = []
         for _destination, backup in self._changes:
             if backup is not None and backup.exists():
-                backup.unlink()
+                try:
+                    backup.unlink()
+                except OSError as exc:
+                    warnings.append(
+                        f"compatibility backup cleanup failed for {backup}: {exc}"
+                    )
+        return warnings
 
 
 def _publish_snapshots(
@@ -352,7 +359,8 @@ def _promote_and_publish(
     final: Path,
     backup: Path,
     publish: bool,
-) -> None:
+) -> list[str]:
+    warnings = []
     had_previous = _install_run(staging, final, backup)
     if publish:
         transaction = _CompatibilityTransaction()
@@ -374,18 +382,14 @@ def _promote_and_publish(
             if rollback_errors:
                 detail += "\nrollback errors:\n  " + "\n  ".join(rollback_errors)
             raise PipelineError(detail) from exc
-        try:
-            transaction.commit()
-        except OSError as exc:
-            raise PipelineError(
-                f"compatibility backup cleanup failed: {exc}"
-            ) from exc
+        warnings.extend(transaction.commit())
 
     if backup.exists():
         try:
             shutil.rmtree(backup)
         except OSError as exc:
-            raise PipelineError(f"run backup cleanup failed: {exc}") from exc
+            warnings.append(f"run backup cleanup failed: {exc}")
+    return warnings
 
 
 def _cleanup_staging(staging: Path) -> str | None:
@@ -597,9 +601,29 @@ def run_pipeline(config: PipelineConfig) -> dict:
         )
         os.replace(manifest_tmp, manifest_path)
 
-        _promote_and_publish(
+        finalization_warnings = _promote_and_publish(
             root, staging, final, backup, config.publish
         )
+        if finalization_warnings:
+            manifest["warnings"] = finalization_warnings
+            final_manifest = final / "manifest.json"
+            final_manifest_tmp = final / "manifest.json.tmp"
+            try:
+                final_manifest_tmp.write_text(
+                    json.dumps(manifest, indent=2) + "\n", encoding="utf-8"
+                )
+                os.replace(final_manifest_tmp, final_manifest)
+            except OSError as exc:
+                print(
+                    f"warning: could not record finalization warnings: {exc}",
+                    file=sys.stderr,
+                )
+            finally:
+                if final_manifest_tmp.exists():
+                    try:
+                        final_manifest_tmp.unlink()
+                    except OSError:
+                        pass
         return manifest
     except PipelineError as exc:
         cleanup_error = _cleanup_staging(staging)
