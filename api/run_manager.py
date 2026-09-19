@@ -83,6 +83,10 @@ class RunManager:
     ``apply_recommended_interventions`` is accepted on the request for forward
     compatibility, but Phase 12 still invokes the existing before/after Phase 11
     path: the current simulator always evaluates the advisor / intervention arm.
+
+    The API may report ``cancelled`` immediately, but the single-worker slot stays
+    busy (``list_active`` / ``create_run`` conflict) until the worker thread fully
+    exits and any child process is cleared.
     """
 
     def __init__(self, root: Path, *, pipeline_fn=None):
@@ -92,13 +96,16 @@ class RunManager:
         self._runs: dict[str, dict] = {}
         self._active_proc: subprocess.Popen | None = None
         self._cancel_flags: dict[str, threading.Event] = {}
+        # Occupies the single-worker slot until the worker ``finally`` clears it,
+        # even if the run status is already ``cancelled``.
+        self._busy_run_id: str | None = None
         # Test hook: keep worker in queued until cleared (cancel-queued coverage).
         self._pause_workers = False
 
     def create_run(self, request: dict) -> dict:
         """Accept a validated run request. Returns ``{run_id, status: queued}``."""
         with self._lock:
-            if self._active_run_id_unlocked() is not None:
+            if self._busy_run_id is not None:
                 raise ConflictError(
                     "Another simulation is already queued or running; "
                     "wait for it to finish or cancel it first."
@@ -117,6 +124,7 @@ class RunManager:
                 "report": None,
                 "error": None,
             }
+            self._busy_run_id = run_id
             thread = threading.Thread(
                 target=self._worker,
                 args=(run_id,),
@@ -134,8 +142,9 @@ class RunManager:
             return self._summary_unlocked(record)
 
     def list_active(self) -> str | None:
+        """Return the run occupying the engine slot (including cancel drain)."""
         with self._lock:
-            return self._active_run_id_unlocked()
+            return self._busy_run_id
 
     def cancel_run(self, run_id: str) -> dict:
         with self._lock:
@@ -160,10 +169,8 @@ class RunManager:
             flag = self._cancel_flags.get(run_id)
             if flag is not None:
                 flag.set()
-            if status == "queued":
-                record["status"] = "cancelled"
-                return {"run_id": run_id, "status": "cancelled"}
-            # running: signal + kill subprocess if present
+            # Status flips immediately for clients; the slot stays busy until
+            # the worker ``finally`` clears ``_busy_run_id``.
             record["status"] = "cancelled"
             proc = self._active_proc
         if proc is not None and proc.poll() is None:
@@ -181,12 +188,6 @@ class RunManager:
             return live_citizen_page(report, run_id, state, limit, offset)
 
     # --- internals ---------------------------------------------------------
-
-    def _active_run_id_unlocked(self) -> str | None:
-        for run_id, record in self._runs.items():
-            if record["status"] in {"queued", "running"}:
-                return run_id
-        return None
 
     def _allocate_run_id(self) -> str:
         stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
@@ -221,6 +222,14 @@ class RunManager:
         )
 
     def _worker(self, run_id: str) -> None:
+        try:
+            self._run_pipeline_worker(run_id)
+        finally:
+            with self._lock:
+                if self._busy_run_id == run_id:
+                    self._busy_run_id = None
+
+    def _run_pipeline_worker(self, run_id: str) -> None:
         while self._pause_workers:
             with self._lock:
                 record = self._runs.get(run_id)
@@ -350,10 +359,23 @@ class RunManager:
             text=True,
             creationflags=creationflags,
         )
+        kill_now = False
         with self._lock:
             self._active_proc = proc
+            flag = self._cancel_flags.get(config.run_id)
+            # Close the race where cancel ran after the pre-pipeline check but
+            # before this assignment: kill immediately so publish cannot finish.
+            if flag is not None and flag.is_set():
+                kill_now = True
+        if kill_now:
+            self._terminate_process_tree(proc)
         try:
             stdout, stderr = proc.communicate()
+            if kill_now or (
+                self._cancel_flags.get(config.run_id) is not None
+                and self._cancel_flags[config.run_id].is_set()
+            ):
+                raise PipelineError("cancelled")
             if proc.returncode:
                 detail = (stderr or stdout or "").strip() or f"exit {proc.returncode}"
                 raise PipelineError(detail)

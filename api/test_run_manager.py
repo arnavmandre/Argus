@@ -6,6 +6,7 @@ import threading
 import time
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from integration.run_pipeline import PipelineError
 
@@ -65,6 +66,15 @@ def _write_report(config) -> None:
     report.write_text(_minimal_report_json(scenario), encoding="utf-8")
 
 
+def _wait_until(predicate, timeout=2.0, interval=0.02) -> bool:
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        if predicate():
+            return True
+        time.sleep(interval)
+    return False
+
+
 class RunManagerTests(unittest.TestCase):
     def test_second_create_conflicts_while_running(self):
         def slow_pipeline(config):
@@ -104,14 +114,23 @@ class RunManagerTests(unittest.TestCase):
             time.sleep(0.05)
             self.assertEqual(manager.get_run(created["run_id"])["status"], "queued")
             result = manager.cancel_run(created["run_id"])
-            manager._pause_workers = False
             self.assertEqual(result["status"], "cancelled")
-            for _ in range(50):
-                if manager.get_run(created["run_id"])["status"] == "cancelled":
-                    break
-                time.sleep(0.05)
+            # Engine still draining while the paused worker has not exited.
+            with self.assertRaises(ConflictError):
+                manager.create_run(
+                    _valid_request(
+                        temperature=26,
+                        humidity=40,
+                        rainfall=5,
+                        population=30000,
+                    )
+                )
+            manager._pause_workers = False
+            self.assertTrue(
+                _wait_until(lambda: manager.list_active() is None),
+                "engine should go idle after cancelled worker exits",
+            )
             self.assertEqual(manager.get_run(created["run_id"])["status"], "cancelled")
-            self.assertIsNone(manager.list_active())
 
     def test_failed_pipeline_becomes_failed_with_error(self):
         def failing_pipeline(config):
@@ -179,6 +198,143 @@ class RunManagerTests(unittest.TestCase):
             self.assertEqual(page["source"], "live")
             self.assertEqual(page["total_in_run"], 1)
             self.assertEqual(len(page["items"]), 1)
+
+    def test_create_conflicts_while_cancelled_engine_still_busy(self):
+        """P1: cancel must not free the slot until the worker/engine finishes."""
+        entered = threading.Event()
+        release = threading.Event()
+
+        def blocking_pipeline(config):
+            entered.set()
+            release.wait(timeout=5)
+            time.sleep(0.05)
+            _write_report(config)
+            return {"status": "complete", "run_id": config.run_id}
+
+        with tempfile.TemporaryDirectory() as directory:
+            manager = RunManager(Path(directory), pipeline_fn=blocking_pipeline)
+            first = manager.create_run(_valid_request())
+            self.assertTrue(entered.wait(timeout=2))
+            cancelled = manager.cancel_run(first["run_id"])
+            self.assertEqual(cancelled["status"], "cancelled")
+            self.assertEqual(manager.get_run(first["run_id"])["status"], "cancelled")
+            with self.assertRaises(ConflictError):
+                manager.create_run(
+                    _valid_request(
+                        temperature=26,
+                        humidity=40,
+                        rainfall=5,
+                        population=30000,
+                    )
+                )
+            release.set()
+            self.assertTrue(
+                _wait_until(lambda: manager.list_active() is None),
+                "busy should clear only after worker finally exits",
+            )
+            self.assertEqual(manager.get_run(first["run_id"])["status"], "cancelled")
+            second = manager.create_run(
+                _valid_request(
+                    temperature=26,
+                    humidity=40,
+                    rainfall=5,
+                    population=30000,
+                )
+            )
+            self.assertEqual(second["status"], "queued")
+            self.assertTrue(
+                _wait_until(
+                    lambda: manager.get_run(second["run_id"])["status"]
+                    in {"complete", "failed"}
+                )
+            )
+
+    def test_cancel_while_running_keeps_cancelled_not_complete(self):
+        entered = threading.Event()
+        release = threading.Event()
+
+        def blocking_pipeline(config):
+            entered.set()
+            release.wait(timeout=5)
+            _write_report(config)
+            return {"status": "complete", "run_id": config.run_id}
+
+        with tempfile.TemporaryDirectory() as directory:
+            manager = RunManager(Path(directory), pipeline_fn=blocking_pipeline)
+            created = manager.create_run(_valid_request())
+            self.assertTrue(entered.wait(timeout=2))
+            self.assertEqual(manager.list_active(), created["run_id"])
+            result = manager.cancel_run(created["run_id"])
+            self.assertEqual(result["status"], "cancelled")
+            with self.assertRaises(ConflictError):
+                manager.create_run(
+                    _valid_request(
+                        temperature=28,
+                        humidity=50,
+                        rainfall=10,
+                        population=35000,
+                    )
+                )
+            release.set()
+            self.assertTrue(_wait_until(lambda: manager.list_active() is None))
+            self.assertEqual(manager.get_run(created["run_id"])["status"], "cancelled")
+
+    def test_cancel_during_popen_startup_kills_before_communicate(self):
+        """P1: cancel between pre-check and _active_proc assign must still kill."""
+        init_entered = threading.Event()
+        allow_init = threading.Event()
+        terminate_pids: list[int] = []
+
+        class GatedPopen:
+            def __init__(self, *args, **kwargs):
+                init_entered.set()
+                allow_init.wait(timeout=5)
+                self.pid = 4242
+                self.returncode = None
+
+            def poll(self):
+                return self.returncode
+
+            def communicate(self):
+                deadline = time.time() + 2
+                while self.returncode is None and time.time() < deadline:
+                    time.sleep(0.01)
+                return ("", "terminated by cancel")
+
+        def fake_terminate(proc):
+            terminate_pids.append(proc.pid)
+            proc.returncode = 1
+
+        with tempfile.TemporaryDirectory() as directory:
+            manager = RunManager(Path(directory))
+            with mock.patch("api.run_manager.subprocess.Popen", GatedPopen), mock.patch.object(
+                RunManager, "_terminate_process_tree", staticmethod(fake_terminate)
+            ):
+                created = manager.create_run(_valid_request())
+                self.assertTrue(init_entered.wait(timeout=2))
+                # Cancel while Popen __init__ is gated — _active_proc not set yet.
+                cancelled = manager.cancel_run(created["run_id"])
+                self.assertEqual(cancelled["status"], "cancelled")
+                allow_init.set()
+                self.assertTrue(
+                    _wait_until(
+                        lambda: manager.get_run(created["run_id"])["status"] == "cancelled"
+                    )
+                )
+                self.assertTrue(
+                    _wait_until(lambda: manager.list_active() is None),
+                    "worker must finish after startup kill",
+                )
+                self.assertEqual(terminate_pids, [4242])
+                self.assertEqual(manager.get_run(created["run_id"])["status"], "cancelled")
+                report = (
+                    Path(directory)
+                    / "data"
+                    / "runs"
+                    / created["run_id"]
+                    / "simulation_report.json"
+                )
+                self.assertFalse(report.exists())
 
 
 if __name__ == "__main__":
