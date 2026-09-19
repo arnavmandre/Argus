@@ -123,7 +123,7 @@ visualisation layer consumes **canonical v1 snapshots** (see
 `docs/INTEGRATION_CONTRACT.md`), not this file directly — the exporter owns
 normalising these to `0`–`1`.
 
-* **`heat_stress`**, **`rain_impact`** — city-level environmental readings after
+* **`heat_stress`**, **`cold_stress`**, **`rain_impact`** — city-level environmental readings after
   any intervention is applied.
 * **`crowding`** — blend of corridor congestion (70%) and building-entrance
   crowding (30%). Corridor congestion is **emergent**: it comes from how many
@@ -143,6 +143,8 @@ normalising these to `0`–`1`.
   `citizen_comfort` 0.35, `comfort` 0.25, `safety` 0.20, `mobility` 0.20.
   Weights sum to 1.0, so the index stays within `0`–`100` by construction.
 
-Per-citizen rows additionally carry `travel_minutes`, `route`, exposure values
-and `comfort`. Per-route rows carry `crowding`, `chosen_by_agents`,
+Per-citizen rows additionally carry `travel_minutes`, `route`, heat/cold/rain/
+crowd exposure, `flood_risk`, `comfort`, `stress`, and an explicit `behavior`
+(`CONTINUE`, `STRESSED`, `SEEK_SHADE`, `SEEK_SHELTER`, `REROUTE`, or
+`AVOID_AREA`). Per-route rows carry `crowding`, `chosen_by_agents`,
 `peak_pedestrians`, `capacity_pph`, `utilisation`, `shade` and `greenery`.

@@ -88,8 +88,9 @@ survey, not an assumption, and it survives into the synthetic population.
 
 1. **Marginals** — every parameter's mean within 0.013 of the real sample
 2. **Structure** — worst correlation drift 0.14 across all 15 pairs
-3. **Holdout** — 5 participants excluded, then checked: **5/5 inside the
-   synthetic 95 % range on every parameter**
+3. **Holdout** — a fresh copula is fitted on 36 participants only, then five
+   unseen participants are checked against its predictive 95% ranges. This is
+   a distributional sanity check, not proof of individual behavior prediction.
 
 "Matches the data we fitted on" is circular. The holdout is the part that counts.
 

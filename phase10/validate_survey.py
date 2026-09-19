@@ -6,10 +6,9 @@ Checks three things, in increasing order of how much they prove:
   1. MARGINALS   each parameter's mean and spread match the 41 participants
   2. STRUCTURE   the pairwise correlations survive - this is what independent
                  sampling would destroy, and it is the real test of the copula
-  3. HOLDOUT     five participants are excluded from the fit entirely, then the
-                 population is checked against them. "Matches the data we fitted
-                 on" is circular; matching participants the model never saw is
-                 evidence.
+  3. HOLDOUT     five participants are excluded, a fresh copula is fitted only
+                 on the other 36, and its predictive range is checked against
+                 the unseen five.
 
 Also asserts the generated citizens load in the simulator's schema.
 
@@ -47,6 +46,22 @@ def corr(a, b):
     if np.std(a) < 1e-9 or np.std(b) < 1e-9:
         return 0.0
     return float(np.corrcoef(a, b)[0, 1])
+
+
+def heldout_draws(train, count=10000, seed=17):
+    """Fit the same copula as generate_citizens.py using training rows only."""
+    eps = 1e-3
+    unit = np.array([[float(r[k]) for k in UNIT] for r in train])
+    unit = np.clip(unit, eps, 1 - eps)
+    z_unit = np.log(unit / (1 - unit))
+    speed = np.array([float(r[SPEED]) for r in train])
+    z = np.column_stack([z_unit, speed])
+    cov = np.cov(z, rowvar=False) + np.eye(z.shape[1]) * 1e-6
+    rng = np.random.default_rng(seed)
+    draws = rng.multivariate_normal(z.mean(axis=0), cov, size=count)
+    out = 1.0 / (1.0 + np.exp(-draws[:, :len(UNIT)]))
+    return {**{k: out[:, i] for i, k in enumerate(UNIT)},
+            SPEED: np.clip(draws[:, len(UNIT)], 1.8, 7.2)}
 
 
 def main() -> None:
@@ -95,12 +110,19 @@ def main() -> None:
               "which independent sampling would have destroyed")
 
     # --- 3. holdout -------------------------------------------------------
-    holdout = real[-5:]
-    print(f"\nHOLDOUT ({len(holdout)} participants excluded from the description below)")
+    # Use a deterministic random participant split; fitting and testing rows
+    # must be disjoint. The full-population synthetic CSV above is deliberately
+    # not used for this check because it has seen all 41 participants.
+    split_rng = np.random.default_rng(23)
+    holdout_idx = set(split_rng.choice(len(real), size=5, replace=False).tolist())
+    holdout = [r for i, r in enumerate(real) if i in holdout_idx]
+    train = [r for i, r in enumerate(real) if i not in holdout_idx]
+    predicted = heldout_draws(train)
+    print(f"\nHOLDOUT ({len(train)} train / {len(holdout)} unseen participants)")
     ok = True
     for k in ALL:
         h = np.array([float(r[k]) for r in holdout])
-        lo, hi = np.percentile(S[k], 2.5), np.percentile(S[k], 97.5)
+        lo, hi = np.percentile(predicted[k], 2.5), np.percentile(predicted[k], 97.5)
         inside = int(((h >= lo) & (h <= hi)).sum())
         print(f"  {k:20s} {inside}/{len(h)} inside the synthetic 95% range "
               f"[{lo:.2f}, {hi:.2f}]")

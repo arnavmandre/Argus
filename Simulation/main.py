@@ -1,5 +1,5 @@
 """
-UrbanTwin AI — Person 1 Simulation Engine
+UrbanTwin AI â€” Person 1 Simulation Engine
 24-hour hackathon MVP
 
 Pure Python, deterministic, transparent heuristics.
@@ -113,6 +113,7 @@ CROWDING_PASSES = 8
 # more stress; TIME_COST_PER_HOUR keeps a ~0.3 h walk near its old cost scale.
 TIME_COST_PER_HOUR = 8.0
 HEAT_COST_PER_HOUR = 24.0
+COLD_COST_PER_HOUR = 18.0
 RAIN_COST_PER_HOUR = 24.0
 CROWD_COST_PER_HOUR = 18.0
 TRANSIT_BONUS = 1.5      # flat draw of a transit-served corridor
@@ -537,6 +538,11 @@ def heat_stress(temperature: float, humidity: float) -> float:
     return clamp(raw * 100)
 
 
+def cold_stress(temperature: float) -> float:
+    """Prototype cold-exposure signal: 0 at 15 C or warmer, 100 at -10 C."""
+    return norm(15.0 - temperature, 0.0, 25.0) * 100.0
+
+
 def rainfall_intensity(rainfall: float) -> float:
     return norm(rainfall, 0, 100)
 
@@ -604,6 +610,7 @@ def route_cost(
     congestion can be solved together.
     """
     hs = heat_stress(temperature, humidity) / 100
+    cs = cold_stress(temperature) / 100
     rain = rainfall_intensity(rainfall)
 
     effective_shade = clamp(route.shade + shade_boost, 0.0, 1.0)
@@ -616,6 +623,9 @@ def route_cost(
 
     time_cost = travel_h * TIME_COST_PER_HOUR
     heat_penalty = hs * (1 - effective_shade) * (1 - citizen.heat_tolerance) * travel_h * HEAT_COST_PER_HOUR
+    # Cold tolerance was not measured by the survey, so keep this as a shared
+    # environmental burden rather than inventing a personal attribute.
+    cold_penalty = cs * travel_h * COLD_COST_PER_HOUR
     rain_penalty = rain * (1 - effective_drainage) * (1 - citizen.rain_tolerance) * travel_h * RAIN_COST_PER_HOUR
     crowd_penalty = crowd_level * (1 - citizen.crowd_tolerance) * travel_h * CROWD_COST_PER_HOUR
     transit_bonus = route.transit * citizen.transit_preference * TRANSIT_BONUS
@@ -624,6 +634,7 @@ def route_cost(
     total = (
         time_cost
         + heat_penalty
+        + cold_penalty
         + rain_penalty
         + crowd_penalty
         - transit_bonus
@@ -635,6 +646,7 @@ def route_cost(
         "time": time_cost,
         "travel_hours": travel_h,
         "heat": heat_penalty,
+        "cold": cold_penalty,
         "rain": rain_penalty,
         "crowd": crowd_penalty,
         "transit_bonus": transit_bonus,
@@ -713,8 +725,8 @@ def simulate(
     The run is fully deterministic (no randomness anywhere).
     """
 
-    if not (20 <= temperature <= 45):
-        raise ValueError("temperature must be between 20 and 45 °C")
+    if not (-10 <= temperature <= 45):
+        raise ValueError("temperature must be between -10 and 45 degrees C")
     if not (20 <= humidity <= 90):
         raise ValueError("humidity must be between 20 and 90 %")
     if not (0 <= rainfall <= 100):
@@ -744,6 +756,7 @@ def simulate(
     building_by_id = {b.id: b for b in city["buildings"]}
 
     hs = heat_stress(temperature, humidity)
+    cs = cold_stress(temperature)
 
     zone_rain = {
         z.id: zone_rain_impact(rainfall, z.drainage)
@@ -781,6 +794,7 @@ def simulate(
 
     # Interventions directly reduce exposure/stress in the prototype.
     effective_heat = clamp(hs * (1 - 0.30 * interventions.get("shade_boost", 0)))
+    effective_cold = cs
     effective_rain = clamp(rain * (1 - 0.65 * interventions.get("drainage_boost", 0)))
     capacity_boost = interventions.get("route_capacity_boost", 0.0)
 
@@ -853,21 +867,55 @@ def simulate(
         dest = building_by_id[c.destination]
         dest_crowd = bmetrics[dest.id]["crowd"]
 
-        local_heat = effective_heat * (1 - clamp(route.shade + interventions.get("shade_boost", 0), 0.0, 1.0))
+        effective_route_shade = clamp(
+            route.shade + interventions.get("shade_boost", 0), 0.0, 1.0
+        )
+        local_heat = effective_heat * (1 - effective_route_shade)
+        local_cold = effective_cold
         local_rain = effective_rain * (1 - clamp(route.drainage + interventions.get("drainage_boost", 0), 0.0, 1.0))
         local_crowd = route_crowding[chosen]
 
-        # Longer exposure hurts more: scale against a 0.3 h reference walk.
-        exposure = clamp(costs["travel_hours"] / 0.30, 0.0, 2.0)
+        # Extreme weather has an immediate burden. Previously a two-minute trip
+        # received almost no penalty, making citizens implausibly comfortable.
+        # Duration still matters, while the first minutes now have a real dose.
+        exposure = 0.55 + 0.45 * clamp(costs["travel_hours"] / 0.30, 0.0, 2.0)
+
+        heat_burden = (
+            effective_heat * (1 - 0.65 * effective_route_shade)
+            * (0.55 + 0.45 * (1 - c.heat_tolerance))
+        )
+        cold_burden = local_cold
+        rain_burden = (
+            effective_rain
+            * (1 - 0.65 * clamp(route.drainage + interventions.get("drainage_boost", 0), 0.0, 1.0))
+            * (0.55 + 0.45 * (1 - c.rain_tolerance))
+        )
+        crowd_burden = local_crowd * (0.55 + 0.45 * (1 - c.crowd_tolerance))
 
         personal_comfort = clamp(
             100
-            - 0.52 * local_heat * (1 - c.heat_tolerance) * exposure
-            - 0.24 * local_rain * (1 - c.rain_tolerance) * exposure
-            - 0.24 * local_crowd * (1 - c.crowd_tolerance) * exposure
+            - 0.70 * heat_burden * exposure
+            - 0.58 * cold_burden * exposure
+            - 0.42 * rain_burden * exposure
+            - 0.30 * crowd_burden * exposure
             # Arrival end of the trip: crowded entrance.
             - 0.08 * dest_crowd * (1 - c.crowd_tolerance)
         )
+
+        stress = clamp(100.0 - personal_comfort)
+        flood_risk = max(local_rain, bmetrics[dest.id]["rain"])
+        if personal_comfort < 35 or flood_risk >= 70:
+            behavior = "AVOID_AREA"
+        elif local_rain >= 45 or cold_burden >= 60:
+            behavior = "SEEK_SHELTER"
+        elif heat_burden >= 55:
+            behavior = "SEEK_SHADE"
+        elif local_crowd >= 60:
+            behavior = "REROUTE"
+        elif personal_comfort < 65:
+            behavior = "STRESSED"
+        else:
+            behavior = "CONTINUE"
 
         citizen_results.append({
             "id": c.id,
@@ -877,10 +925,14 @@ def simulate(
             "route": chosen,
             "travel_minutes": round(costs["travel_hours"] * 60, 1),
             "heat_exposure": round(local_heat, 2),
+            "cold_exposure": round(local_cold, 2),
             "rain_exposure": round(local_rain, 2),
+            "flood_risk": round(flood_risk, 2),
             "crowd_exposure": round(local_crowd, 2),
             "destination_crowding": round(dest_crowd, 2),
             "comfort": round(personal_comfort, 2),
+            "stress": round(stress, 2),
+            "behavior": behavior,
             "route_cost": round(costs["total"], 2),
         })
 
@@ -895,10 +947,12 @@ def simulate(
     ) / total_citizen_weight
 
     # --- Human-centric aggregate metrics ------------------------------------
+    effective_thermal = max(effective_heat, effective_cold)
+
     safety = clamp(
         100
         - 0.65 * effective_rain
-        - 0.20 * effective_heat
+        - 0.20 * effective_thermal
         - 0.15 * effective_crowd
     )
 
@@ -906,12 +960,12 @@ def simulate(
         100
         - 0.35 * effective_crowd
         - 0.35 * effective_rain
-        - 0.15 * effective_heat
+        - 0.15 * effective_thermal
     )
 
     comfort = clamp(
         100
-        - 0.48 * effective_heat
+        - 0.48 * effective_thermal
         - 0.22 * effective_rain
         - 0.20 * effective_crowd
     )
@@ -994,6 +1048,7 @@ def simulate(
         },
         "metrics": {
             "heat_stress": round(effective_heat, 2),
+            "cold_stress": round(effective_cold, 2),
             "rain_impact": round(effective_rain, 2),
             "crowding": round(effective_crowd, 2),
             "safety": round(safety, 2),
@@ -1206,6 +1261,8 @@ def run_tests() -> None:
     # --- environment formulas ---
     assert heat_stress(20, 20) < heat_stress(40, 80)
     assert heat_stress(40, 80) > heat_stress(40, 30)          # humidity matters
+    assert cold_stress(-10) == 100
+    assert cold_stress(15) == 0
     assert zone_rain_impact(80, 0.20) > zone_rain_impact(80, 0.90)
     assert zone_rain_impact(0, 0.20) == 0
 
@@ -1375,6 +1432,17 @@ def run_tests() -> None:
     harsh = urban_advisor(simulate(45, 90, 100, 100_000))["recommendations"]
     assert "no_major_intervention" not in harsh and len(harsh) >= 2, harsh
 
+    # Extreme conditions must reach people, not only aggregate city metrics.
+    extreme_hot = simulate(45, 90, 100, 100_000)
+    extreme_cold = simulate(-10, 60, 20, 100_000)
+    mild = simulate(22, 45, 0, 30_000)
+    assert extreme_hot["metrics"]["citizen_comfort"] < 60
+    assert extreme_cold["metrics"]["citizen_comfort"] < 60
+    assert mild["metrics"]["citizen_comfort"] > extreme_hot["metrics"]["citizen_comfort"]
+    assert any(c["behavior"] != "CONTINUE" for c in extreme_hot["citizens"])
+    assert any(c["behavior"] in {"SEEK_SHELTER", "AVOID_AREA"}
+               for c in extreme_cold["citizens"])
+
     # --- validation / error paths ---
     def expect_error(fn, exc=ValueError):
         try:
@@ -1443,10 +1511,10 @@ def run_tests() -> None:
 
 
 def print_demo_summary(demo: Dict) -> None:
-    print("\n=== UrbanTwin AI — Compound Stress Demo ===")
+    print("\n=== UrbanTwin AI â€” Compound Stress Demo ===")
     s = demo["scenario"]
     print(
-        f"Scenario: {s['temperature']}°C | {s['humidity']}% RH | "
+        f"Scenario: {s['temperature']}Â°C | {s['humidity']}% RH | "
         f"{s['rainfall']} mm | population {s['population']:,}"
     )
     print(f"Citizens simulated: {len(demo['before']['citizens'])}")
@@ -1481,7 +1549,7 @@ def print_demo_summary(demo: Dict) -> None:
     c = demo["control"]
     cs = c["scenario"]
     print(
-        f"\nCONTROL RUN (thresholds are not hardwired): {cs['temperature']}°C | "
+        f"\nCONTROL RUN (thresholds are not hardwired): {cs['temperature']}Â°C | "
         f"{cs['humidity']}% RH | {cs['rainfall']} mm | population {cs['population']:,}"
     )
     print(f"  HEI {c['metrics']['human_experience_index']:.2f} -> advisor says: "
