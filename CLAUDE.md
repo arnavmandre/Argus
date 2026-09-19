@@ -73,6 +73,10 @@ Only claim what the code does when executed. Verified as of this writing:
 - ⚠️ The default 8-building `city.json` is still abstract, and
   `integration/route_mapping.proposal.json` is still provisional. Use
   `city_osm.json` when real geography matters.
+- ✅ Agents animate from a 60-frame snapshot sequence; each walks at their own
+  survey-calibrated speed. Positions between frames are interpolated for display
+  and edge colours are one fixed equilibrium - do NOT call it a time-evolving
+  simulation.
 - ✅ `integration/export_snapshot.py` closes the loop: simulator report ->
   canonical v1 snapshot -> USD. 9/9 integration tests pass, agents land within
   1mm of their route geometry, snapshots are `data_kind: simulation`.

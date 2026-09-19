@@ -134,8 +134,29 @@ INTERVENTION_TYPES = {
 }
 
 
+def departure_phase(agent_id: str) -> float:
+    """Stable 0-1 offset from the id, so agents do not all set off in lockstep."""
+    h = 2166136261
+    for ch in str(agent_id):
+        h = ((h ^ ord(ch)) * 16777619) & 0xFFFFFFFF
+    return (h % 10000) / 10000.0
+
+
 def build(report: dict, state: str, edges, edge_map, map_source, real_geometry,
-          city_id: str, run_id: str, sequence: int) -> dict:
+          city_id: str, run_id: str, sequence: int, elapsed: float = 0.0,
+          animate: bool = False) -> dict:
+    """
+    One canonical snapshot.
+
+    With `animate`, each agent is advanced along its own route by `elapsed`
+    seconds at that citizen's own pace: the simulator's `travel_minutes` is how
+    long THAT person takes on the route THEY chose, which in turn comes from
+    their survey-calibrated walking speed. Trips wrap, so corridors stay
+    populated instead of emptying after one pass.
+
+    Positions between snapshots are interpolated for display only; the simulator
+    decides the route and the duration, not the coordinates.
+    """
     snap = report[state]
     metrics = snap["metrics"]
     inputs = snap["inputs"]
@@ -170,7 +191,13 @@ def build(report: dict, state: str, edges, edge_map, map_source, real_geometry,
     agents, unplaced = [], 0
     for i, c in enumerate(citizens):
         mapped = edge_map.get(c["route"]) or []
-        frac = (i + 0.5) / max(len(citizens), 1)
+        if animate:
+            # travel_minutes is this citizen's own trip time, from their
+            # calibrated walking speed over their chosen route.
+            trip_s = max(float(c.get("travel_minutes", 5.0)), 0.1) * 60.0
+            frac = (elapsed / trip_s + departure_phase(c["id"])) % 1.0
+        else:
+            frac = (i + 0.5) / max(len(citizens), 1)
         pos, _current = position_on_route(edges, mapped, frac)
         if pos is None:
             unplaced += 1
@@ -231,7 +258,14 @@ def main() -> None:
     ap.add_argument("--state", choices=["before", "after", "both"], default="both")
     ap.add_argument("--run-id", default="urbantwin-sim-001")
     ap.add_argument("--out-dir", type=Path, default=ROOT / "data")
+    ap.add_argument("--frames", type=int, default=1,
+                    help="emit N snapshots stepping through time so agents can "
+                         "be animated (default 1 = a single still snapshot)")
+    ap.add_argument("--duration", type=float, default=60.0,
+                    help="seconds of simulated walking the frames span")
     args = ap.parse_args()
+    if args.frames < 1:
+        raise SystemExit("--frames must be >= 1")
 
     report = json.loads(args.report.read_text(encoding="utf-8"))
     registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
@@ -251,26 +285,46 @@ def main() -> None:
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
     states = ["before", "after"] if args.state == "both" else [args.state]
+    animate = args.frames > 1
     written = []
-    for seq, state in enumerate(states):
-        snap, info = build(report, state, edges, edge_map, source, real,
-                           registry["city_id"], args.run_id, seq)
-        out = args.out_dir / f"simulation_{state}.json"
-        out.write_text(json.dumps(snap, indent=2) + "\n", encoding="utf-8")
-        written.append(out)
-        print(f"[BRIDGE] {state:7s} {len(snap['agents']):3d} agents, "
-              f"{len(snap['edges']):4d} edges, "
-              f"{len(snap['interventions'])} intervention(s) -> {out.name}")
-        if info["unmapped_routes"]:
-            print(f"[BRIDGE]   WARNING {len(info['unmapped_routes'])} routes had no "
-                  f"edge mapping: {info['unmapped_routes'][:5]}")
-        if info["unplaced_agents"]:
-            print(f"[BRIDGE]   WARNING {info['unplaced_agents']} agents could not be "
-                  "positioned")
 
-    print("\nValidate:  python phase3\\validate_mock_data.py "
-          + " ".join(str(p) for p in written))
-    print("Render:    python integration\\load_snapshot.py " + str(written[0]))
+    for state in states:
+        step = args.duration / args.frames if animate else 0.0
+        frames = []
+        for k in range(args.frames):
+            elapsed = k * step
+            snap, info = build(report, state, edges, edge_map, source, real,
+                               registry["city_id"], f"{args.run_id}-{state}",
+                               k, elapsed, animate)
+            snap["timestamp"] = round(elapsed, 4)
+            name = (f"simulation_{state}_{k:03d}.json" if animate
+                    else f"simulation_{state}.json")
+            out = args.out_dir / name
+            out.write_text(json.dumps(snap, indent=2) + "\n", encoding="utf-8")
+            frames.append(out)
+            if k == 0:
+                print(f"[BRIDGE] {state:7s} {len(snap['agents']):3d} agents, "
+                      f"{len(snap['edges']):4d} edges, "
+                      f"{len(snap['interventions'])} intervention(s)")
+                if info["unmapped_routes"]:
+                    print(f"[BRIDGE]   WARNING {len(info['unmapped_routes'])} routes "
+                          f"had no edge mapping: {info['unmapped_routes'][:5]}")
+                if info["unplaced_agents"]:
+                    print(f"[BRIDGE]   WARNING {info['unplaced_agents']} agents could "
+                          "not be positioned")
+        written.extend(frames)
+        if animate:
+            print(f"[BRIDGE] {state:7s} {len(frames)} frames over {args.duration:.0f}s "
+                  f"-> {frames[0].name} .. {frames[-1].name}")
+
+    glob = (f"data\\simulation_{states[0]}_*.json" if animate
+            else str(written[0]))
+    print("\nValidate:  python phase3\\validate_mock_data.py " + glob)
+    if animate:
+        print("Animate:   python phase9\\agents_instancer.py " + glob
+              + " --metric heat_exposure")
+    else:
+        print("Render:    python integration\\load_snapshot.py " + str(written[0]))
 
 
 if __name__ == "__main__":
