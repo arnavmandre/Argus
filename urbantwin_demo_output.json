@@ -1,0 +1,3213 @@
+{
+  "scenario": {
+    "temperature": 40,
+    "humidity": 80,
+    "rainfall": 80,
+    "population": 100000
+  },
+  "before": {
+    "inputs": {
+      "temperature": 40,
+      "humidity": 80,
+      "rainfall": 80,
+      "population": 100000
+    },
+    "metrics": {
+      "heat_stress": 79.43,
+      "rain_impact": 31.9,
+      "crowding": 66.77,
+      "safety": 53.36,
+      "mobility": 53.55,
+      "comfort": 41.5,
+      "human_experience_index": 37.07
+    },
+    "zones": [
+      {
+        "id": "Zone A",
+        "drainage": 0.9,
+        "shade": 0.35,
+        "rain_impact": 7.76,
+        "buildings": [
+          "H3",
+          "T1",
+          "W1"
+        ]
+      },
+      {
+        "id": "Zone B",
+        "drainage": 0.6,
+        "shade": 0.55,
+        "rain_impact": 31.05,
+        "buildings": [
+          "H2",
+          "S1",
+          "HOS1"
+        ]
+      },
+      {
+        "id": "Zone C",
+        "drainage": 0.25,
+        "shade": 0.2,
+        "rain_impact": 58.23,
+        "buildings": [
+          "H1",
+          "M1"
+        ]
+      }
+    ],
+    "buildings": [
+      {
+        "id": "H1",
+        "name": "Riverside Homes",
+        "type": "residential",
+        "zone": "Zone C",
+        "capacity": 0,
+        "residents": 42500,
+        "peak_arrivals": 0,
+        "heat_exposure": 55.6,
+        "rain_impact": 78.61,
+        "crowding": 0.0,
+        "stress": 78.61,
+        "issues": [
+          "flooding",
+          "heat exposure"
+        ]
+      },
+      {
+        "id": "H2",
+        "name": "Old Town Apartments",
+        "type": "residential",
+        "zone": "Zone B",
+        "capacity": 0,
+        "residents": 35000,
+        "peak_arrivals": 0,
+        "heat_exposure": 29.49,
+        "rain_impact": 31.05,
+        "crowding": 0.0,
+        "stress": 31.05,
+        "issues": []
+      },
+      {
+        "id": "H3",
+        "name": "Garden Court",
+        "type": "residential",
+        "zone": "Zone A",
+        "capacity": 0,
+        "residents": 22500,
+        "peak_arrivals": 0,
+        "heat_exposure": 36.14,
+        "rain_impact": 5.05,
+        "crowding": 0.0,
+        "stress": 36.14,
+        "issues": []
+      },
+      {
+        "id": "T1",
+        "name": "Central Transit Hub",
+        "type": "transit_hub",
+        "zone": "Zone A",
+        "capacity": 3200,
+        "residents": 0,
+        "peak_arrivals": 2812,
+        "heat_exposure": 41.3,
+        "rain_impact": 6.6,
+        "crowding": 87.89,
+        "stress": 87.89,
+        "issues": [
+          "overcrowding"
+        ]
+      },
+      {
+        "id": "W1",
+        "name": "Business Park Offices",
+        "type": "office",
+        "zone": "Zone A",
+        "capacity": 4500,
+        "residents": 0,
+        "peak_arrivals": 3375,
+        "heat_exposure": 28.4,
+        "rain_impact": 5.43,
+        "crowding": 75.0,
+        "stress": 75.0,
+        "issues": [
+          "overcrowding"
+        ]
+      },
+      {
+        "id": "S1",
+        "name": "City College",
+        "type": "school",
+        "zone": "Zone B",
+        "capacity": 3500,
+        "residents": 0,
+        "peak_arrivals": 2812,
+        "heat_exposure": 25.91,
+        "rain_impact": 27.95,
+        "crowding": 80.36,
+        "stress": 80.36,
+        "issues": [
+          "overcrowding"
+        ]
+      },
+      {
+        "id": "HOS1",
+        "name": "City General Hospital",
+        "type": "hospital",
+        "zone": "Zone B",
+        "capacity": 2400,
+        "residents": 0,
+        "peak_arrivals": 1688,
+        "heat_exposure": 20.55,
+        "rain_impact": 24.84,
+        "crowding": 70.31,
+        "stress": 70.31,
+        "issues": [
+          "overcrowding"
+        ]
+      },
+      {
+        "id": "M1",
+        "name": "Market Square",
+        "type": "market",
+        "zone": "Zone C",
+        "capacity": 5000,
+        "residents": 0,
+        "peak_arrivals": 4312,
+        "heat_exposure": 58.78,
+        "rain_impact": 75.69,
+        "crowding": 86.25,
+        "stress": 86.25,
+        "issues": [
+          "flooding",
+          "overcrowding",
+          "heat exposure"
+        ]
+      }
+    ],
+    "routes": [
+      {
+        "id": "R1",
+        "from": "H1",
+        "to": "T1",
+        "via_zones": [
+          "Zone C",
+          "Zone A"
+        ],
+        "crowding": 70.0,
+        "chosen_by_agents": 1,
+        "peak_pedestrians": 188
+      },
+      {
+        "id": "R2",
+        "from": "H1",
+        "to": "T1",
+        "via_zones": [
+          "Zone C",
+          "Zone B",
+          "Zone A"
+        ],
+        "crowding": 50.0,
+        "chosen_by_agents": 1,
+        "peak_pedestrians": 188
+      },
+      {
+        "id": "R3",
+        "from": "H1",
+        "to": "T1",
+        "via_zones": [
+          "Zone C"
+        ],
+        "crowding": 90.0,
+        "chosen_by_agents": 0,
+        "peak_pedestrians": 0
+      },
+      {
+        "id": "R4",
+        "from": "H1",
+        "to": "T1",
+        "via_zones": [
+          "Zone C",
+          "Zone B",
+          "Zone A"
+        ],
+        "crowding": 30.0,
+        "chosen_by_agents": 4,
+        "peak_pedestrians": 750
+      },
+      {
+        "id": "R5",
+        "from": "H1",
+        "to": "M1",
+        "via_zones": [
+          "Zone C"
+        ],
+        "crowding": 80.0,
+        "chosen_by_agents": 0,
+        "peak_pedestrians": 0
+      },
+      {
+        "id": "R6",
+        "from": "H1",
+        "to": "M1",
+        "via_zones": [
+          "Zone C"
+        ],
+        "crowding": 50.0,
+        "chosen_by_agents": 23,
+        "peak_pedestrians": 4312
+      },
+      {
+        "id": "R7",
+        "from": "H1",
+        "to": "HOS1",
+        "via_zones": [
+          "Zone C",
+          "Zone B"
+        ],
+        "crowding": 70.0,
+        "chosen_by_agents": 0,
+        "peak_pedestrians": 0
+      },
+      {
+        "id": "R8",
+        "from": "H1",
+        "to": "HOS1",
+        "via_zones": [
+          "Zone C",
+          "Zone A",
+          "Zone B"
+        ],
+        "crowding": 40.0,
+        "chosen_by_agents": 5,
+        "peak_pedestrians": 938
+      },
+      {
+        "id": "R9",
+        "from": "H2",
+        "to": "HOS1",
+        "via_zones": [
+          "Zone B"
+        ],
+        "crowding": 80.0,
+        "chosen_by_agents": 0,
+        "peak_pedestrians": 0
+      },
+      {
+        "id": "R10",
+        "from": "H2",
+        "to": "HOS1",
+        "via_zones": [
+          "Zone B"
+        ],
+        "crowding": 40.0,
+        "chosen_by_agents": 4,
+        "peak_pedestrians": 750
+      },
+      {
+        "id": "R11",
+        "from": "H2",
+        "to": "S1",
+        "via_zones": [
+          "Zone B"
+        ],
+        "crowding": 90.0,
+        "chosen_by_agents": 0,
+        "peak_pedestrians": 0
+      },
+      {
+        "id": "R12",
+        "from": "H2",
+        "to": "S1",
+        "via_zones": [
+          "Zone B"
+        ],
+        "crowding": 40.0,
+        "chosen_by_agents": 15,
+        "peak_pedestrians": 2812
+      },
+      {
+        "id": "R13",
+        "from": "H2",
+        "to": "W1",
+        "via_zones": [
+          "Zone B",
+          "Zone A"
+        ],
+        "crowding": 80.0,
+        "chosen_by_agents": 0,
+        "peak_pedestrians": 0
+      },
+      {
+        "id": "R14",
+        "from": "H2",
+        "to": "W1",
+        "via_zones": [
+          "Zone B",
+          "Zone A"
+        ],
+        "crowding": 40.0,
+        "chosen_by_agents": 9,
+        "peak_pedestrians": 1688
+      },
+      {
+        "id": "R15",
+        "from": "H3",
+        "to": "W1",
+        "via_zones": [
+          "Zone A"
+        ],
+        "crowding": 70.0,
+        "chosen_by_agents": 0,
+        "peak_pedestrians": 0
+      },
+      {
+        "id": "R16",
+        "from": "H3",
+        "to": "W1",
+        "via_zones": [
+          "Zone A"
+        ],
+        "crowding": 30.0,
+        "chosen_by_agents": 9,
+        "peak_pedestrians": 1688
+      },
+      {
+        "id": "R17",
+        "from": "H3",
+        "to": "T1",
+        "via_zones": [
+          "Zone A"
+        ],
+        "crowding": 100.0,
+        "chosen_by_agents": 0,
+        "peak_pedestrians": 0
+      },
+      {
+        "id": "R18",
+        "from": "H3",
+        "to": "T1",
+        "via_zones": [
+          "Zone A"
+        ],
+        "crowding": 50.0,
+        "chosen_by_agents": 9,
+        "peak_pedestrians": 1688
+      }
+    ],
+    "citizens": [
+      {
+        "id": "C001",
+        "archetype": "Family / parent",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 15.89,
+        "rain_exposure": 12.76,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 80.36,
+        "comfort": 85.14,
+        "route_cost": 3.58
+      },
+      {
+        "id": "C002",
+        "archetype": "Young commuter",
+        "home": "H3",
+        "destination": "W1",
+        "route": "R16",
+        "heat_exposure": 15.89,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 46.14,
+        "destination_crowding": 75.0,
+        "comfort": 90.64,
+        "route_cost": 2.52
+      },
+      {
+        "id": "C003",
+        "archetype": "Outdoor worker",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 91.71,
+        "route_cost": 3.54
+      },
+      {
+        "id": "C004",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 15.89,
+        "rain_exposure": 12.76,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 80.36,
+        "comfort": 89.05,
+        "route_cost": 3.15
+      },
+      {
+        "id": "C005",
+        "archetype": "Outdoor worker",
+        "home": "H2",
+        "destination": "W1",
+        "route": "R14",
+        "heat_exposure": 31.77,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 75.0,
+        "comfort": 91.57,
+        "route_cost": 4.58
+      },
+      {
+        "id": "C006",
+        "archetype": "Young commuter",
+        "home": "H2",
+        "destination": "W1",
+        "route": "R14",
+        "heat_exposure": 31.77,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 75.0,
+        "comfort": 88.47,
+        "route_cost": 4.55
+      },
+      {
+        "id": "C007",
+        "archetype": "Young commuter",
+        "home": "H1",
+        "destination": "T1",
+        "route": "R4",
+        "heat_exposure": 11.91,
+        "rain_exposure": 4.79,
+        "crowd_exposure": 46.14,
+        "destination_crowding": 87.89,
+        "comfort": 90.95,
+        "route_cost": 3.72
+      },
+      {
+        "id": "C008",
+        "archetype": "Family / parent",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 15.89,
+        "rain_exposure": 12.76,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 80.36,
+        "comfort": 85.0,
+        "route_cost": 3.68
+      },
+      {
+        "id": "C009",
+        "archetype": "Mobility-limited citizen",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 82.48,
+        "route_cost": 4.98
+      },
+      {
+        "id": "C010",
+        "archetype": "Transit-dependent citizen",
+        "home": "H3",
+        "destination": "T1",
+        "route": "R18",
+        "heat_exposure": 23.83,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 87.89,
+        "comfort": 84.48,
+        "route_cost": 2.73
+      },
+      {
+        "id": "C011",
+        "archetype": "Young commuter",
+        "home": "H1",
+        "destination": "T1",
+        "route": "R4",
+        "heat_exposure": 11.91,
+        "rain_exposure": 4.79,
+        "crowd_exposure": 46.14,
+        "destination_crowding": 87.89,
+        "comfort": 91.58,
+        "route_cost": 3.72
+      },
+      {
+        "id": "C012",
+        "archetype": "Outdoor worker",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 92.29,
+        "route_cost": 3.47
+      },
+      {
+        "id": "C013",
+        "archetype": "Young commuter",
+        "home": "H3",
+        "destination": "W1",
+        "route": "R16",
+        "heat_exposure": 15.89,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 46.14,
+        "destination_crowding": 75.0,
+        "comfort": 91.48,
+        "route_cost": 2.43
+      },
+      {
+        "id": "C014",
+        "archetype": "Mobility-limited citizen",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 82.01,
+        "route_cost": 5.04
+      },
+      {
+        "id": "C015",
+        "archetype": "Outdoor worker",
+        "home": "H2",
+        "destination": "W1",
+        "route": "R14",
+        "heat_exposure": 31.77,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 75.0,
+        "comfort": 92.02,
+        "route_cost": 4.58
+      },
+      {
+        "id": "C016",
+        "archetype": "General pedestrian",
+        "home": "H3",
+        "destination": "W1",
+        "route": "R16",
+        "heat_exposure": 15.89,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 46.14,
+        "destination_crowding": 75.0,
+        "comfort": 90.84,
+        "route_cost": 2.69
+      },
+      {
+        "id": "C017",
+        "archetype": "Elderly citizen",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 78.1,
+        "route_cost": 5.33
+      },
+      {
+        "id": "C018",
+        "archetype": "General pedestrian",
+        "home": "H3",
+        "destination": "T1",
+        "route": "R18",
+        "heat_exposure": 23.83,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 87.89,
+        "comfort": 87.11,
+        "route_cost": 2.73
+      },
+      {
+        "id": "C019",
+        "archetype": "Elderly citizen",
+        "home": "H1",
+        "destination": "HOS1",
+        "route": "R8",
+        "heat_exposure": 35.74,
+        "rain_exposure": 4.79,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 70.31,
+        "comfort": 77.55,
+        "route_cost": 7.56
+      },
+      {
+        "id": "C020",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 15.89,
+        "rain_exposure": 12.76,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 80.36,
+        "comfort": 88.69,
+        "route_cost": 3.16
+      },
+      {
+        "id": "C021",
+        "archetype": "Family / parent",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 82.57,
+        "route_cost": 4.5
+      },
+      {
+        "id": "C022",
+        "archetype": "Mobility-limited citizen",
+        "home": "H1",
+        "destination": "HOS1",
+        "route": "R8",
+        "heat_exposure": 35.74,
+        "rain_exposure": 4.79,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 70.31,
+        "comfort": 81.93,
+        "route_cost": 7.26
+      },
+      {
+        "id": "C023",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 15.89,
+        "rain_exposure": 12.76,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 80.36,
+        "comfort": 88.65,
+        "route_cost": 3.12
+      },
+      {
+        "id": "C024",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 15.89,
+        "rain_exposure": 12.76,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 80.36,
+        "comfort": 88.19,
+        "route_cost": 3.19
+      },
+      {
+        "id": "C025",
+        "archetype": "Mobility-limited citizen",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 82.97,
+        "route_cost": 4.9
+      },
+      {
+        "id": "C026",
+        "archetype": "Outdoor worker",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 91.93,
+        "route_cost": 3.51
+      },
+      {
+        "id": "C027",
+        "archetype": "Young commuter",
+        "home": "H3",
+        "destination": "W1",
+        "route": "R16",
+        "heat_exposure": 15.89,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 46.14,
+        "destination_crowding": 75.0,
+        "comfort": 91.66,
+        "route_cost": 2.46
+      },
+      {
+        "id": "C028",
+        "archetype": "Young commuter",
+        "home": "H3",
+        "destination": "W1",
+        "route": "R16",
+        "heat_exposure": 15.89,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 46.14,
+        "destination_crowding": 75.0,
+        "comfort": 91.47,
+        "route_cost": 2.48
+      },
+      {
+        "id": "C029",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 15.89,
+        "rain_exposure": 12.76,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 80.36,
+        "comfort": 89.05,
+        "route_cost": 3.12
+      },
+      {
+        "id": "C030",
+        "archetype": "Outdoor worker",
+        "home": "H2",
+        "destination": "W1",
+        "route": "R14",
+        "heat_exposure": 31.77,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 75.0,
+        "comfort": 91.01,
+        "route_cost": 4.66
+      },
+      {
+        "id": "C031",
+        "archetype": "Mobility-limited citizen",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 82.35,
+        "route_cost": 5.01
+      },
+      {
+        "id": "C032",
+        "archetype": "General pedestrian",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 86.12,
+        "route_cost": 4.29
+      },
+      {
+        "id": "C033",
+        "archetype": "General pedestrian",
+        "home": "H3",
+        "destination": "W1",
+        "route": "R16",
+        "heat_exposure": 15.89,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 46.14,
+        "destination_crowding": 75.0,
+        "comfort": 89.43,
+        "route_cost": 2.79
+      },
+      {
+        "id": "C034",
+        "archetype": "Transit-dependent citizen",
+        "home": "H3",
+        "destination": "T1",
+        "route": "R18",
+        "heat_exposure": 23.83,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 87.89,
+        "comfort": 85.24,
+        "route_cost": 2.72
+      },
+      {
+        "id": "C035",
+        "archetype": "Outdoor worker",
+        "home": "H2",
+        "destination": "W1",
+        "route": "R14",
+        "heat_exposure": 31.77,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 75.0,
+        "comfort": 92.15,
+        "route_cost": 4.5
+      },
+      {
+        "id": "C036",
+        "archetype": "Elderly citizen",
+        "home": "H1",
+        "destination": "HOS1",
+        "route": "R8",
+        "heat_exposure": 35.74,
+        "rain_exposure": 4.79,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 70.31,
+        "comfort": 78.18,
+        "route_cost": 7.45
+      },
+      {
+        "id": "C037",
+        "archetype": "Elderly citizen",
+        "home": "H1",
+        "destination": "HOS1",
+        "route": "R8",
+        "heat_exposure": 35.74,
+        "rain_exposure": 4.79,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 70.31,
+        "comfort": 78.74,
+        "route_cost": 7.39
+      },
+      {
+        "id": "C038",
+        "archetype": "Transit-dependent citizen",
+        "home": "H3",
+        "destination": "T1",
+        "route": "R18",
+        "heat_exposure": 23.83,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 87.89,
+        "comfort": 84.02,
+        "route_cost": 2.8
+      },
+      {
+        "id": "C039",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 15.89,
+        "rain_exposure": 12.76,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 80.36,
+        "comfort": 88.06,
+        "route_cost": 3.3
+      },
+      {
+        "id": "C040",
+        "archetype": "Outdoor worker",
+        "home": "H2",
+        "destination": "W1",
+        "route": "R14",
+        "heat_exposure": 31.77,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 75.0,
+        "comfort": 93.32,
+        "route_cost": 4.37
+      },
+      {
+        "id": "C041",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 15.89,
+        "rain_exposure": 12.76,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 80.36,
+        "comfort": 87.86,
+        "route_cost": 3.26
+      },
+      {
+        "id": "C042",
+        "archetype": "Outdoor worker",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 91.53,
+        "route_cost": 3.59
+      },
+      {
+        "id": "C043",
+        "archetype": "Mobility-limited citizen",
+        "home": "H2",
+        "destination": "HOS1",
+        "route": "R10",
+        "heat_exposure": 15.89,
+        "rain_exposure": 12.76,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 70.31,
+        "comfort": 86.33,
+        "route_cost": 4.71
+      },
+      {
+        "id": "C044",
+        "archetype": "Transit-dependent citizen",
+        "home": "H1",
+        "destination": "T1",
+        "route": "R4",
+        "heat_exposure": 11.91,
+        "rain_exposure": 4.79,
+        "crowd_exposure": 46.14,
+        "destination_crowding": 87.89,
+        "comfort": 87.75,
+        "route_cost": 4.24
+      },
+      {
+        "id": "C045",
+        "archetype": "Family / parent",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 82.29,
+        "route_cost": 4.5
+      },
+      {
+        "id": "C046",
+        "archetype": "Mobility-limited citizen",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 82.86,
+        "route_cost": 4.96
+      },
+      {
+        "id": "C047",
+        "archetype": "Young commuter",
+        "home": "H3",
+        "destination": "W1",
+        "route": "R16",
+        "heat_exposure": 15.89,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 46.14,
+        "destination_crowding": 75.0,
+        "comfort": 92.17,
+        "route_cost": 2.35
+      },
+      {
+        "id": "C048",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 15.89,
+        "rain_exposure": 12.76,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 80.36,
+        "comfort": 87.49,
+        "route_cost": 3.31
+      },
+      {
+        "id": "C049",
+        "archetype": "Elderly citizen",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 77.63,
+        "route_cost": 5.44
+      },
+      {
+        "id": "C050",
+        "archetype": "General pedestrian",
+        "home": "H3",
+        "destination": "T1",
+        "route": "R18",
+        "heat_exposure": 23.83,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 87.89,
+        "comfort": 88.38,
+        "route_cost": 2.53
+      },
+      {
+        "id": "C051",
+        "archetype": "General pedestrian",
+        "home": "H2",
+        "destination": "W1",
+        "route": "R14",
+        "heat_exposure": 31.77,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 75.0,
+        "comfort": 87.34,
+        "route_cost": 5.02
+      },
+      {
+        "id": "C052",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 15.89,
+        "rain_exposure": 12.76,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 80.36,
+        "comfort": 88.69,
+        "route_cost": 3.31
+      },
+      {
+        "id": "C053",
+        "archetype": "Elderly citizen",
+        "home": "H2",
+        "destination": "HOS1",
+        "route": "R10",
+        "heat_exposure": 15.89,
+        "rain_exposure": 12.76,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 70.31,
+        "comfort": 83.46,
+        "route_cost": 4.63
+      },
+      {
+        "id": "C054",
+        "archetype": "Family / parent",
+        "home": "H3",
+        "destination": "T1",
+        "route": "R18",
+        "heat_exposure": 23.83,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 87.89,
+        "comfort": 83.83,
+        "route_cost": 2.67
+      },
+      {
+        "id": "C055",
+        "archetype": "Transit-dependent citizen",
+        "home": "H1",
+        "destination": "T1",
+        "route": "R4",
+        "heat_exposure": 11.91,
+        "rain_exposure": 4.79,
+        "crowd_exposure": 46.14,
+        "destination_crowding": 87.89,
+        "comfort": 87.6,
+        "route_cost": 4.21
+      },
+      {
+        "id": "C056",
+        "archetype": "General pedestrian",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 87.34,
+        "route_cost": 4.13
+      },
+      {
+        "id": "C057",
+        "archetype": "General pedestrian",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 85.03,
+        "route_cost": 4.43
+      },
+      {
+        "id": "C058",
+        "archetype": "General pedestrian",
+        "home": "H3",
+        "destination": "T1",
+        "route": "R18",
+        "heat_exposure": 23.83,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 87.89,
+        "comfort": 88.46,
+        "route_cost": 2.57
+      },
+      {
+        "id": "C059",
+        "archetype": "General pedestrian",
+        "home": "H3",
+        "destination": "W1",
+        "route": "R16",
+        "heat_exposure": 15.89,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 46.14,
+        "destination_crowding": 75.0,
+        "comfort": 89.79,
+        "route_cost": 2.77
+      },
+      {
+        "id": "C060",
+        "archetype": "Outdoor worker",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 91.25,
+        "route_cost": 3.56
+      },
+      {
+        "id": "C061",
+        "archetype": "Elderly citizen",
+        "home": "H2",
+        "destination": "HOS1",
+        "route": "R10",
+        "heat_exposure": 15.89,
+        "rain_exposure": 12.76,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 70.31,
+        "comfort": 83.0,
+        "route_cost": 4.75
+      },
+      {
+        "id": "C062",
+        "archetype": "Young commuter",
+        "home": "H1",
+        "destination": "T1",
+        "route": "R1",
+        "heat_exposure": 63.54,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 54.69,
+        "destination_crowding": 87.89,
+        "comfort": 84.63,
+        "route_cost": 3.48
+      },
+      {
+        "id": "C063",
+        "archetype": "Outdoor worker",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 91.12,
+        "route_cost": 3.6
+      },
+      {
+        "id": "C064",
+        "archetype": "Young commuter",
+        "home": "H2",
+        "destination": "W1",
+        "route": "R14",
+        "heat_exposure": 31.77,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 75.0,
+        "comfort": 89.49,
+        "route_cost": 4.42
+      },
+      {
+        "id": "C065",
+        "archetype": "Transit-dependent citizen",
+        "home": "H3",
+        "destination": "T1",
+        "route": "R18",
+        "heat_exposure": 23.83,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 87.89,
+        "comfort": 84.63,
+        "route_cost": 2.67
+      },
+      {
+        "id": "C066",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 15.89,
+        "rain_exposure": 12.76,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 80.36,
+        "comfort": 88.2,
+        "route_cost": 3.26
+      },
+      {
+        "id": "C067",
+        "archetype": "Elderly citizen",
+        "home": "H2",
+        "destination": "HOS1",
+        "route": "R10",
+        "heat_exposure": 15.89,
+        "rain_exposure": 12.76,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 70.31,
+        "comfort": 83.62,
+        "route_cost": 4.55
+      },
+      {
+        "id": "C068",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 15.89,
+        "rain_exposure": 12.76,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 80.36,
+        "comfort": 88.49,
+        "route_cost": 3.26
+      },
+      {
+        "id": "C069",
+        "archetype": "Mobility-limited citizen",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 81.84,
+        "route_cost": 5.07
+      },
+      {
+        "id": "C070",
+        "archetype": "Mobility-limited citizen",
+        "home": "H1",
+        "destination": "HOS1",
+        "route": "R8",
+        "heat_exposure": 35.74,
+        "rain_exposure": 4.79,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 70.31,
+        "comfort": 81.3,
+        "route_cost": 7.31
+      },
+      {
+        "id": "C071",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 15.89,
+        "rain_exposure": 12.76,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 80.36,
+        "comfort": 88.45,
+        "route_cost": 3.18
+      },
+      {
+        "id": "C072",
+        "archetype": "Young commuter",
+        "home": "H3",
+        "destination": "W1",
+        "route": "R16",
+        "heat_exposure": 15.89,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 46.14,
+        "destination_crowding": 75.0,
+        "comfort": 91.01,
+        "route_cost": 2.47
+      },
+      {
+        "id": "C073",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 15.89,
+        "rain_exposure": 12.76,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 80.36,
+        "comfort": 87.99,
+        "route_cost": 3.26
+      },
+      {
+        "id": "C074",
+        "archetype": "Outdoor worker",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 91.78,
+        "route_cost": 3.52
+      },
+      {
+        "id": "C075",
+        "archetype": "Outdoor worker",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 92.49,
+        "route_cost": 3.43
+      },
+      {
+        "id": "C076",
+        "archetype": "Young commuter",
+        "home": "H1",
+        "destination": "T1",
+        "route": "R2",
+        "heat_exposure": 19.86,
+        "rain_exposure": 12.76,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 87.89,
+        "comfort": 89.42,
+        "route_cost": 3.77
+      },
+      {
+        "id": "C077",
+        "archetype": "Young commuter",
+        "home": "H2",
+        "destination": "W1",
+        "route": "R14",
+        "heat_exposure": 31.77,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 48.28,
+        "destination_crowding": 75.0,
+        "comfort": 88.63,
+        "route_cost": 4.54
+      },
+      {
+        "id": "C078",
+        "archetype": "Family / parent",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 82.97,
+        "route_cost": 4.44
+      },
+      {
+        "id": "C079",
+        "archetype": "General pedestrian",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 31.77,
+        "rain_exposure": 6.38,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 86.25,
+        "comfort": 85.19,
+        "route_cost": 4.45
+      },
+      {
+        "id": "C080",
+        "archetype": "Family / parent",
+        "home": "H3",
+        "destination": "T1",
+        "route": "R18",
+        "heat_exposure": 23.83,
+        "rain_exposure": 3.19,
+        "crowd_exposure": 50.42,
+        "destination_crowding": 87.89,
+        "comfort": 84.16,
+        "route_cost": 2.64
+      }
+    ],
+    "problem_zones": [
+      "Zone C",
+      "Heat-exposed pedestrian corridors",
+      "High-crowding corridors"
+    ],
+    "problem_buildings": [
+      {
+        "id": "T1",
+        "name": "Central Transit Hub",
+        "zone": "Zone A",
+        "issues": [
+          "overcrowding"
+        ],
+        "severity": 87.89
+      },
+      {
+        "id": "M1",
+        "name": "Market Square",
+        "zone": "Zone C",
+        "issues": [
+          "flooding",
+          "overcrowding",
+          "heat exposure"
+        ],
+        "severity": 86.25
+      },
+      {
+        "id": "S1",
+        "name": "City College",
+        "zone": "Zone B",
+        "issues": [
+          "overcrowding"
+        ],
+        "severity": 80.36
+      },
+      {
+        "id": "H1",
+        "name": "Riverside Homes",
+        "zone": "Zone C",
+        "issues": [
+          "flooding",
+          "heat exposure"
+        ],
+        "severity": 78.61
+      },
+      {
+        "id": "W1",
+        "name": "Business Park Offices",
+        "zone": "Zone A",
+        "issues": [
+          "overcrowding"
+        ],
+        "severity": 75.0
+      },
+      {
+        "id": "HOS1",
+        "name": "City General Hospital",
+        "zone": "Zone B",
+        "issues": [
+          "overcrowding"
+        ],
+        "severity": 70.31
+      }
+    ],
+    "problem_routes": [
+      {
+        "id": "R17",
+        "from": "H3",
+        "to": "T1",
+        "via_zones": [
+          "Zone A"
+        ],
+        "crowding": 100.0
+      },
+      {
+        "id": "R3",
+        "from": "H1",
+        "to": "T1",
+        "via_zones": [
+          "Zone C"
+        ],
+        "crowding": 90.0
+      },
+      {
+        "id": "R11",
+        "from": "H2",
+        "to": "S1",
+        "via_zones": [
+          "Zone B"
+        ],
+        "crowding": 90.0
+      }
+    ],
+    "interventions": {}
+  },
+  "advisor": {
+    "summary": "High heat exposure is affecting pedestrian comfort; most exposed: Market Square (Zone C), Riverside Homes (Zone C). ; Rainfall is creating meaningful safety and mobility penalties; most flood-prone: Riverside Homes (Zone C), Market Square (Zone C). ; Population-driven crowding is increasing route congestion; busiest destinations: Central Transit Hub (Zone A), Market Square (Zone C).",
+    "problem_zones": [
+      "Zone C",
+      "Heat-exposed pedestrian corridors",
+      "High-crowding corridors"
+    ],
+    "problem_buildings": [
+      {
+        "id": "T1",
+        "name": "Central Transit Hub",
+        "zone": "Zone A",
+        "issues": [
+          "overcrowding"
+        ],
+        "severity": 87.89
+      },
+      {
+        "id": "M1",
+        "name": "Market Square",
+        "zone": "Zone C",
+        "issues": [
+          "flooding",
+          "overcrowding",
+          "heat exposure"
+        ],
+        "severity": 86.25
+      },
+      {
+        "id": "S1",
+        "name": "City College",
+        "zone": "Zone B",
+        "issues": [
+          "overcrowding"
+        ],
+        "severity": 80.36
+      },
+      {
+        "id": "H1",
+        "name": "Riverside Homes",
+        "zone": "Zone C",
+        "issues": [
+          "flooding",
+          "heat exposure"
+        ],
+        "severity": 78.61
+      },
+      {
+        "id": "W1",
+        "name": "Business Park Offices",
+        "zone": "Zone A",
+        "issues": [
+          "overcrowding"
+        ],
+        "severity": 75.0
+      },
+      {
+        "id": "HOS1",
+        "name": "City General Hospital",
+        "zone": "Zone B",
+        "issues": [
+          "overcrowding"
+        ],
+        "severity": 70.31
+      }
+    ],
+    "problem_routes": [
+      {
+        "id": "R17",
+        "from": "H3",
+        "to": "T1",
+        "via_zones": [
+          "Zone A"
+        ],
+        "crowding": 100.0
+      },
+      {
+        "id": "R3",
+        "from": "H1",
+        "to": "T1",
+        "via_zones": [
+          "Zone C"
+        ],
+        "crowding": 90.0
+      },
+      {
+        "id": "R11",
+        "from": "H2",
+        "to": "S1",
+        "via_zones": [
+          "Zone B"
+        ],
+        "crowding": 90.0
+      }
+    ],
+    "recommendations": [
+      "increase_shade",
+      "improve_drainage",
+      "alternative_pedestrian_routes"
+    ],
+    "affected_buildings": {
+      "increase_shade": [
+        "M1",
+        "H1"
+      ],
+      "improve_drainage": [
+        "H1",
+        "M1"
+      ],
+      "alternative_pedestrian_routes": [
+        "T1",
+        "M1"
+      ]
+    },
+    "explanation": [
+      "High heat exposure is affecting pedestrian comfort; most exposed: Market Square (Zone C), Riverside Homes (Zone C).",
+      "Rainfall is creating meaningful safety and mobility penalties; most flood-prone: Riverside Homes (Zone C), Market Square (Zone C).",
+      "Population-driven crowding is increasing route congestion; busiest destinations: Central Transit Hub (Zone A), Market Square (Zone C)."
+    ],
+    "supported_interventions": {
+      "increase_shade": {
+        "changes": {
+          "shade_boost": 0.25
+        },
+        "effect": "Reduces heat exposure and improves shaded-route attractiveness."
+      },
+      "improve_drainage": {
+        "changes": {
+          "drainage_boost": 0.35
+        },
+        "effect": "Reduces rainfall impact and improves rain-time safety and mobility."
+      },
+      "alternative_pedestrian_routes": {
+        "changes": {
+          "route_capacity_boost": 0.4
+        },
+        "effect": "Redistributes pedestrians and reduces crowding pressure."
+      }
+    }
+  },
+  "intervention": {
+    "shade_boost": 0.25,
+    "drainage_boost": 0.35,
+    "route_capacity_boost": 0.4
+  },
+  "after": {
+    "inputs": {
+      "temperature": 40,
+      "humidity": 80,
+      "rainfall": 80,
+      "population": 100000
+    },
+    "metrics": {
+      "heat_stress": 73.47,
+      "rain_impact": 8.96,
+      "crowding": 53.29,
+      "safety": 71.49,
+      "mobility": 67.19,
+      "comfort": 52.11,
+      "human_experience_index": 50.59
+    },
+    "zones": [
+      {
+        "id": "Zone A",
+        "drainage": 1.0,
+        "shade": 0.6,
+        "rain_impact": 0.0,
+        "buildings": [
+          "H3",
+          "T1",
+          "W1"
+        ]
+      },
+      {
+        "id": "Zone B",
+        "drainage": 0.95,
+        "shade": 0.8,
+        "rain_impact": 3.88,
+        "buildings": [
+          "H2",
+          "S1",
+          "HOS1"
+        ]
+      },
+      {
+        "id": "Zone C",
+        "drainage": 0.6,
+        "shade": 0.45,
+        "rain_impact": 31.05,
+        "buildings": [
+          "H1",
+          "M1"
+        ]
+      }
+    ],
+    "buildings": [
+      {
+        "id": "H1",
+        "name": "Riverside Homes",
+        "type": "residential",
+        "zone": "Zone C",
+        "capacity": 0,
+        "residents": 42500,
+        "peak_arrivals": 0,
+        "heat_exposure": 38.23,
+        "rain_impact": 41.92,
+        "crowding": 0.0,
+        "stress": 41.92,
+        "issues": [
+          "flooding"
+        ]
+      },
+      {
+        "id": "H2",
+        "name": "Old Town Apartments",
+        "type": "residential",
+        "zone": "Zone B",
+        "capacity": 0,
+        "residents": 35000,
+        "peak_arrivals": 0,
+        "heat_exposure": 13.11,
+        "rain_impact": 3.88,
+        "crowding": 0.0,
+        "stress": 13.11,
+        "issues": []
+      },
+      {
+        "id": "H3",
+        "name": "Garden Court",
+        "type": "residential",
+        "zone": "Zone A",
+        "capacity": 0,
+        "residents": 22500,
+        "peak_arrivals": 0,
+        "heat_exposure": 22.24,
+        "rain_impact": 0.0,
+        "crowding": 0.0,
+        "stress": 22.24,
+        "issues": []
+      },
+      {
+        "id": "T1",
+        "name": "Central Transit Hub",
+        "type": "transit_hub",
+        "zone": "Zone A",
+        "capacity": 3200,
+        "residents": 0,
+        "peak_arrivals": 2812,
+        "heat_exposure": 25.42,
+        "rain_impact": 0.0,
+        "crowding": 87.89,
+        "stress": 87.89,
+        "issues": [
+          "overcrowding"
+        ]
+      },
+      {
+        "id": "W1",
+        "name": "Business Park Offices",
+        "type": "office",
+        "zone": "Zone A",
+        "capacity": 4500,
+        "residents": 0,
+        "peak_arrivals": 3375,
+        "heat_exposure": 17.47,
+        "rain_impact": 0.0,
+        "crowding": 75.0,
+        "stress": 75.0,
+        "issues": [
+          "overcrowding"
+        ]
+      },
+      {
+        "id": "S1",
+        "name": "City College",
+        "type": "school",
+        "zone": "Zone B",
+        "capacity": 3500,
+        "residents": 0,
+        "peak_arrivals": 2812,
+        "heat_exposure": 11.52,
+        "rain_impact": 3.49,
+        "crowding": 80.36,
+        "stress": 80.36,
+        "issues": [
+          "overcrowding"
+        ]
+      },
+      {
+        "id": "HOS1",
+        "name": "City General Hospital",
+        "type": "hospital",
+        "zone": "Zone B",
+        "capacity": 2400,
+        "residents": 0,
+        "peak_arrivals": 1688,
+        "heat_exposure": 9.13,
+        "rain_impact": 3.11,
+        "crowding": 70.31,
+        "stress": 70.31,
+        "issues": [
+          "overcrowding"
+        ]
+      },
+      {
+        "id": "M1",
+        "name": "Market Square",
+        "type": "market",
+        "zone": "Zone C",
+        "capacity": 5000,
+        "residents": 0,
+        "peak_arrivals": 4312,
+        "heat_exposure": 40.41,
+        "rain_impact": 40.37,
+        "crowding": 86.25,
+        "stress": 86.25,
+        "issues": [
+          "flooding",
+          "overcrowding"
+        ]
+      }
+    ],
+    "routes": [
+      {
+        "id": "R1",
+        "from": "H1",
+        "to": "T1",
+        "via_zones": [
+          "Zone C",
+          "Zone A"
+        ],
+        "crowding": 70.0,
+        "chosen_by_agents": 2,
+        "peak_pedestrians": 375
+      },
+      {
+        "id": "R2",
+        "from": "H1",
+        "to": "T1",
+        "via_zones": [
+          "Zone C",
+          "Zone B",
+          "Zone A"
+        ],
+        "crowding": 50.0,
+        "chosen_by_agents": 2,
+        "peak_pedestrians": 375
+      },
+      {
+        "id": "R3",
+        "from": "H1",
+        "to": "T1",
+        "via_zones": [
+          "Zone C"
+        ],
+        "crowding": 90.0,
+        "chosen_by_agents": 0,
+        "peak_pedestrians": 0
+      },
+      {
+        "id": "R4",
+        "from": "H1",
+        "to": "T1",
+        "via_zones": [
+          "Zone C",
+          "Zone B",
+          "Zone A"
+        ],
+        "crowding": 30.0,
+        "chosen_by_agents": 2,
+        "peak_pedestrians": 375
+      },
+      {
+        "id": "R5",
+        "from": "H1",
+        "to": "M1",
+        "via_zones": [
+          "Zone C"
+        ],
+        "crowding": 80.0,
+        "chosen_by_agents": 0,
+        "peak_pedestrians": 0
+      },
+      {
+        "id": "R6",
+        "from": "H1",
+        "to": "M1",
+        "via_zones": [
+          "Zone C"
+        ],
+        "crowding": 50.0,
+        "chosen_by_agents": 23,
+        "peak_pedestrians": 4312
+      },
+      {
+        "id": "R7",
+        "from": "H1",
+        "to": "HOS1",
+        "via_zones": [
+          "Zone C",
+          "Zone B"
+        ],
+        "crowding": 70.0,
+        "chosen_by_agents": 0,
+        "peak_pedestrians": 0
+      },
+      {
+        "id": "R8",
+        "from": "H1",
+        "to": "HOS1",
+        "via_zones": [
+          "Zone C",
+          "Zone A",
+          "Zone B"
+        ],
+        "crowding": 40.0,
+        "chosen_by_agents": 5,
+        "peak_pedestrians": 938
+      },
+      {
+        "id": "R9",
+        "from": "H2",
+        "to": "HOS1",
+        "via_zones": [
+          "Zone B"
+        ],
+        "crowding": 80.0,
+        "chosen_by_agents": 0,
+        "peak_pedestrians": 0
+      },
+      {
+        "id": "R10",
+        "from": "H2",
+        "to": "HOS1",
+        "via_zones": [
+          "Zone B"
+        ],
+        "crowding": 40.0,
+        "chosen_by_agents": 4,
+        "peak_pedestrians": 750
+      },
+      {
+        "id": "R11",
+        "from": "H2",
+        "to": "S1",
+        "via_zones": [
+          "Zone B"
+        ],
+        "crowding": 90.0,
+        "chosen_by_agents": 0,
+        "peak_pedestrians": 0
+      },
+      {
+        "id": "R12",
+        "from": "H2",
+        "to": "S1",
+        "via_zones": [
+          "Zone B"
+        ],
+        "crowding": 40.0,
+        "chosen_by_agents": 15,
+        "peak_pedestrians": 2812
+      },
+      {
+        "id": "R13",
+        "from": "H2",
+        "to": "W1",
+        "via_zones": [
+          "Zone B",
+          "Zone A"
+        ],
+        "crowding": 80.0,
+        "chosen_by_agents": 0,
+        "peak_pedestrians": 0
+      },
+      {
+        "id": "R14",
+        "from": "H2",
+        "to": "W1",
+        "via_zones": [
+          "Zone B",
+          "Zone A"
+        ],
+        "crowding": 40.0,
+        "chosen_by_agents": 9,
+        "peak_pedestrians": 1688
+      },
+      {
+        "id": "R15",
+        "from": "H3",
+        "to": "W1",
+        "via_zones": [
+          "Zone A"
+        ],
+        "crowding": 70.0,
+        "chosen_by_agents": 0,
+        "peak_pedestrians": 0
+      },
+      {
+        "id": "R16",
+        "from": "H3",
+        "to": "W1",
+        "via_zones": [
+          "Zone A"
+        ],
+        "crowding": 30.0,
+        "chosen_by_agents": 9,
+        "peak_pedestrians": 1688
+      },
+      {
+        "id": "R17",
+        "from": "H3",
+        "to": "T1",
+        "via_zones": [
+          "Zone A"
+        ],
+        "crowding": 100.0,
+        "chosen_by_agents": 0,
+        "peak_pedestrians": 0
+      },
+      {
+        "id": "R18",
+        "from": "H3",
+        "to": "T1",
+        "via_zones": [
+          "Zone A"
+        ],
+        "crowding": 50.0,
+        "chosen_by_agents": 9,
+        "peak_pedestrians": 1688
+      }
+    ],
+    "citizens": [
+      {
+        "id": "C001",
+        "archetype": "Family / parent",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 80.36,
+        "comfort": 91.64,
+        "route_cost": 1.57
+      },
+      {
+        "id": "C002",
+        "archetype": "Young commuter",
+        "home": "H3",
+        "destination": "W1",
+        "route": "R16",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 31.6,
+        "destination_crowding": 75.0,
+        "comfort": 94.73,
+        "route_cost": 1.13
+      },
+      {
+        "id": "C003",
+        "archetype": "Outdoor worker",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 94.61,
+        "route_cost": 2.59
+      },
+      {
+        "id": "C004",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 80.36,
+        "comfort": 93.86,
+        "route_cost": 1.63
+      },
+      {
+        "id": "C005",
+        "archetype": "Outdoor worker",
+        "home": "H2",
+        "destination": "W1",
+        "route": "R14",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 75.0,
+        "comfort": 94.49,
+        "route_cost": 3.72
+      },
+      {
+        "id": "C006",
+        "archetype": "Young commuter",
+        "home": "H2",
+        "destination": "W1",
+        "route": "R14",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 75.0,
+        "comfort": 93.12,
+        "route_cost": 3.21
+      },
+      {
+        "id": "C007",
+        "archetype": "Young commuter",
+        "home": "H1",
+        "destination": "T1",
+        "route": "R2",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 87.89,
+        "comfort": 94.19,
+        "route_cost": 2.3
+      },
+      {
+        "id": "C008",
+        "archetype": "Family / parent",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 80.36,
+        "comfort": 91.84,
+        "route_cost": 1.59
+      },
+      {
+        "id": "C009",
+        "archetype": "Mobility-limited citizen",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 89.99,
+        "route_cost": 2.75
+      },
+      {
+        "id": "C010",
+        "archetype": "Transit-dependent citizen",
+        "home": "H3",
+        "destination": "T1",
+        "route": "R18",
+        "heat_exposure": 3.67,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 87.89,
+        "comfort": 91.21,
+        "route_cost": 0.68
+      },
+      {
+        "id": "C011",
+        "archetype": "Young commuter",
+        "home": "H1",
+        "destination": "T1",
+        "route": "R1",
+        "heat_exposure": 40.41,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 37.46,
+        "destination_crowding": 87.89,
+        "comfort": 88.07,
+        "route_cost": 2.29
+      },
+      {
+        "id": "C012",
+        "archetype": "Outdoor worker",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 95.14,
+        "route_cost": 2.51
+      },
+      {
+        "id": "C013",
+        "archetype": "Young commuter",
+        "home": "H3",
+        "destination": "W1",
+        "route": "R16",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 31.6,
+        "destination_crowding": 75.0,
+        "comfort": 94.99,
+        "route_cost": 1.22
+      },
+      {
+        "id": "C014",
+        "archetype": "Mobility-limited citizen",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 89.68,
+        "route_cost": 2.65
+      },
+      {
+        "id": "C015",
+        "archetype": "Outdoor worker",
+        "home": "H2",
+        "destination": "W1",
+        "route": "R14",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 75.0,
+        "comfort": 95.16,
+        "route_cost": 3.71
+      },
+      {
+        "id": "C016",
+        "archetype": "General pedestrian",
+        "home": "H3",
+        "destination": "W1",
+        "route": "R16",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 31.6,
+        "destination_crowding": 75.0,
+        "comfort": 95.08,
+        "route_cost": 1.2
+      },
+      {
+        "id": "C017",
+        "archetype": "Elderly citizen",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 87.74,
+        "route_cost": 2.72
+      },
+      {
+        "id": "C018",
+        "archetype": "General pedestrian",
+        "home": "H3",
+        "destination": "T1",
+        "route": "R18",
+        "heat_exposure": 3.67,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 87.89,
+        "comfort": 92.73,
+        "route_cost": 1.03
+      },
+      {
+        "id": "C019",
+        "archetype": "Elderly citizen",
+        "home": "H1",
+        "destination": "HOS1",
+        "route": "R8",
+        "heat_exposure": 14.69,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 70.31,
+        "comfort": 87.23,
+        "route_cost": 4.93
+      },
+      {
+        "id": "C020",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 80.36,
+        "comfort": 93.59,
+        "route_cost": 1.66
+      },
+      {
+        "id": "C021",
+        "archetype": "Family / parent",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 89.59,
+        "route_cost": 2.45
+      },
+      {
+        "id": "C022",
+        "archetype": "Mobility-limited citizen",
+        "home": "H1",
+        "destination": "HOS1",
+        "route": "R8",
+        "heat_exposure": 14.69,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 70.31,
+        "comfort": 89.57,
+        "route_cost": 4.92
+      },
+      {
+        "id": "C023",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 80.36,
+        "comfort": 93.89,
+        "route_cost": 1.56
+      },
+      {
+        "id": "C024",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 80.36,
+        "comfort": 93.11,
+        "route_cost": 1.7
+      },
+      {
+        "id": "C025",
+        "archetype": "Mobility-limited citizen",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 90.1,
+        "route_cost": 2.74
+      },
+      {
+        "id": "C026",
+        "archetype": "Outdoor worker",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 94.81,
+        "route_cost": 2.53
+      },
+      {
+        "id": "C027",
+        "archetype": "Young commuter",
+        "home": "H3",
+        "destination": "W1",
+        "route": "R16",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 31.6,
+        "destination_crowding": 75.0,
+        "comfort": 95.64,
+        "route_cost": 0.98
+      },
+      {
+        "id": "C028",
+        "archetype": "Young commuter",
+        "home": "H3",
+        "destination": "W1",
+        "route": "R16",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 31.6,
+        "destination_crowding": 75.0,
+        "comfort": 95.27,
+        "route_cost": 1.15
+      },
+      {
+        "id": "C029",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 80.36,
+        "comfort": 94.0,
+        "route_cost": 1.6
+      },
+      {
+        "id": "C030",
+        "archetype": "Outdoor worker",
+        "home": "H2",
+        "destination": "W1",
+        "route": "R14",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 75.0,
+        "comfort": 94.32,
+        "route_cost": 3.68
+      },
+      {
+        "id": "C031",
+        "archetype": "Mobility-limited citizen",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 89.9,
+        "route_cost": 2.74
+      },
+      {
+        "id": "C032",
+        "archetype": "General pedestrian",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 92.07,
+        "route_cost": 2.61
+      },
+      {
+        "id": "C033",
+        "archetype": "General pedestrian",
+        "home": "H3",
+        "destination": "W1",
+        "route": "R16",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 31.6,
+        "destination_crowding": 75.0,
+        "comfort": 94.32,
+        "route_cost": 1.12
+      },
+      {
+        "id": "C034",
+        "archetype": "Transit-dependent citizen",
+        "home": "H3",
+        "destination": "T1",
+        "route": "R18",
+        "heat_exposure": 3.67,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 87.89,
+        "comfort": 92.04,
+        "route_cost": 0.61
+      },
+      {
+        "id": "C035",
+        "archetype": "Outdoor worker",
+        "home": "H2",
+        "destination": "W1",
+        "route": "R14",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 75.0,
+        "comfort": 95.23,
+        "route_cost": 3.53
+      },
+      {
+        "id": "C036",
+        "archetype": "Elderly citizen",
+        "home": "H1",
+        "destination": "HOS1",
+        "route": "R8",
+        "heat_exposure": 14.69,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 70.31,
+        "comfort": 87.89,
+        "route_cost": 4.89
+      },
+      {
+        "id": "C037",
+        "archetype": "Elderly citizen",
+        "home": "H1",
+        "destination": "HOS1",
+        "route": "R8",
+        "heat_exposure": 14.69,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 70.31,
+        "comfort": 88.07,
+        "route_cost": 4.79
+      },
+      {
+        "id": "C038",
+        "archetype": "Transit-dependent citizen",
+        "home": "H3",
+        "destination": "T1",
+        "route": "R18",
+        "heat_exposure": 3.67,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 87.89,
+        "comfort": 91.29,
+        "route_cost": 0.71
+      },
+      {
+        "id": "C039",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 80.36,
+        "comfort": 93.38,
+        "route_cost": 1.7
+      },
+      {
+        "id": "C040",
+        "archetype": "Outdoor worker",
+        "home": "H2",
+        "destination": "W1",
+        "route": "R14",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 75.0,
+        "comfort": 95.69,
+        "route_cost": 3.47
+      },
+      {
+        "id": "C041",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 80.36,
+        "comfort": 93.06,
+        "route_cost": 1.74
+      },
+      {
+        "id": "C042",
+        "archetype": "Outdoor worker",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 94.72,
+        "route_cost": 2.58
+      },
+      {
+        "id": "C043",
+        "archetype": "Mobility-limited citizen",
+        "home": "H2",
+        "destination": "HOS1",
+        "route": "R10",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 70.31,
+        "comfort": 93.38,
+        "route_cost": 2.45
+      },
+      {
+        "id": "C044",
+        "archetype": "Transit-dependent citizen",
+        "home": "H1",
+        "destination": "T1",
+        "route": "R4",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 31.6,
+        "destination_crowding": 87.89,
+        "comfort": 92.75,
+        "route_cost": 2.26
+      },
+      {
+        "id": "C045",
+        "archetype": "Family / parent",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 89.34,
+        "route_cost": 2.48
+      },
+      {
+        "id": "C046",
+        "archetype": "Mobility-limited citizen",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 90.27,
+        "route_cost": 2.65
+      },
+      {
+        "id": "C047",
+        "archetype": "Young commuter",
+        "home": "H3",
+        "destination": "W1",
+        "route": "R16",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 31.6,
+        "destination_crowding": 75.0,
+        "comfort": 95.53,
+        "route_cost": 1.09
+      },
+      {
+        "id": "C048",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 80.36,
+        "comfort": 92.92,
+        "route_cost": 1.69
+      },
+      {
+        "id": "C049",
+        "archetype": "Elderly citizen",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 87.62,
+        "route_cost": 2.72
+      },
+      {
+        "id": "C050",
+        "archetype": "General pedestrian",
+        "home": "H3",
+        "destination": "T1",
+        "route": "R18",
+        "heat_exposure": 3.67,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 87.89,
+        "comfort": 93.41,
+        "route_cost": 0.98
+      },
+      {
+        "id": "C051",
+        "archetype": "General pedestrian",
+        "home": "H2",
+        "destination": "W1",
+        "route": "R14",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 75.0,
+        "comfort": 92.77,
+        "route_cost": 3.42
+      },
+      {
+        "id": "C052",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 80.36,
+        "comfort": 93.94,
+        "route_cost": 1.67
+      },
+      {
+        "id": "C053",
+        "archetype": "Elderly citizen",
+        "home": "H2",
+        "destination": "HOS1",
+        "route": "R10",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 70.31,
+        "comfort": 92.39,
+        "route_cost": 2.07
+      },
+      {
+        "id": "C054",
+        "archetype": "Family / parent",
+        "home": "H3",
+        "destination": "T1",
+        "route": "R18",
+        "heat_exposure": 3.67,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 87.89,
+        "comfort": 90.61,
+        "route_cost": 0.52
+      },
+      {
+        "id": "C055",
+        "archetype": "Transit-dependent citizen",
+        "home": "H1",
+        "destination": "T1",
+        "route": "R4",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 31.6,
+        "destination_crowding": 87.89,
+        "comfort": 92.68,
+        "route_cost": 2.2
+      },
+      {
+        "id": "C056",
+        "archetype": "General pedestrian",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 92.64,
+        "route_cost": 2.53
+      },
+      {
+        "id": "C057",
+        "archetype": "General pedestrian",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 91.36,
+        "route_cost": 2.65
+      },
+      {
+        "id": "C058",
+        "archetype": "General pedestrian",
+        "home": "H3",
+        "destination": "T1",
+        "route": "R18",
+        "heat_exposure": 3.67,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 87.89,
+        "comfort": 93.56,
+        "route_cost": 0.92
+      },
+      {
+        "id": "C059",
+        "archetype": "General pedestrian",
+        "home": "H3",
+        "destination": "W1",
+        "route": "R16",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 31.6,
+        "destination_crowding": 75.0,
+        "comfort": 94.24,
+        "route_cost": 1.29
+      },
+      {
+        "id": "C060",
+        "archetype": "Outdoor worker",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 94.42,
+        "route_cost": 2.56
+      },
+      {
+        "id": "C061",
+        "archetype": "Elderly citizen",
+        "home": "H2",
+        "destination": "HOS1",
+        "route": "R10",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 70.31,
+        "comfort": 92.28,
+        "route_cost": 2.04
+      },
+      {
+        "id": "C062",
+        "archetype": "Young commuter",
+        "home": "H1",
+        "destination": "T1",
+        "route": "R1",
+        "heat_exposure": 40.41,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 37.46,
+        "destination_crowding": 87.89,
+        "comfort": 89.31,
+        "route_cost": 1.99
+      },
+      {
+        "id": "C063",
+        "archetype": "Outdoor worker",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 94.36,
+        "route_cost": 2.63
+      },
+      {
+        "id": "C064",
+        "archetype": "Young commuter",
+        "home": "H2",
+        "destination": "W1",
+        "route": "R14",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 75.0,
+        "comfort": 93.82,
+        "route_cost": 3.12
+      },
+      {
+        "id": "C065",
+        "archetype": "Transit-dependent citizen",
+        "home": "H3",
+        "destination": "T1",
+        "route": "R18",
+        "heat_exposure": 3.67,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 87.89,
+        "comfort": 91.58,
+        "route_cost": 0.66
+      },
+      {
+        "id": "C066",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 80.36,
+        "comfort": 93.31,
+        "route_cost": 1.7
+      },
+      {
+        "id": "C067",
+        "archetype": "Elderly citizen",
+        "home": "H2",
+        "destination": "HOS1",
+        "route": "R10",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 70.31,
+        "comfort": 92.25,
+        "route_cost": 2.05
+      },
+      {
+        "id": "C068",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 80.36,
+        "comfort": 93.49,
+        "route_cost": 1.72
+      },
+      {
+        "id": "C069",
+        "archetype": "Mobility-limited citizen",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 89.59,
+        "route_cost": 2.74
+      },
+      {
+        "id": "C070",
+        "archetype": "Mobility-limited citizen",
+        "home": "H1",
+        "destination": "HOS1",
+        "route": "R8",
+        "heat_exposure": 14.69,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 70.31,
+        "comfort": 89.14,
+        "route_cost": 4.93
+      },
+      {
+        "id": "C071",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 80.36,
+        "comfort": 93.27,
+        "route_cost": 1.7
+      },
+      {
+        "id": "C072",
+        "archetype": "Young commuter",
+        "home": "H3",
+        "destination": "W1",
+        "route": "R16",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 31.6,
+        "destination_crowding": 75.0,
+        "comfort": 94.84,
+        "route_cost": 1.16
+      },
+      {
+        "id": "C073",
+        "archetype": "Student",
+        "home": "H2",
+        "destination": "S1",
+        "route": "R12",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 80.36,
+        "comfort": 93.21,
+        "route_cost": 1.73
+      },
+      {
+        "id": "C074",
+        "archetype": "Outdoor worker",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 94.97,
+        "route_cost": 2.63
+      },
+      {
+        "id": "C075",
+        "archetype": "Outdoor worker",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 95.21,
+        "route_cost": 2.53
+      },
+      {
+        "id": "C076",
+        "archetype": "Young commuter",
+        "home": "H1",
+        "destination": "T1",
+        "route": "R2",
+        "heat_exposure": 0.0,
+        "rain_exposure": 0.45,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 87.89,
+        "comfort": 94.76,
+        "route_cost": 2.37
+      },
+      {
+        "id": "C077",
+        "archetype": "Young commuter",
+        "home": "H2",
+        "destination": "W1",
+        "route": "R14",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 33.07,
+        "destination_crowding": 75.0,
+        "comfort": 93.26,
+        "route_cost": 3.16
+      },
+      {
+        "id": "C078",
+        "archetype": "Family / parent",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 89.68,
+        "route_cost": 2.48
+      },
+      {
+        "id": "C079",
+        "archetype": "General pedestrian",
+        "home": "H1",
+        "destination": "M1",
+        "route": "R6",
+        "heat_exposure": 11.02,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 86.25,
+        "comfort": 91.5,
+        "route_cost": 2.64
+      },
+      {
+        "id": "C080",
+        "archetype": "Family / parent",
+        "home": "H3",
+        "destination": "T1",
+        "route": "R18",
+        "heat_exposure": 3.67,
+        "rain_exposure": 0.0,
+        "crowd_exposure": 34.53,
+        "destination_crowding": 87.89,
+        "comfort": 90.84,
+        "route_cost": 0.56
+      }
+    ],
+    "problem_zones": [
+      "Zone C",
+      "Heat-exposed pedestrian corridors"
+    ],
+    "problem_buildings": [
+      {
+        "id": "T1",
+        "name": "Central Transit Hub",
+        "zone": "Zone A",
+        "issues": [
+          "overcrowding"
+        ],
+        "severity": 87.89
+      },
+      {
+        "id": "M1",
+        "name": "Market Square",
+        "zone": "Zone C",
+        "issues": [
+          "flooding",
+          "overcrowding"
+        ],
+        "severity": 86.25
+      },
+      {
+        "id": "S1",
+        "name": "City College",
+        "zone": "Zone B",
+        "issues": [
+          "overcrowding"
+        ],
+        "severity": 80.36
+      },
+      {
+        "id": "W1",
+        "name": "Business Park Offices",
+        "zone": "Zone A",
+        "issues": [
+          "overcrowding"
+        ],
+        "severity": 75.0
+      },
+      {
+        "id": "HOS1",
+        "name": "City General Hospital",
+        "zone": "Zone B",
+        "issues": [
+          "overcrowding"
+        ],
+        "severity": 70.31
+      },
+      {
+        "id": "H1",
+        "name": "Riverside Homes",
+        "zone": "Zone C",
+        "issues": [
+          "flooding"
+        ],
+        "severity": 41.92
+      }
+    ],
+    "problem_routes": [
+      {
+        "id": "R17",
+        "from": "H3",
+        "to": "T1",
+        "via_zones": [
+          "Zone A"
+        ],
+        "crowding": 100.0
+      },
+      {
+        "id": "R3",
+        "from": "H1",
+        "to": "T1",
+        "via_zones": [
+          "Zone C"
+        ],
+        "crowding": 90.0
+      },
+      {
+        "id": "R11",
+        "from": "H2",
+        "to": "S1",
+        "via_zones": [
+          "Zone B"
+        ],
+        "crowding": 90.0
+      }
+    ],
+    "interventions": {
+      "shade_boost": 0.25,
+      "drainage_boost": 0.35,
+      "route_capacity_boost": 0.4
+    }
+  },
+  "delta": {
+    "heat_stress": -5.96,
+    "rain_impact": -22.94,
+    "crowding": -13.48,
+    "safety": 18.13,
+    "mobility": 13.64,
+    "comfort": 10.61,
+    "human_experience_index": 13.52
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "description": "City structure for UrbanTwin AI: zones, the buildings inside them, and the walking routes between buildings. Citizens (citizens.json) refer to building ids from this file. All 0..1 values are heuristic prototype parameters, not measurements. Unknown keys are ignored.",
+  "fields": {"zones": {"id": "unique string", "drainage": "0 (poor) .. 1 (excellent)", "shade": "0 (none) .. 1 (fully shaded)"}, "buildings": {"id": "unique string", "name": "display name", "type": "residential | transit_hub | office | school | hospital | market | ...", "zone": "id of a zone above", "capacity": "people the building/entrances can absorb in the peak window (>=0; 0 is fine for pure homes)", "cooling": "0 (no indoor refuge) .. 1 (fully climate-controlled)", "flood_exposure": "0 (protected) .. 1 (ground floor in a flood path)"}, "routes": {"id": "unique string", "start": "building id", "end": "building id (routes work in both directions)", "distance_km": ">0", "shade": "0..1", "drainage": "0..1", "base_crowding": "0..1", "transit": "0..1, optional (default 0)", "via_zones": "optional list of zone ids the route passes through"}},
+  "zones": [
+    {"id": "Zone A", "drainage": 0.9, "shade": 0.35},
+    {"id": "Zone B", "drainage": 0.6, "shade": 0.55},
+    {"id": "Zone C", "drainage": 0.25, "shade": 0.2}
+  ],
+  "buildings": [
+    {"id": "H1", "name": "Riverside Homes", "type": "residential", "zone": "Zone C", "capacity": 0, "cooling": 0.25, "flood_exposure": 0.85},
+    {"id": "H2", "name": "Old Town Apartments", "type": "residential", "zone": "Zone B", "capacity": 0, "cooling": 0.35, "flood_exposure": 0.5},
+    {"id": "H3", "name": "Garden Court", "type": "residential", "zone": "Zone A", "capacity": 0, "cooling": 0.6, "flood_exposure": 0.15},
+    {"id": "T1", "name": "Central Transit Hub", "type": "transit_hub", "zone": "Zone A", "capacity": 3200, "cooling": 0.4, "flood_exposure": 0.35},
+    {"id": "W1", "name": "Business Park Offices", "type": "office", "zone": "Zone A", "capacity": 4500, "cooling": 0.9, "flood_exposure": 0.2},
+    {"id": "S1", "name": "City College", "type": "school", "zone": "Zone B", "capacity": 3500, "cooling": 0.55, "flood_exposure": 0.4},
+    {"id": "HOS1", "name": "City General Hospital", "type": "hospital", "zone": "Zone B", "capacity": 2400, "cooling": 0.85, "flood_exposure": 0.3},
+    {"id": "M1", "name": "Market Square", "type": "market", "zone": "Zone C", "capacity": 5000, "cooling": 0.15, "flood_exposure": 0.8}
+  ],
+  "routes": [
+    {"id": "R1", "start": "H1", "end": "T1", "distance_km": 1.2, "shade": 0.2, "drainage": 0.9, "base_crowding": 0.35, "transit": 1.0, "via_zones": ["Zone C", "Zone A"]},
+    {"id": "R2", "start": "H1", "end": "T1", "distance_km": 1.5, "shade": 0.75, "drainage": 0.6, "base_crowding": 0.25, "transit": 0.7, "via_zones": ["Zone C", "Zone B", "Zone A"]},
+    {"id": "R3", "start": "H1", "end": "T1", "distance_km": 1.0, "shade": 0.1, "drainage": 0.25, "base_crowding": 0.45, "transit": 0.35, "via_zones": ["Zone C"]},
+    {"id": "R4", "start": "H1", "end": "T1", "distance_km": 1.8, "shade": 0.85, "drainage": 0.85, "base_crowding": 0.15, "transit": 0.4, "via_zones": ["Zone C", "Zone B", "Zone A"]},
+    {"id": "R5", "start": "H1", "end": "M1", "distance_km": 0.8, "shade": 0.15, "drainage": 0.25, "base_crowding": 0.4, "transit": 0.1, "via_zones": ["Zone C"]},
+    {"id": "R6", "start": "H1", "end": "M1", "distance_km": 1.3, "shade": 0.6, "drainage": 0.8, "base_crowding": 0.25, "transit": 0.2, "via_zones": ["Zone C"]},
+    {"id": "R7", "start": "H1", "end": "HOS1", "distance_km": 2.0, "shade": 0.2, "drainage": 0.3, "base_crowding": 0.35, "transit": 0.3, "via_zones": ["Zone C", "Zone B"]},
+    {"id": "R8", "start": "H1", "end": "HOS1", "distance_km": 2.6, "shade": 0.55, "drainage": 0.85, "base_crowding": 0.2, "transit": 0.5, "via_zones": ["Zone C", "Zone A", "Zone B"]},
+    {"id": "R9", "start": "H2", "end": "HOS1", "distance_km": 0.9, "shade": 0.3, "drainage": 0.6, "base_crowding": 0.4, "transit": 0.3, "via_zones": ["Zone B"]},
+    {"id": "R10", "start": "H2", "end": "HOS1", "distance_km": 1.2, "shade": 0.8, "drainage": 0.6, "base_crowding": 0.2, "transit": 0.2, "via_zones": ["Zone B"]},
+    {"id": "R11", "start": "H2", "end": "S1", "distance_km": 0.7, "shade": 0.25, "drainage": 0.65, "base_crowding": 0.45, "transit": 0.45, "via_zones": ["Zone B"]},
+    {"id": "R12", "start": "H2", "end": "S1", "distance_km": 1.0, "shade": 0.8, "drainage": 0.6, "base_crowding": 0.2, "transit": 0.25, "via_zones": ["Zone B"]},
+    {"id": "R13", "start": "H2", "end": "W1", "distance_km": 1.6, "shade": 0.15, "drainage": 0.6, "base_crowding": 0.4, "transit": 0.6, "via_zones": ["Zone B", "Zone A"]},
+    {"id": "R14", "start": "H2", "end": "W1", "distance_km": 2.0, "shade": 0.6, "drainage": 0.9, "base_crowding": 0.2, "transit": 0.55, "via_zones": ["Zone B", "Zone A"]},
+    {"id": "R15", "start": "H3", "end": "W1", "distance_km": 0.8, "shade": 0.3, "drainage": 0.9, "base_crowding": 0.35, "transit": 0.5, "via_zones": ["Zone A"]},
+    {"id": "R16", "start": "H3", "end": "W1", "distance_km": 1.1, "shade": 0.8, "drainage": 0.9, "base_crowding": 0.15, "transit": 0.3, "via_zones": ["Zone A"]},
+    {"id": "R17", "start": "H3", "end": "T1", "distance_km": 0.6, "shade": 0.25, "drainage": 0.9, "base_crowding": 0.5, "transit": 1.0, "via_zones": ["Zone A"]},
+    {"id": "R18", "start": "H3", "end": "T1", "distance_km": 0.9, "shade": 0.7, "drainage": 0.9, "base_crowding": 0.25, "transit": 0.7, "via_zones": ["Zone A"]}
+  ]
+}

@@ -19,6 +19,8 @@ What changed vs. the first version
     * Buildings live inside zones. They are route endpoints, have their own
       heat / flood / crowding numbers, and feed the headline metrics and the
       Advisor.
+    * The city (zones, buildings, routes) is NOT hardcoded. It is read from
+      city.json (see load_city), exactly like the citizens.
     * Citizens are NOT generated in code. They are read from citizens.json
       (see load_citizens). Each citizen has a home building and a destination
       building and chooses among the routes that connect them.
@@ -45,6 +47,7 @@ import sys
 # Tunable constants (kept in one place so they are easy to explain / tweak)
 # ---------------------------------------------------------------------------
 
+DEFAULT_CITY_PATH = Path(__file__).with_name("city.json")
 DEFAULT_CITIZENS_PATH = Path(__file__).with_name("citizens.json")
 
 # Share of the city population that makes a trip in the simulated peak window.
@@ -135,55 +138,6 @@ class Citizen:
     weight: float = 1.0    # relative share of the population this agent stands for
 
 
-DEFAULT_CITY = {
-    "zones": [
-        Zone("Zone A", drainage=0.90, shade=0.35),
-        Zone("Zone B", drainage=0.60, shade=0.55),
-        Zone("Zone C", drainage=0.25, shade=0.20),
-    ],
-    "buildings": [
-        #         id     name                     type           zone      cap   cool  flood
-        Building("H1",   "Riverside Homes",       "residential", "Zone C",    0, 0.25, 0.85),
-        Building("H2",   "Old Town Apartments",   "residential", "Zone B",    0, 0.35, 0.50),
-        Building("H3",   "Garden Court",          "residential", "Zone A",    0, 0.60, 0.15),
-        Building("T1",   "Central Transit Hub",   "transit_hub", "Zone A", 3200, 0.40, 0.35),
-        Building("W1",   "Business Park Offices", "office",      "Zone A", 4500, 0.90, 0.20),
-        Building("S1",   "City College",          "school",      "Zone B", 3500, 0.55, 0.40),
-        Building("HOS1", "City General Hospital", "hospital",    "Zone B", 2400, 0.85, 0.30),
-        Building("M1",   "Market Square",         "market",      "Zone C", 5000, 0.15, 0.80),
-    ],
-    "routes": [
-        #      id     from  to     km   shade drain crowd transit via_zones
-        # Riverside Homes (Zone C) -> Central Transit Hub (Zone A): the original 4 corridors
-        Route("R1",  "H1", "T1",   1.2, 0.20, 0.90, 0.35, 1.00, ("Zone C", "Zone A")),
-        Route("R2",  "H1", "T1",   1.5, 0.75, 0.60, 0.25, 0.70, ("Zone C", "Zone B", "Zone A")),
-        Route("R3",  "H1", "T1",   1.0, 0.10, 0.25, 0.45, 0.35, ("Zone C",)),
-        Route("R4",  "H1", "T1",   1.8, 0.85, 0.85, 0.15, 0.40, ("Zone C", "Zone B", "Zone A")),
-        # Riverside Homes -> Market Square (both Zone C)
-        Route("R5",  "H1", "M1",   0.8, 0.15, 0.25, 0.40, 0.10, ("Zone C",)),
-        Route("R6",  "H1", "M1",   1.3, 0.60, 0.80, 0.25, 0.20, ("Zone C",)),
-        # Riverside Homes -> City General Hospital
-        Route("R7",  "H1", "HOS1", 2.0, 0.20, 0.30, 0.35, 0.30, ("Zone C", "Zone B")),
-        Route("R8",  "H1", "HOS1", 2.6, 0.55, 0.85, 0.20, 0.50, ("Zone C", "Zone A", "Zone B")),
-        # Old Town Apartments (Zone B) -> City General Hospital
-        Route("R9",  "H2", "HOS1", 0.9, 0.30, 0.60, 0.40, 0.30, ("Zone B",)),
-        Route("R10", "H2", "HOS1", 1.2, 0.80, 0.60, 0.20, 0.20, ("Zone B",)),
-        # Old Town Apartments -> City College
-        Route("R11", "H2", "S1",   0.7, 0.25, 0.65, 0.45, 0.45, ("Zone B",)),
-        Route("R12", "H2", "S1",   1.0, 0.80, 0.60, 0.20, 0.25, ("Zone B",)),
-        # Old Town Apartments -> Business Park Offices
-        Route("R13", "H2", "W1",   1.6, 0.15, 0.60, 0.40, 0.60, ("Zone B", "Zone A")),
-        Route("R14", "H2", "W1",   2.0, 0.60, 0.90, 0.20, 0.55, ("Zone B", "Zone A")),
-        # Garden Court (Zone A) -> Business Park Offices
-        Route("R15", "H3", "W1",   0.8, 0.30, 0.90, 0.35, 0.50, ("Zone A",)),
-        Route("R16", "H3", "W1",   1.1, 0.80, 0.90, 0.15, 0.30, ("Zone A",)),
-        # Garden Court -> Central Transit Hub
-        Route("R17", "H3", "T1",   0.6, 0.25, 0.90, 0.50, 1.00, ("Zone A",)),
-        Route("R18", "H3", "T1",   0.9, 0.70, 0.90, 0.25, 0.70, ("Zone A",)),
-    ],
-}
-
-
 # ---------------------------------------------------------------------------
 # Validation helpers
 # ---------------------------------------------------------------------------
@@ -247,6 +201,152 @@ def validate_citizens(citizens: List[Citizen], city: Dict) -> None:
 
 
 # ---------------------------------------------------------------------------
+# JSON import helpers (shared by city and citizens)
+# ---------------------------------------------------------------------------
+
+def _read_json(path: Union[str, Path], what: str):
+    path = Path(path)
+    if not path.exists():
+        raise FileNotFoundError(f"{what} file not found: {path}")
+    with path.open(encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _is_num(x) -> bool:
+    return isinstance(x, (int, float)) and not isinstance(x, bool)
+
+
+# ---------------------------------------------------------------------------
+# City import (JSON)
+# ---------------------------------------------------------------------------
+
+def _parse_section(
+    data: Dict,
+    key: str,
+    required: Tuple[str, ...],
+    build,
+    problems: List[str],
+    unit: Tuple[str, ...] = (),
+    positive: Tuple[str, ...] = (),
+    nonneg: Tuple[str, ...] = (),
+    extra_check=None,
+) -> list:
+    """
+    Validate and convert one list ('zones', 'buildings' or 'routes') of the city file.
+    `required` keys must exist; range checks apply to any of unit/positive/nonneg
+    keys that are present. Problems are appended to `problems` (not raised).
+    """
+    records = data.get(key)
+    if not isinstance(records, list) or not records:
+        problems.append(f"'{key}' must be a non-empty list")
+        return []
+
+    out, seen = [], set()
+    for i, rec in enumerate(records):
+        if not isinstance(rec, dict):
+            problems.append(f"{key}[{i}]: not a JSON object")
+            continue
+        label = f"{key.rstrip('s')} {rec.get('id', f'#{i}')}"
+
+        missing = [k for k in required if k not in rec]
+        if missing:
+            problems.append(f"{label}: missing {missing}")
+            continue
+
+        errs: List[str] = []
+        if str(rec["id"]) in seen:
+            errs.append("duplicate id")
+        seen.add(str(rec["id"]))
+
+        bad = [k for k in unit if k in rec and not (_is_num(rec[k]) and 0.0 <= rec[k] <= 1.0)]
+        if bad:
+            errs.append(f"{bad} must be numbers in 0..1")
+        bad = [k for k in positive if k in rec and not (_is_num(rec[k]) and rec[k] > 0)]
+        if bad:
+            errs.append(f"{bad} must be numbers > 0")
+        bad = [k for k in nonneg if k in rec and not (_is_num(rec[k]) and rec[k] >= 0)]
+        if bad:
+            errs.append(f"{bad} must be numbers >= 0")
+        if extra_check:
+            errs.extend(extra_check(rec))
+
+        if errs:
+            problems.extend(f"{label}: {e}" for e in errs)
+            continue
+        out.append(build(rec))
+    return out
+
+
+def _check_via_zones(rec: Dict) -> List[str]:
+    v = rec.get("via_zones", [])
+    if not isinstance(v, list) or not all(isinstance(z, str) for z in v):
+        return ["via_zones must be a list of zone ids"]
+    return []
+
+
+def load_city(path: Union[str, Path] = DEFAULT_CITY_PATH) -> Dict:
+    """
+    Read the city structure from a JSON file and return
+    {"zones": [Zone], "buildings": [Building], "routes": [Route]}.
+
+    File shape:
+        {"zones": [...], "buildings": [...], "routes": [...]}
+        (extra top-level keys such as 'description' are ignored)
+
+    zone      : id, drainage(0..1), shade(0..1)
+    building  : id, name, type, zone, capacity(>=0), cooling(0..1), flood_exposure(0..1)
+    route     : id, start, end, distance_km(>0), shade, drainage, base_crowding (0..1);
+                optional: transit (0..1, default 0), via_zones (list of zone ids)
+
+    Unknown keys are ignored. Field-level problems are collected and reported
+    together, then cross-references (building->zone, route->building/zone) are checked.
+    """
+    path = Path(path)
+    data = _read_json(path, "City")
+    if not isinstance(data, dict):
+        raise ValueError(f"{path}: expected an object with 'zones', 'buildings' and 'routes'")
+
+    problems: List[str] = []
+
+    zones = _parse_section(
+        data, "zones", ("id", "drainage", "shade"),
+        lambda r: Zone(id=str(r["id"]), drainage=float(r["drainage"]), shade=float(r["shade"])),
+        problems, unit=("drainage", "shade"),
+    )
+    buildings = _parse_section(
+        data, "buildings", ("id", "name", "type", "zone", "capacity", "cooling", "flood_exposure"),
+        lambda r: Building(
+            id=str(r["id"]), name=str(r["name"]), type=str(r["type"]), zone=str(r["zone"]),
+            capacity=int(r["capacity"]), cooling=float(r["cooling"]),
+            flood_exposure=float(r["flood_exposure"]),
+        ),
+        problems, unit=("cooling", "flood_exposure"), nonneg=("capacity",),
+    )
+    routes = _parse_section(
+        data, "routes", ("id", "start", "end", "distance_km", "shade", "drainage", "base_crowding"),
+        lambda r: Route(
+            id=str(r["id"]), start=str(r["start"]), end=str(r["end"]),
+            distance_km=float(r["distance_km"]), shade=float(r["shade"]),
+            drainage=float(r["drainage"]), base_crowding=float(r["base_crowding"]),
+            transit=float(r.get("transit", 0.0)),
+            via_zones=tuple(str(z) for z in r.get("via_zones", [])),
+        ),
+        problems, unit=("shade", "drainage", "base_crowding", "transit"),
+        positive=("distance_km",), extra_check=_check_via_zones,
+    )
+
+    if problems:
+        raise ValueError(f"{path}: invalid city data:\n  - " + "\n  - ".join(problems))
+
+    city = {"zones": zones, "buildings": buildings, "routes": routes}
+    try:
+        validate_city(city)
+    except ValueError as e:
+        raise ValueError(f"{path}: {e}") from None
+    return city
+
+
+# ---------------------------------------------------------------------------
 # Citizen import (JSON)
 # ---------------------------------------------------------------------------
 
@@ -278,11 +378,7 @@ def load_citizens(path: Union[str, Path] = DEFAULT_CITIZENS_PATH) -> List[Citize
     inside simulate().
     """
     path = Path(path)
-    if not path.exists():
-        raise FileNotFoundError(f"Citizen file not found: {path}")
-
-    with path.open(encoding="utf-8") as f:
-        data = json.load(f)
+    data = _read_json(path, "Citizen")
 
     records = data.get("citizens") if isinstance(data, dict) else data
     if not isinstance(records, list) or not records:
@@ -497,11 +593,14 @@ def simulate(
     humidity: float,
     rainfall: float,
     population: int,
-    city_state: Optional[Dict] = None,
+    city_state: Union[None, str, Path, Dict] = None,
     citizens: Union[None, str, Path, List[Citizen]] = None,
     interventions: Optional[Dict] = None,
 ) -> Dict:
     """
+    city_state: None          -> load DEFAULT_CITY_PATH (city.json next to this file)
+                str / Path      -> load that JSON file
+                Dict            -> a city as returned by load_city() (copied, never mutated)
     citizens: None            -> load DEFAULT_CITIZENS_PATH (citizens.json next to this file)
               str / Path      -> load that JSON file
               List[Citizen]   -> use as-is
@@ -518,7 +617,10 @@ def simulate(
         raise ValueError("population must be between 25,000 and 100,000")
 
     interventions = interventions or {}
-    city = deepcopy(city_state or DEFAULT_CITY)
+    if city_state is None or isinstance(city_state, (str, Path)):
+        city = load_city(city_state or DEFAULT_CITY_PATH)   # fresh objects on every call
+    else:
+        city = deepcopy(city_state)                          # never mutate the caller's city
     validate_city(city)
 
     if citizens is None or isinstance(citizens, (str, Path)):
@@ -869,7 +971,10 @@ def recommended_interventions(advisor: Dict) -> Dict:
 # Before / after demo
 # ---------------------------------------------------------------------------
 
-def run_demo(citizens: Union[None, str, Path, List[Citizen]] = None) -> Dict:
+def run_demo(
+    citizens: Union[None, str, Path, List[Citizen]] = None,
+    city_state: Union[None, str, Path, Dict] = None,
+) -> Dict:
     scenario = dict(
         temperature=40,
         humidity=80,
@@ -877,10 +982,10 @@ def run_demo(citizens: Union[None, str, Path, List[Citizen]] = None) -> Dict:
         population=100_000,
     )
 
-    before = simulate(**scenario, citizens=citizens)
+    before = simulate(**scenario, city_state=city_state, citizens=citizens)
     advisor = urban_advisor(before)
     intervention = recommended_interventions(advisor)
-    after = simulate(**scenario, citizens=citizens, interventions=intervention)
+    after = simulate(**scenario, city_state=city_state, citizens=citizens, interventions=intervention)
 
     before_m = before["metrics"]
     after_m = after["metrics"]
@@ -929,7 +1034,7 @@ def run_tests() -> None:
     assert rerouted["metrics"]["crowding"] < base["metrics"]["crowding"]
 
     # --- buildings ---
-    assert len(base["buildings"]) == len(DEFAULT_CITY["buildings"])
+    assert len(base["buildings"]) == len(load_city()["buildings"])
 
     # Same rain: a flood-exposed building in a poorly drained zone (H1, Zone C)
     # is hit far harder than one in a well drained zone (H3, Zone A).
@@ -947,7 +1052,7 @@ def run_tests() -> None:
     assert _building(rerouted, "T1")["crowding"] == _building(base, "T1")["crowding"]
 
     # Building properties matter (cooling / flood exposure).
-    tweaked = deepcopy(DEFAULT_CITY)
+    tweaked = load_city()
     for b in tweaked["buildings"]:
         if b.id == "M1":
             b.cooling, b.flood_exposure = 0.95, 0.10
@@ -961,15 +1066,25 @@ def run_tests() -> None:
 
     # --- citizens from JSON ---
     loaded = load_citizens()
+    city0 = load_city()
     assert len(loaded) > 0
     assert len(base["citizens"]) == len(loaded)
     for c in base["citizens"]:
-        cand = {r.id for r in routes_between(DEFAULT_CITY["routes"], c["home"], c["destination"])}
+        cand = {r.id for r in routes_between(city0["routes"], c["home"], c["destination"])}
         assert c["route"] in cand                        # chose a route that connects home->destination
 
     # Explicit list / explicit path give identical results to the default load.
     assert simulate(40, 80, 80, 100_000, citizens=loaded)["metrics"] == base["metrics"]
     assert simulate(40, 80, 80, 100_000, citizens=DEFAULT_CITIZENS_PATH)["metrics"] == base["metrics"]
+
+    # City: default file, explicit path and an already-loaded dict all agree.
+    assert simulate(40, 80, 80, 100_000, city_state=DEFAULT_CITY_PATH)["metrics"] == base["metrics"]
+    assert simulate(40, 80, 80, 100_000, city_state=load_city())["metrics"] == base["metrics"]
+    # A city dict passed in must not be mutated by interventions.
+    city_in = load_city()
+    shade_before = [z.shade for z in city_in["zones"]]
+    simulate(40, 80, 80, 100_000, city_state=city_in, interventions={"shade_boost": 0.25})
+    assert [z.shade for z in city_in["zones"]] == shade_before
 
     # Weights are relative: doubling every weight must not change anything.
     doubled = [Citizen(**{**c.__dict__, "weight": c.weight * 2}) for c in loaded]
@@ -1004,6 +1119,35 @@ def run_tests() -> None:
     expect_error(lambda: load_citizens("does_not_exist.json"), FileNotFoundError)
 
     with tempfile.TemporaryDirectory() as d:
+        # --- city.json: edits change results; bad files fail clearly ---
+        def city_file(mutate):
+            raw = json.loads(DEFAULT_CITY_PATH.read_text(encoding="utf-8"))
+            mutate(raw)
+            f = Path(d) / "city_test.json"
+            f.write_text(json.dumps(raw), encoding="utf-8")
+            return f
+
+        def set_building(raw, bid, **kw):
+            next(b for b in raw["buildings"] if b["id"] == bid).update(kw)
+
+        small_hub = simulate(40, 80, 80, 100_000,
+                             city_state=city_file(lambda r: set_building(r, "T1", capacity=800)))
+        assert _building(small_hub, "T1")["crowding"] > _building(base, "T1")["crowding"]
+
+        # Older files that still carry 'accessibility' keys must keep loading (ignored).
+        load_city(city_file(lambda r: (r["zones"][0].update(accessibility=0.9),
+                                       set_building(r, "H1", accessibility=0.1),
+                                       r["routes"][0].update(accessibility=0.5))))
+
+        expect_error(lambda: load_city(city_file(lambda r: r.pop("routes"))))                       # missing section
+        expect_error(lambda: load_city(city_file(lambda r: r["zones"][0].update(drainage=1.5))))    # out of range
+        expect_error(lambda: load_city(city_file(lambda r: r["buildings"].append(dict(r["buildings"][0])))))  # dup id
+        expect_error(lambda: load_city(city_file(lambda r: set_building(r, "H1", zone="Zone Z"))))  # unknown zone
+        expect_error(lambda: load_city(city_file(lambda r: r["routes"][0].pop("distance_km"))))     # missing field
+        expect_error(lambda: load_city(city_file(lambda r: r["routes"][0].update(via_zones="Zone A"))))  # not a list
+        expect_error(lambda: load_city("no_such_city.json"), FileNotFoundError)
+
+        # --- citizens.json ---
         p = Path(d) / "bad.json"
         p.write_text(json.dumps({"citizens": [{"id": "Z1", "archetype": "x", "home": "H1"}]}))
         expect_error(lambda: load_citizens(p))                      # missing fields
@@ -1019,7 +1163,7 @@ def run_tests() -> None:
             transit_preference=.5, accessibility_need=0.9)]}))
         assert len(load_citizens(p)) == 1
 
-    broken_city = deepcopy(DEFAULT_CITY)
+    broken_city = load_city()
     broken_city["buildings"][0].zone = "Zone Z"
     expect_error(lambda: simulate(40, 80, 80, 100_000, city_state=broken_city))
 
@@ -1074,11 +1218,12 @@ def print_demo_summary(demo: Dict) -> None:
 
 
 if __name__ == "__main__":
-    # Optional: python urbantwin_simulation.py path/to/citizens.json
+    # Optional: python urbantwin_simulation.py [citizens.json] [city.json]
     citizens_path = sys.argv[1] if len(sys.argv) > 1 else None
+    city_path = sys.argv[2] if len(sys.argv) > 2 else None
 
     run_tests()
-    demo = run_demo(citizens=citizens_path)
+    demo = run_demo(citizens=citizens_path, city_state=city_path)
     print_demo_summary(demo)
 
     # Also save machine-readable output for Person 3 / dashboard integration.
