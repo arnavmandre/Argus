@@ -103,6 +103,18 @@ python phase8\switch_state.py stressed|intervention
 python phase9\validate_phase9.py
 python phase3\validate_mock_data.py <snapshot.json>
 
+# complete local regeneration (Phase 11 is the source of truth)
+python integration\run_pipeline.py `
+  --run-id phase11-smoke `
+  --citizens Simulation\citizens_survey_city_osm.json `
+  --city Simulation\city_osm.json `
+  --temperature 40 `
+  --humidity 80 `
+  --rainfall 80 `
+  --population 100000 `
+  --frames 60 `
+  --duration 60
+
 # animated agents (60 frames of real walking, then press play in Kit)
 python integration\export_snapshot.py --state before --frames 60 --duration 60
 python phase9\agents_instancer.py data\simulation_before_*.json --behavior-report Simulation\urbantwin_demo_output.json

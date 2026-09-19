@@ -248,9 +248,16 @@ def _publish_snapshots(
     destination_dir.mkdir(parents=True, exist_ok=True)
     source_names: set[str] = set()
     for state in ("before", "after"):
-        for source in _snapshot_paths(source_dir, state):
+        sources = _snapshot_paths(source_dir, state)
+        for source in sources:
             source_names.add(source.name)
             transaction.replace(source, destination_dir / source.name)
+        if sources:
+            compatibility_name = f"simulation_{state}.json"
+            source_names.add(compatibility_name)
+            transaction.replace(
+                sources[0], destination_dir / compatibility_name
+            )
 
     for state in ("before", "after"):
         candidates = list(

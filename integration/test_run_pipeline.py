@@ -207,6 +207,11 @@ class PipelineTests(unittest.TestCase):
                 [path.name for path in sorted(data.glob("simulation_after_*.json"))],
                 ["simulation_after_000.json", "simulation_after_001.json"],
             )
+            for state in ("before", "after"):
+                self.assertEqual(
+                    (data / f"simulation_{state}.json").read_bytes(),
+                    (data / f"simulation_{state}_000.json").read_bytes(),
+                )
 
     @patch("integration.run_pipeline.run_stage")
     def test_promotion_failure_restores_previous_completed_run(self, run_stage):

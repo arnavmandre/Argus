@@ -24,12 +24,28 @@ Simulation/main.py
   -> the dashboard
 ```
 
-Regenerate the fixtures after a new simulator run:
+Regenerate the complete validated local run and recorded fixtures from the
+repository root:
 
 ```powershell
-cd C:\Users\arnav\Argus
-python integration\export_api_mocks.py
+python integration\run_pipeline.py `
+  --run-id phase11-smoke `
+  --citizens Simulation\citizens_survey_city_osm.json `
+  --city Simulation\city_osm.json `
+  --temperature 40 `
+  --humidity 80 `
+  --rainfall 80 `
+  --population 100000 `
+  --frames 60 `
+  --duration 60
 ```
+
+This is synchronous local orchestration, not an HTTP service, job queue, or
+live stream. The displayed agent motion interpolates fixed equilibrium
+snapshots. See `docs/PHASE11_LOCAL_PIPELINE.md` for artifacts and recovery.
+
+For fixture-only maintenance after an existing simulator report changes, run
+`python integration\export_api_mocks.py`.
 
 The fixtures carry the real numbers from that run — metrics, advisor text,
 problem buildings, behaviour counts. Only the API envelope (run ids, status,
