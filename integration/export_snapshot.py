@@ -110,21 +110,80 @@ def point_at(pts, cum, frac):
     return pts[-1]
 
 
-def position_on_route(edges, edge_ids, frac):
-    """Interpolate along the concatenated geometry of a route. Visual only."""
+JOIN_TOLERANCE = 25.0       # metres; a wider gap means the chain is suspect
+
+
+def oriented_route_points(edges, edge_ids):
+    """
+    One continuous polyline for a whole route.
+
+    The edge registry stores each segment in its own arbitrary direction, so
+    consecutive edges on a path frequently meet end-to-end, start-to-start, or
+    start-to-end. Walking every edge from points[0] to points[-1] therefore
+    makes an agent lurch backwards at half the joins.
+
+    This flips each edge to match the direction of travel, producing a chain a
+    pedestrian could actually follow.
+
+    -> (points, worst_join_gap_m). Empty list if nothing usable.
+    """
     usable = [e for e in edge_ids if e in edges]
     if not usable:
+        return [], 0.0
+
+    segments = [[(p[0], p[1]) for p in edges[e]["points"]] for e in usable]
+    segments = [s for s in segments if len(s) >= 2]
+    if not segments:
+        return [], 0.0
+
+    first = segments[0]
+    if len(segments) > 1:
+        nxt = segments[1]
+        # Point the first edge so its far end is the one nearest the second edge.
+        if min(math.dist(first[0], nxt[0]), math.dist(first[0], nxt[-1])) < \
+           min(math.dist(first[-1], nxt[0]), math.dist(first[-1], nxt[-1])):
+            first = first[::-1]
+
+    chain = list(first)
+    worst = 0.0
+    for seg in segments[1:]:
+        tail = chain[-1]
+        d_fwd, d_rev = math.dist(tail, seg[0]), math.dist(tail, seg[-1])
+        if d_rev < d_fwd:
+            seg, gap = seg[::-1], d_rev
+        else:
+            gap = d_fwd
+        worst = max(worst, gap)
+        # Skip the duplicated join point so polyline() sees no zero-length span.
+        chain.extend(seg[1:] if gap < 1e-6 else seg)
+    return chain, worst
+
+
+def position_on_route(edges, edge_ids, frac, chain_cache=None):
+    """
+    Position at `frac` (0..1) along a route's oriented geometry. Visual only.
+
+    `chain_cache` keyed by the route's edge tuple avoids re-orienting the same
+    route once per agent per frame.
+    """
+    key = tuple(edge_ids)
+    if chain_cache is not None and key in chain_cache:
+        chain, cum = chain_cache[key]
+    else:
+        pts, _worst = oriented_route_points(edges, edge_ids)
+        if not pts:
+            if chain_cache is not None:
+                chain_cache[key] = ([], [0.0])
+            return None, None
+        chain, cum = polyline(pts)
+        if chain_cache is not None:
+            chain_cache[key] = (chain, cum)
+    if not chain:
         return None, None
-    spans = [polyline(edges[e]["points"]) for e in usable]
-    total = sum(c[-1] for _, c in spans) or 1.0
-    target = max(0.0, min(0.999, frac)) * total
-    for eid, (pts, cum) in zip(usable, spans):
-        if target <= cum[-1]:
-            x, y = point_at(pts, cum, target / cum[-1] if cum[-1] else 0.0)
-            return (x, y), eid
-        target -= cum[-1]
-    pts, cum = spans[-1]
-    return point_at(pts, cum, 1.0), usable[-1]
+
+    x, y = point_at(chain, cum, max(0.0, min(1.0, frac)))
+    current = next((e for e in edge_ids if e in edges), None)
+    return (x, y), current
 
 
 INTERVENTION_TYPES = {
@@ -189,16 +248,21 @@ def build(report: dict, state: str, edges, edge_map, map_source, real_geometry,
     # --- agents -----------------------------------------------------------
     citizens = snap["citizens"][:AGENT_CAP]
     agents, unplaced = [], 0
+    chain_cache = {}
     for i, c in enumerate(citizens):
         mapped = edge_map.get(c["route"]) or []
         if animate:
             # travel_minutes is this citizen's own trip time, from their
             # calibrated walking speed over their chosen route.
             trip_s = max(float(c.get("travel_minutes", 5.0)), 0.1) * 60.0
-            frac = (elapsed / trip_s + departure_phase(c["id"])) % 1.0
+            # Everyone is already part-way through their trip when the window
+            # opens, so the streets are populated from frame 0. Progress only
+            # increases and clamps at 1.0: they arrive and stop, rather than
+            # teleporting back to their origin the way a cyclic offset did.
+            frac = min(1.0, departure_phase(c["id"]) + elapsed / trip_s)
         else:
             frac = (i + 0.5) / max(len(citizens), 1)
-        pos, _current = position_on_route(edges, mapped, frac)
+        pos, _current = position_on_route(edges, mapped, frac, chain_cache)
         if pos is None:
             unplaced += 1
             continue

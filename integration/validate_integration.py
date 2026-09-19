@@ -144,6 +144,76 @@ def main() -> None:
           checked > 0 and worst < 1.0,
           f"worst offset {worst:.3f} m across {checked} agents")
 
+    # --- route geometry is a walkable chain, not a scrambled edge bag ------
+    # Test 7 above only proves each point is near SOME segment of its own
+    # route, which stays true even when the traversal order is nonsense. These
+    # three catch ordering, which test 7 cannot.
+    sys.path.insert(0, str(HERE))
+    from export_snapshot import oriented_route_points  # noqa: E402
+
+    worst_join = 0.0
+    for r in city["routes"]:
+        _pts, w = oriented_route_points(edges, r.get("osm_edges", []))
+        worst_join = max(worst_join, w)
+    check("9. route edges chain end-to-end (orientation)",
+          worst_join < 5.0, f"worst join gap {worst_join:.2f} m across "
+                            f"{len(city['routes'])} routes")
+
+    # --- animation sanity ---------------------------------------------------
+    seq = sorted(ROOT.joinpath("data").glob("simulation_before_*.json"))
+    if len(seq) > 1:
+        series = [json.loads(p.read_text(encoding="utf-8"))["agents"] for p in seq]
+        times = [json.loads(p.read_text(encoding="utf-8"))["timestamp"] for p in seq]
+        jumps, backwards = [], 0
+        for k in range(len(series) - 1):
+            dt = max(times[k + 1] - times[k], 1e-6)
+            for a, b in zip(series[k], series[k + 1]):
+                jumps.append(math.dist((a["x"], a["y"]), (b["x"], b["y"])) / dt)
+        top = max(jumps) * 3.6
+        check("10. no agent exceeds a plausible walking speed between frames",
+              top < 10.0, f"fastest {top:.1f} km/h over {len(seq)} frames")
+
+        # Progress must never reverse: an agent walks forward, or has arrived.
+        # Measured as distance along that agent's own oriented chain.
+        chains = {}
+
+        def along(agent):
+            key = tuple(agent["route"])
+            if key not in chains:
+                pts, _ = oriented_route_points(edges, agent["route"])
+                cum = [0.0]
+                for p, q in zip(pts, pts[1:]):
+                    cum.append(cum[-1] + math.dist(p, q))
+                chains[key] = (pts, cum)
+            pts, cum = chains[key]
+            if not pts:
+                return None
+            best, best_s = math.inf, 0.0
+            for i, (p0, p1) in enumerate(zip(pts, pts[1:])):
+                dx, dy = p1[0] - p0[0], p1[1] - p0[1]
+                L = dx * dx + dy * dy
+                t = 0.0 if L == 0 else max(0.0, min(1.0, ((agent["x"] - p0[0]) * dx
+                                                          + (agent["y"] - p0[1]) * dy) / L))
+                d = math.dist((agent["x"], agent["y"]), (p0[0] + t * dx, p0[1] + t * dy))
+                if d < best:
+                    best, best_s = d, cum[i] + t * math.dist(p0, p1)
+            return best_s
+
+        backwards, sampled = 0, 0
+        for k in range(0, len(series) - 1, 5):          # every 5th transition
+            for j in range(0, len(series[k]), 20):      # every 20th agent
+                s0, s1 = along(series[k][j]), along(series[k + 1][j])
+                if s0 is None or s1 is None:
+                    continue
+                sampled += 1
+                if s1 < s0 - 1.0:                       # 1 m tolerance
+                    backwards += 1
+        check("10b. agents never move backwards along their own route",
+              backwards == 0,
+              f"{backwards} reversals in {sampled} sampled transitions")
+    else:
+        print("  SKIP  10. animation checks (no frame sequence in data/)")
+
     # --- provenance --------------------------------------------------------
     real = snap["data_kind"] == "simulation"
     check("8. snapshot is labelled as real simulation output, not mock",
