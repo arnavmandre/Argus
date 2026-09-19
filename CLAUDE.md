@@ -90,6 +90,10 @@ python phase9\set_scenario.py baseline|heat|rain|dusk
 python phase8\switch_state.py stressed|intervention
 python phase9\validate_phase9.py
 python phase3\validate_mock_data.py <snapshot.json>
+
+# animated agents (60 frames of real walking, then press play in Kit)
+python integration\export_snapshot.py --state before --frames 60 --duration 60
+python phase9\agents_instancer.py data\simulation_before_*.json --metric heat_exposure
 ```
 
 Open `phase9/scene/main.usda` in Kit for the demo stage.
