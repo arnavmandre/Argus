@@ -115,6 +115,10 @@ def _record_stage(name: str, command: list[object], root: Path) -> StageResult:
 
 
 def _validate_config(config: PipelineConfig) -> None:
+    if config.run_id.endswith((".", " ")):
+        raise PipelineError(
+            "run ID must not end with a Windows-unsafe trailing dot or space"
+        )
     if not RUN_ID_PATTERN.fullmatch(config.run_id):
         raise PipelineError(
             "run ID must use 1-64 letters, digits, dot, underscore or hyphen"
@@ -296,13 +300,17 @@ def _recover_stale_backup(final: Path, backup: Path) -> None:
 def _install_run(staging: Path, final: Path, backup: Path) -> bool:
     """Install staging while retaining the previous run backup."""
     moved_previous = False
+    installed_staging = False
     try:
         if final.exists():
             os.replace(final, backup)
             moved_previous = True
         os.replace(staging, final)
+        installed_staging = True
     except OSError as exc:
-        rollback_errors = _restore_run(final, backup, moved_previous)
+        rollback_errors = _restore_run(
+            final, backup, moved_previous, installed_staging
+        )
         detail = f"could not promote completed run: {exc}"
         if rollback_errors:
             detail += "\nrollback errors:\n  " + "\n  ".join(rollback_errors)
@@ -310,13 +318,19 @@ def _install_run(staging: Path, final: Path, backup: Path) -> bool:
     return moved_previous
 
 
-def _restore_run(final: Path, backup: Path, had_previous: bool) -> list[str]:
+def _restore_run(
+    final: Path,
+    backup: Path,
+    had_previous: bool,
+    installed_staging: bool,
+) -> list[str]:
     errors = []
-    try:
-        if final.exists():
-            shutil.rmtree(final)
-    except OSError as exc:
-        errors.append(f"remove failed promoted run {final}: {exc}")
+    if installed_staging:
+        try:
+            if final.exists():
+                shutil.rmtree(final)
+        except OSError as exc:
+            errors.append(f"remove failed promoted run {final}: {exc}")
     if had_previous and backup.exists():
         try:
             os.replace(backup, final)
@@ -346,7 +360,9 @@ def _promote_and_publish(
             )
         except (OSError, PipelineError) as exc:
             rollback_errors = transaction.rollback()
-            rollback_errors.extend(_restore_run(final, backup, had_previous))
+            rollback_errors.extend(
+                _restore_run(final, backup, had_previous, True)
+            )
             detail = f"compatibility publication failed: {exc}"
             if rollback_errors:
                 detail += "\nrollback errors:\n  " + "\n  ".join(rollback_errors)

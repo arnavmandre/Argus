@@ -244,6 +244,48 @@ class PipelineTests(unittest.TestCase):
             self.assertFalse((root / "data" / "runs" / "test-run.backup").exists())
 
     @patch("integration.run_pipeline.run_stage")
+    def test_failed_move_aside_leaves_previous_run_byte_for_byte_intact(
+        self, run_stage
+    ):
+        run_stage.side_effect = self.complete_stage
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            completed = root / "data" / "runs" / "test-run"
+            nested = completed / "nested"
+            nested.mkdir(parents=True)
+            marker = completed / "manifest.json"
+            payload = nested / "artifact.bin"
+            marker.write_bytes(b'{"status":"complete","old":true}\n')
+            payload.write_bytes(b"\x00old-run-artifact\xff")
+            real_replace = pipeline_module.os.replace
+
+            def fail_move_aside(source, destination):
+                if Path(source) == completed and Path(destination).name == (
+                    "test-run.backup"
+                ):
+                    raise OSError("injected move-aside failure")
+                return real_replace(source, destination)
+
+            with patch(
+                "integration.run_pipeline.os.replace",
+                side_effect=fail_move_aside,
+            ):
+                with self.assertRaisesRegex(PipelineError, "could not promote"):
+                    run_pipeline(self.config(root, publish=True))
+
+            self.assertEqual(
+                marker.read_bytes(), b'{"status":"complete","old":true}\n'
+            )
+            self.assertEqual(payload.read_bytes(), b"\x00old-run-artifact\xff")
+            self.assertEqual(
+                sorted(
+                    path.relative_to(completed).as_posix()
+                    for path in completed.rglob("*")
+                ),
+                ["manifest.json", "nested", "nested/artifact.bin"],
+            )
+
+    @patch("integration.run_pipeline.run_stage")
     def test_mid_publication_failure_rolls_back_run_and_compatibility(
         self, run_stage
     ):
@@ -297,6 +339,45 @@ class PipelineTests(unittest.TestCase):
                     with self.assertRaisesRegex(PipelineError, "reserved"):
                         run_pipeline(config)
             run_stage.assert_not_called()
+
+    @patch("integration.run_pipeline.run_stage")
+    def test_windows_unsafe_trailing_run_id_characters_are_rejected(
+        self, run_stage
+    ):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for run_id in (
+                "demo.staging.",
+                "demo.backup...",
+                "demo.failed-deadbeef.",
+                "ordinary.",
+                "ordinary ",
+            ):
+                config = self.config(root)
+                config = pipeline_module.PipelineConfig(
+                    **{**config.__dict__, "run_id": run_id}
+                )
+                with self.subTest(run_id=run_id):
+                    with self.assertRaisesRegex(
+                        PipelineError, "trailing dot or space"
+                    ):
+                        run_pipeline(config)
+            run_stage.assert_not_called()
+
+    def test_scratch_words_inside_valid_run_ids_remain_allowed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for run_id in (
+                "demo.staging-v2",
+                "demo.backup-copy",
+                "demo.failed",
+            ):
+                config = self.config(root)
+                config = pipeline_module.PipelineConfig(
+                    **{**config.__dict__, "run_id": run_id}
+                )
+                with self.subTest(run_id=run_id):
+                    pipeline_module._validate_config(config)
 
     def test_cli_reports_pipeline_filesystem_error_without_traceback(self):
         error = io.StringIO()
