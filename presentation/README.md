@@ -19,10 +19,22 @@ generated/path_colors.usda <- optional, from recolor_paths.py
 cameras.usda
 look.usda
 lighting.usda
-../../phase2/scene/main.usda
+../../phase8/scene/main.usda   <- the final city + demoState variants
 ```
 
 The stage opens fine without the two generated layers.
+
+Phase 8 is the final city. It carries the `Stressed` / `Intervention`
+variants and chains down through Phase 2 semantics to Phase 1 geometry, so
+the presentation stage sits on top of everything:
+
+```powershell
+python phase8\switch_state.py stressed
+python phase8\switch_state.py intervention
+```
+
+Then **File > Reopen** in Kit. Verified: the variant selection propagates
+through to this stage.
 
 ## What it adds
 

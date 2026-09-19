@@ -5,7 +5,9 @@
     upAxis = "Z"
     doc = """UrbanTwin presentation stage - open THIS for demos.
 
-    Composes the Phase 2 semantic city and adds a presentation layer on top:
+    Composes the PHASE 8 stage - the final city, which carries the Stressed /
+    Intervention demoState variants and chains down through Phase 2 semantics
+    to the Phase 1 geometry - and adds a presentation layer on top:
     real sun shadows, matte materials, an extended ground plane and saved
     demo cameras. Nothing here changes geometry or semantics, so the Phase 1/2
     contract and city_id are untouched.
@@ -24,7 +26,7 @@
         @cameras.usda@,
         @look.usda@,
         @lighting.usda@,
-        @../../phase2/scene/main.usda@
+        @../../phase8/scene/main.usda@
     ]
 )
 
