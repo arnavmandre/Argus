@@ -18,6 +18,9 @@ from typing import NotRequired, TypedDict
 
 ROOT = Path(__file__).resolve().parents[1]
 RUN_ID_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}")
+RESERVED_RUN_ID_PATTERN = re.compile(
+    r"(?:\.staging|\.backup)$|\.failed-", re.IGNORECASE
+)
 STAGE_OUTPUT_LIMIT = 4000
 
 
@@ -116,6 +119,10 @@ def _validate_config(config: PipelineConfig) -> None:
         raise PipelineError(
             "run ID must use 1-64 letters, digits, dot, underscore or hyphen"
         )
+    if RESERVED_RUN_ID_PATTERN.search(config.run_id):
+        raise PipelineError(
+            "run ID uses a reserved pipeline scratch suffix or pattern"
+        )
     if config.frames < 1:
         raise PipelineError("frames must be >= 1")
     if config.duration <= 0:
@@ -185,13 +192,61 @@ def _atomic_copy(source: Path, destination: Path) -> None:
             temporary.unlink()
 
 
-def _publish_snapshots(source_dir: Path, destination_dir: Path) -> None:
+class _CompatibilityTransaction:
+    """Journal compatibility file replacements for rollback or commit."""
+
+    def __init__(self) -> None:
+        self._changes: list[tuple[Path, Path | None]] = []
+
+    def replace(self, source: Path, destination: Path) -> None:
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        backup = None
+        if destination.exists():
+            backup = destination.with_name(
+                f".{destination.name}.{uuid.uuid4().hex}.pipeline-backup"
+            )
+            os.replace(destination, backup)
+        self._changes.append((destination, backup))
+        _atomic_copy(source, destination)
+
+    def delete(self, destination: Path) -> None:
+        if not destination.exists():
+            return
+        backup = destination.with_name(
+            f".{destination.name}.{uuid.uuid4().hex}.pipeline-backup"
+        )
+        os.replace(destination, backup)
+        self._changes.append((destination, backup))
+
+    def rollback(self) -> list[str]:
+        errors = []
+        for destination, backup in reversed(self._changes):
+            try:
+                if destination.exists():
+                    destination.unlink()
+                if backup is not None and backup.exists():
+                    os.replace(backup, destination)
+            except OSError as exc:
+                errors.append(f"{destination}: {exc}")
+        return errors
+
+    def commit(self) -> None:
+        for _destination, backup in self._changes:
+            if backup is not None and backup.exists():
+                backup.unlink()
+
+
+def _publish_snapshots(
+    source_dir: Path,
+    destination_dir: Path,
+    transaction: _CompatibilityTransaction,
+) -> None:
     destination_dir.mkdir(parents=True, exist_ok=True)
     source_names: set[str] = set()
     for state in ("before", "after"):
         for source in _snapshot_paths(source_dir, state):
             source_names.add(source.name)
-            _atomic_copy(source, destination_dir / source.name)
+            transaction.replace(source, destination_dir / source.name)
 
     for state in ("before", "after"):
         candidates = list(
@@ -200,7 +255,7 @@ def _publish_snapshots(source_dir: Path, destination_dir: Path) -> None:
         candidates.append(destination_dir / f"simulation_{state}.json")
         for stale in candidates:
             if stale.exists() and stale.name not in source_names:
-                stale.unlink()
+                transaction.delete(stale)
 
 
 def _publish_compatibility(
@@ -209,15 +264,24 @@ def _publish_compatibility(
     snapshots: Path,
     usd: Path,
     mocks: Path,
+    transaction: _CompatibilityTransaction,
 ) -> None:
-    _atomic_copy(report, root / "Simulation" / "urbantwin_demo_output.json")
-    _publish_snapshots(snapshots, root / "data")
+    transaction.replace(
+        report, root / "Simulation" / "urbantwin_demo_output.json"
+    )
+    _publish_snapshots(snapshots, root / "data", transaction)
     generated = root / "phase9" / "scene" / "generated"
-    _atomic_copy(usd / "agents_before.usda", generated / "agents_before.usda")
-    _atomic_copy(usd / "agents_after.usda", generated / "agents_after.usda")
-    _atomic_copy(usd / "agents_before.usda", generated / "agents.usda")
+    transaction.replace(
+        usd / "agents_before.usda", generated / "agents_before.usda"
+    )
+    transaction.replace(
+        usd / "agents_after.usda", generated / "agents_after.usda"
+    )
+    transaction.replace(usd / "agents_before.usda", generated / "agents.usda")
     for source in sorted(path for path in mocks.rglob("*") if path.is_file()):
-        _atomic_copy(source, root / "frontend" / "mocks" / source.relative_to(mocks))
+        transaction.replace(
+            source, root / "frontend" / "mocks" / source.relative_to(mocks)
+        )
 
 
 def _recover_stale_backup(final: Path, backup: Path) -> None:
@@ -229,7 +293,8 @@ def _recover_stale_backup(final: Path, backup: Path) -> None:
         os.replace(backup, final)
 
 
-def _promote_run(staging: Path, final: Path, backup: Path) -> None:
+def _install_run(staging: Path, final: Path, backup: Path) -> bool:
+    """Install staging while retaining the previous run backup."""
     moved_previous = False
     try:
         if final.exists():
@@ -237,16 +302,76 @@ def _promote_run(staging: Path, final: Path, backup: Path) -> None:
             moved_previous = True
         os.replace(staging, final)
     except OSError as exc:
-        if moved_previous and backup.exists():
-            displaced = final.with_name(f"{final.name}.failed-{uuid.uuid4().hex}")
-            if final.exists():
-                os.replace(final, displaced)
+        rollback_errors = _restore_run(final, backup, moved_previous)
+        detail = f"could not promote completed run: {exc}"
+        if rollback_errors:
+            detail += "\nrollback errors:\n  " + "\n  ".join(rollback_errors)
+        raise PipelineError(detail) from exc
+    return moved_previous
+
+
+def _restore_run(final: Path, backup: Path, had_previous: bool) -> list[str]:
+    errors = []
+    try:
+        if final.exists():
+            shutil.rmtree(final)
+    except OSError as exc:
+        errors.append(f"remove failed promoted run {final}: {exc}")
+    if had_previous and backup.exists():
+        try:
             os.replace(backup, final)
-            if displaced.exists():
-                shutil.rmtree(displaced)
-        raise PipelineError(f"could not promote completed run: {exc}") from exc
+        except OSError as exc:
+            errors.append(f"restore previous run {final}: {exc}")
+    return errors
+
+
+def _promote_and_publish(
+    root: Path,
+    staging: Path,
+    final: Path,
+    backup: Path,
+    publish: bool,
+) -> None:
+    had_previous = _install_run(staging, final, backup)
+    if publish:
+        transaction = _CompatibilityTransaction()
+        try:
+            _publish_compatibility(
+                root,
+                final / "simulation_report.json",
+                final / "snapshots",
+                final / "usd",
+                final / "frontend-mocks",
+                transaction,
+            )
+        except (OSError, PipelineError) as exc:
+            rollback_errors = transaction.rollback()
+            rollback_errors.extend(_restore_run(final, backup, had_previous))
+            detail = f"compatibility publication failed: {exc}"
+            if rollback_errors:
+                detail += "\nrollback errors:\n  " + "\n  ".join(rollback_errors)
+            raise PipelineError(detail) from exc
+        try:
+            transaction.commit()
+        except OSError as exc:
+            raise PipelineError(
+                f"compatibility backup cleanup failed: {exc}"
+            ) from exc
+
     if backup.exists():
-        shutil.rmtree(backup)
+        try:
+            shutil.rmtree(backup)
+        except OSError as exc:
+            raise PipelineError(f"run backup cleanup failed: {exc}") from exc
+
+
+def _cleanup_staging(staging: Path) -> str | None:
+    try:
+        if staging.exists():
+            shutil.rmtree(staging)
+    except OSError as exc:
+        return f"could not clean staging directory {staging}: {exc}"
+    return None
 
 
 def run_pipeline(config: PipelineConfig) -> dict:
@@ -256,11 +381,14 @@ def run_pipeline(config: PipelineConfig) -> dict:
     staging = runs / f"{config.run_id}.staging"
     final = runs / config.run_id
     backup = runs / f"{config.run_id}.backup"
-    runs.mkdir(parents=True, exist_ok=True)
-    _recover_stale_backup(final, backup)
-    if staging.exists():
-        shutil.rmtree(staging)
-    staging.mkdir()
+    try:
+        runs.mkdir(parents=True, exist_ok=True)
+        _recover_stale_backup(final, backup)
+        if staging.exists():
+            shutil.rmtree(staging)
+        staging.mkdir()
+    except OSError as exc:
+        raise PipelineError(f"pipeline setup failed: {exc}") from exc
 
     report = staging / "simulation_report.json"
     snapshots = staging / "snapshots"
@@ -446,14 +574,21 @@ def run_pipeline(config: PipelineConfig) -> dict:
         )
         os.replace(manifest_tmp, manifest_path)
 
-        if config.publish:
-            _publish_compatibility(root, report, snapshots, usd, mocks)
-        _promote_run(staging, final, backup)
+        _promote_and_publish(
+            root, staging, final, backup, config.publish
+        )
         return manifest
-    except Exception:
-        if staging.exists():
-            shutil.rmtree(staging)
+    except PipelineError as exc:
+        cleanup_error = _cleanup_staging(staging)
+        if cleanup_error:
+            raise PipelineError(f"{exc}\n{cleanup_error}") from exc
         raise
+    except OSError as exc:
+        cleanup_error = _cleanup_staging(staging)
+        detail = f"pipeline filesystem operation failed: {exc}"
+        if cleanup_error:
+            detail += f"\n{cleanup_error}"
+        raise PipelineError(detail) from exc
 
 
 def parse_cli(argv: list[str] | None = None) -> argparse.Namespace:

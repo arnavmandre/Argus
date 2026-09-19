@@ -1,6 +1,8 @@
+import io
 import json
 import tempfile
 import unittest
+from contextlib import redirect_stderr
 from pathlib import Path
 from unittest.mock import patch
 
@@ -217,6 +219,9 @@ class PipelineTests(unittest.TestCase):
             marker.write_text(
                 '{"status":"complete","old":true}\n', encoding="utf-8"
             )
+            compatibility = root / "Simulation" / "urbantwin_demo_output.json"
+            compatibility.parent.mkdir(parents=True)
+            compatibility.write_bytes(b"old report bytes\n")
             real_replace = pipeline_module.os.replace
 
             def fail_staging_promotion(source, destination):
@@ -232,10 +237,110 @@ class PipelineTests(unittest.TestCase):
                 side_effect=fail_staging_promotion,
             ):
                 with self.assertRaisesRegex(PipelineError, "could not promote"):
-                    run_pipeline(self.config(root))
+                    run_pipeline(self.config(root, publish=True))
 
             self.assertTrue(json.loads(marker.read_text(encoding="utf-8"))["old"])
+            self.assertEqual(compatibility.read_bytes(), b"old report bytes\n")
             self.assertFalse((root / "data" / "runs" / "test-run.backup").exists())
+
+    @patch("integration.run_pipeline.run_stage")
+    def test_mid_publication_failure_rolls_back_run_and_compatibility(
+        self, run_stage
+    ):
+        run_stage.side_effect = self.complete_stage
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            completed = root / "data" / "runs" / "test-run"
+            completed.mkdir(parents=True)
+            marker = completed / "manifest.json"
+            marker.write_text(
+                '{"status":"complete","old":true}\n', encoding="utf-8"
+            )
+            report = root / "Simulation" / "urbantwin_demo_output.json"
+            report.parent.mkdir(parents=True)
+            report.write_bytes(b"old report bytes\n")
+            old_snapshot = root / "data" / "simulation_before_000.json"
+            old_snapshot.write_bytes(b"old snapshot bytes\n")
+            real_atomic_copy = pipeline_module._atomic_copy
+
+            def fail_after_replacements(source, destination):
+                if Path(destination).name == "agents_before.usda":
+                    raise OSError("injected publication failure")
+                return real_atomic_copy(source, destination)
+
+            with patch(
+                "integration.run_pipeline._atomic_copy",
+                side_effect=fail_after_replacements,
+            ):
+                with self.assertRaisesRegex(
+                    PipelineError, "compatibility publication failed"
+                ):
+                    run_pipeline(self.config(root, publish=True))
+
+            self.assertTrue(json.loads(marker.read_text(encoding="utf-8"))["old"])
+            self.assertEqual(report.read_bytes(), b"old report bytes\n")
+            self.assertEqual(old_snapshot.read_bytes(), b"old snapshot bytes\n")
+            self.assertFalse(
+                (root / "data" / "simulation_before_001.json").exists()
+            )
+
+    @patch("integration.run_pipeline.run_stage")
+    def test_reserved_scratch_like_run_ids_are_rejected(self, run_stage):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for run_id in ("demo.staging", "demo.backup", "demo.failed-deadbeef"):
+                config = self.config(root)
+                config = pipeline_module.PipelineConfig(
+                    **{**config.__dict__, "run_id": run_id}
+                )
+                with self.subTest(run_id=run_id):
+                    with self.assertRaisesRegex(PipelineError, "reserved"):
+                        run_pipeline(config)
+            run_stage.assert_not_called()
+
+    def test_cli_reports_pipeline_filesystem_error_without_traceback(self):
+        error = io.StringIO()
+        with patch(
+            "integration.run_pipeline.run_pipeline",
+            side_effect=PipelineError(
+                "compatibility publication failed: access denied"
+            ),
+        ), redirect_stderr(error):
+            exit_code = pipeline_module.main(["--run-id", "test-run"])
+
+        self.assertEqual(exit_code, 1)
+        self.assertEqual(
+            error.getvalue(),
+            "compatibility publication failed: access denied\n",
+        )
+        self.assertNotIn("Traceback", error.getvalue())
+
+    @patch("integration.run_pipeline.run_stage")
+    def test_run_backup_removal_error_is_contextual_pipeline_error(self, run_stage):
+        run_stage.side_effect = self.complete_stage
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            completed = root / "data" / "runs" / "test-run"
+            completed.mkdir(parents=True)
+            (completed / "manifest.json").write_text(
+                '{"status":"complete","old":true}\n', encoding="utf-8"
+            )
+            real_rmtree = pipeline_module.shutil.rmtree
+
+            def fail_backup_removal(path, *args, **kwargs):
+                if Path(path).name == "test-run.backup":
+                    raise OSError("injected backup cleanup failure")
+                return real_rmtree(path, *args, **kwargs)
+
+            with patch(
+                "integration.run_pipeline.shutil.rmtree",
+                side_effect=fail_backup_removal,
+            ):
+                with self.assertRaisesRegex(
+                    PipelineError,
+                    "run backup cleanup failed: injected backup cleanup failure",
+                ):
+                    run_pipeline(self.config(root))
 
 
 if __name__ == "__main__":
