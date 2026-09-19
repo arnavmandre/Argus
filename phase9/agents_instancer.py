@@ -38,6 +38,7 @@ from pxr import Gf, Sdf, Usd, UsdGeom, Vt
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from recolor_paths import ramp  # noqa: E402  (shared colour ramp)
+from stamp_demo_timeline import stamp_demo_timeline  # noqa: E402
 
 OUT = Path(__file__).resolve().parent / "scene" / "generated" / "agents.usda"
 # The demo stage. Animating also stamps the timeline range here, because USD
@@ -200,22 +201,11 @@ def main() -> None:
     # USD reads the timeline range from the stage's ROOT layer only - values on
     # a sublayer are ignored, so Kit would show an empty 0..0 timeline. Stamp
     # the range onto the demo stage too, touching nothing else in it.
-    if args.demo_stage.exists():
-        demo = Sdf.Layer.FindOrOpen(str(args.demo_stage))
-        if demo:
-            if animated:
-                demo.startTimeCode = frames[0][1] * args.fps
-                demo.endTimeCode = frames[-1][1] * args.fps
-                demo.timeCodesPerSecond = args.fps
-                demo.framesPerSecond = args.fps
-            else:
-                # Going back to a still snapshot must not leave a stale timeline
-                # advertising frames that no longer exist.
-                demo.ClearStartTimeCode()
-                demo.ClearEndTimeCode()
-                demo.ClearTimeCodesPerSecond()
-                demo.ClearFramesPerSecond()
-            demo.Save()
+    stamp_demo_timeline(
+        args.demo_stage,
+        timestamps=[frame[1] for frame in frames],
+        fps=args.fps,
+    )
 
     hist = [indices.count(i) for i in range(len(proto_paths))]
     print(f"wrote {args.out}")

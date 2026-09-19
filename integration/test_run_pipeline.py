@@ -11,7 +11,7 @@ from integration.run_pipeline import PipelineConfig, PipelineError, run_pipeline
 
 
 class PipelineTests(unittest.TestCase):
-    def config(self, root, *, publish=False, frames=3):
+    def config(self, root, *, publish=False, frames=3, duration=6.0):
         return PipelineConfig(
             root=root,
             run_id="test-run",
@@ -22,7 +22,7 @@ class PipelineTests(unittest.TestCase):
             rainfall=12,
             population=42000,
             frames=frames,
-            duration=6.0,
+            duration=duration,
             publish=publish,
         )
 
@@ -212,6 +212,76 @@ class PipelineTests(unittest.TestCase):
                     (data / f"simulation_{state}.json").read_bytes(),
                     (data / f"simulation_{state}_000.json").read_bytes(),
                 )
+
+    @patch("integration.run_pipeline.run_stage")
+    def test_publish_stamps_demo_stage_timeline_for_non_default_animation(
+        self, run_stage
+    ):
+        run_stage.side_effect = self.complete_stage
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            demo = root / "phase9" / "scene" / "main.usda"
+            demo.parent.mkdir(parents=True)
+            demo.write_text(
+                "#usda 1.0\n"
+                "(\n"
+                "    startTimeCode = 0\n"
+                "    endTimeCode = 1416\n"
+                "    framesPerSecond = 24\n"
+                "    timeCodesPerSecond = 24\n"
+                ")\n",
+                encoding="utf-8",
+            )
+
+            # 5 frames over 10s => timestamps 0,2,4,6,8 => endTimeCode 192
+            run_pipeline(
+                self.config(root, publish=True, frames=5, duration=10.0)
+            )
+
+            text = demo.read_text(encoding="utf-8")
+            self.assertRegex(text, r"startTimeCode\s*=\s*0\b")
+            self.assertRegex(text, r"endTimeCode\s*=\s*192\b")
+            self.assertRegex(text, r"framesPerSecond\s*=\s*24\b")
+            self.assertRegex(text, r"timeCodesPerSecond\s*=\s*24\b")
+            self.assertNotIn("1416", text)
+
+    @patch("integration.run_pipeline.run_stage")
+    def test_demo_timeline_stamp_failure_rolls_back_publication(self, run_stage):
+        run_stage.side_effect = self.complete_stage
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            demo = root / "phase9" / "scene" / "main.usda"
+            demo.parent.mkdir(parents=True)
+            original = (
+                "#usda 1.0\n"
+                "(\n"
+                "    startTimeCode = 0\n"
+                "    endTimeCode = 1416\n"
+                "    framesPerSecond = 24\n"
+                "    timeCodesPerSecond = 24\n"
+                ")\n"
+            )
+            demo.write_text(original, encoding="utf-8")
+            report = root / "Simulation" / "urbantwin_demo_output.json"
+            report.parent.mkdir(parents=True)
+            report.write_bytes(b"old report bytes\n")
+
+            with patch(
+                "integration.run_pipeline._stamp_demo_timeline",
+                side_effect=PipelineError("injected demo stamp failure"),
+            ):
+                with self.assertRaisesRegex(
+                    PipelineError, "compatibility publication failed"
+                ):
+                    run_pipeline(
+                        self.config(root, publish=True, frames=5, duration=10.0)
+                    )
+
+            self.assertEqual(demo.read_text(encoding="utf-8"), original)
+            self.assertEqual(report.read_bytes(), b"old report bytes\n")
+            self.assertFalse(
+                (root / "phase9" / "scene" / "generated" / "agents.usda").exists()
+            )
 
     @patch("integration.run_pipeline.run_stage")
     def test_promotion_failure_restores_previous_completed_run(self, run_stage):

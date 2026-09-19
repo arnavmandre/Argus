@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import os
 import re
@@ -276,6 +277,64 @@ def _publish_snapshots(
                 transaction.delete(stale)
 
 
+def _animation_timestamps(frames: int, duration: float) -> list[float]:
+    """Match integration/export_snapshot.py frame timestamps."""
+    if frames <= 1:
+        return [0.0]
+    step = duration / frames
+    return [round(index * step, 4) for index in range(frames)]
+
+
+def _stamp_demo_timeline(
+    demo_stage: Path,
+    *,
+    timestamps: list[float],
+    fps: float = 24.0,
+) -> None:
+    """Load phase9's shared stamp helper without importing the full instancer."""
+    helper = ROOT / "phase9" / "stamp_demo_timeline.py"
+    spec = importlib.util.spec_from_file_location(
+        "_phase9_stamp_demo_timeline", helper
+    )
+    if spec is None or spec.loader is None:
+        raise PipelineError(f"could not load demo timeline helper: {helper}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.stamp_demo_timeline(demo_stage, timestamps=timestamps, fps=fps)
+
+
+def _publish_demo_timeline(
+    root: Path,
+    frames: int,
+    duration: float,
+    transaction: _CompatibilityTransaction,
+) -> None:
+    """Stamp Kit's demo root after agent layers are published."""
+    demo_stage = root / "phase9" / "scene" / "main.usda"
+    if not demo_stage.exists():
+        return
+    stamped = demo_stage.with_name(
+        f".{demo_stage.stem}.{uuid.uuid4().hex}.pipeline-stamped.usda"
+    )
+    try:
+        shutil.copy2(demo_stage, stamped)
+        try:
+            _stamp_demo_timeline(
+                stamped,
+                timestamps=_animation_timestamps(frames, duration),
+            )
+        except PipelineError:
+            raise
+        except Exception as exc:
+            raise PipelineError(
+                f"demo stage timeline stamp failed: {exc}"
+            ) from exc
+        transaction.replace(stamped, demo_stage)
+    finally:
+        if stamped.exists():
+            stamped.unlink()
+
+
 def _publish_compatibility(
     root: Path,
     report: Path,
@@ -283,6 +342,9 @@ def _publish_compatibility(
     usd: Path,
     mocks: Path,
     transaction: _CompatibilityTransaction,
+    *,
+    frames: int,
+    duration: float,
 ) -> None:
     transaction.replace(
         report, root / "Simulation" / "urbantwin_demo_output.json"
@@ -296,6 +358,7 @@ def _publish_compatibility(
         usd / "agents_after.usda", generated / "agents_after.usda"
     )
     transaction.replace(usd / "agents_before.usda", generated / "agents.usda")
+    _publish_demo_timeline(root, frames, duration, transaction)
     for source in sorted(path for path in mocks.rglob("*") if path.is_file()):
         transaction.replace(
             source, root / "frontend" / "mocks" / source.relative_to(mocks)
@@ -359,6 +422,9 @@ def _promote_and_publish(
     final: Path,
     backup: Path,
     publish: bool,
+    *,
+    frames: int,
+    duration: float,
 ) -> list[str]:
     warnings = []
     had_previous = _install_run(staging, final, backup)
@@ -372,6 +438,8 @@ def _promote_and_publish(
                 final / "usd",
                 final / "frontend-mocks",
                 transaction,
+                frames=frames,
+                duration=duration,
             )
         except (OSError, PipelineError) as exc:
             rollback_errors = transaction.rollback()
@@ -602,7 +670,13 @@ def run_pipeline(config: PipelineConfig) -> dict:
         os.replace(manifest_tmp, manifest_path)
 
         finalization_warnings = _promote_and_publish(
-            root, staging, final, backup, config.publish
+            root,
+            staging,
+            final,
+            backup,
+            config.publish,
+            frames=config.frames,
+            duration=config.duration,
         )
         if finalization_warnings:
             manifest["warnings"] = finalization_warnings
