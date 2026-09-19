@@ -1,0 +1,115 @@
+{
+  "source": "recorded_fixture",
+  "exported_utc": "2026-09-19T14:52:02+00:00",
+  "created_utc": "2026-09-19T13:45:17.728768+00:00",
+  "sklearn_version": "1.9.1",
+  "random_seed": 29,
+  "split_policy": "participant-level; 8 final holdout people; 5-fold GroupKFold on remaining people",
+  "overall_verdict": "mixed_results_do_not_claim_overall_accuracy",
+  "limitations": [
+    "Only 41 participants; most are under 25.",
+    "Temperature, crowding and shade co-vary across the four scenarios.",
+    "Labels are self-reported intentions, not observed pedestrian behavior.",
+    "Avoidance and route-choice each have only one labeled scenario per participant."
+  ],
+  "models": [
+    {
+      "target": "comfort",
+      "kind": "regression",
+      "trust_verdict": "promising",
+      "labelled_rows": 123,
+      "final_holdout_rows": 24,
+      "final_holdout": {
+        "mae": 0.8241561026936025,
+        "r2": 0.35203991916040744
+      },
+      "final_holdout_baseline": {
+        "mae": 1.25,
+        "r2": -0.02857142857142847
+      },
+      "beats_baseline": true,
+      "beats_shuffled_labels": true
+    },
+    {
+      "target": "stress",
+      "kind": "regression",
+      "trust_verdict": "supported_for_prototype",
+      "labelled_rows": 82,
+      "final_holdout_rows": 16,
+      "final_holdout": {
+        "mae": 0.713776905733156,
+        "r2": 0.14350641270935105
+      },
+      "final_holdout_baseline": {
+        "mae": 0.8125,
+        "r2": -0.03896103896103886
+      },
+      "beats_baseline": true,
+      "beats_shuffled_labels": true
+    },
+    {
+      "target": "walking_likelihood",
+      "kind": "regression",
+      "trust_verdict": "supported_for_prototype",
+      "labelled_rows": 81,
+      "final_holdout_rows": 16,
+      "final_holdout": {
+        "mae": 0.6975215576090571,
+        "r2": 0.5620886912681299
+      },
+      "final_holdout_baseline": {
+        "mae": 1.0625,
+        "r2": -0.1180722891566266
+      },
+      "beats_baseline": true,
+      "beats_shuffled_labels": true
+    },
+    {
+      "target": "avoidance_likelihood",
+      "kind": "regression",
+      "trust_verdict": "not_validated",
+      "labelled_rows": 41,
+      "final_holdout_rows": 8,
+      "final_holdout": {
+        "mae": 1.2837248265623264,
+        "r2": -0.08315005144279541
+      },
+      "final_holdout_baseline": {
+        "mae": 1.375,
+        "r2": -0.22522522522522515
+      },
+      "beats_baseline": false,
+      "beats_shuffled_labels": false
+    },
+    {
+      "target": "route_choice",
+      "kind": "classification",
+      "trust_verdict": "not_validated",
+      "labelled_rows": 40,
+      "final_holdout_rows": 8,
+      "final_holdout": {
+        "balanced_accuracy": 0.2857142857142857,
+        "macro_f1": 0.2222222222222222
+      },
+      "final_holdout_baseline": {
+        "balanced_accuracy": 0.5,
+        "macro_f1": 0.4666666666666667
+      },
+      "beats_baseline": false,
+      "beats_shuffled_labels": false,
+      "observed_classes": [
+        "Depends on the weather",
+        "Either route",
+        "Shaded/less crowded route"
+      ]
+    }
+  ],
+  "wired_into_simulator": false,
+  "survey": {
+    "participants": 41,
+    "scenario_response_rows": 164,
+    "synthetic_citizens": 1000,
+    "holdout_people": 5,
+    "note": "A fresh generator fitted on 36 participants was checked against five unseen people. This supports distributional consistency, not prediction of an individual's behaviour."
+  }
+}

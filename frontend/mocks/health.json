@@ -1,0 +1,22 @@
+{
+  "status": "mock",
+  "mode": "mock",
+  "source": "recorded_fixture",
+  "checked_utc": "2026-09-19T14:52:02+00:00",
+  "simulator": false,
+  "omniverse_stream": "offline",
+  "model_card": true,
+  "capabilities": {
+    "http_api": false,
+    "live_simulation": false,
+    "omniverse_streaming": false,
+    "llm_advisor": false,
+    "random_forest_inference": false,
+    "run_persistence": false
+  },
+  "notes": [
+    "No Python HTTP API is running. Responses are recorded fixtures exported by integration/export_api_mocks.py.",
+    "No streaming-enabled Kit application exists yet, so the viewport shows a recorded-stage placeholder rather than an RTX stream.",
+    "The Random Forest models are trained but not wired into the simulator; the simulator still uses transparent rules."
+  ]
+}

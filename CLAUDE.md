@@ -26,7 +26,8 @@ context loss.
 |---|---|---|
 | `Simulation/` | simulation | `main.py` is self-contained, dependency-free, deterministic. `python main.py` runs ~80 asserts then the demo. |
 | `phase1/`–`phase8/` | visualisation | OSM city → semantics → contract → bridges → packaged states. **Treat as frozen.** |
-| `integration/` | boundary | Snapshot loader + route-mapping proposal tooling. |
+| `integration/` | boundary | Snapshot loader, route-mapping proposal tooling, and `export_api_mocks.py` (simulator report -> frontend fixtures). |
+| `frontend/` | web | Next.js dashboard against **recorded fixtures**. No Python API exists; `/api/health` says `mode: "mock"`. See `frontend/README.md`. |
 | `phase9/` | realism + demo | Materials, heights, trees, lighting, cameras, overlays — all `over` layers — plus `build_city_from_osm.py`. **Open `phase9/scene/main.usda` for the demo.** |
 | `phase10/` | survey | Real survey -> calibrated synthetic citizens. `data/` holds the four-table dataset. |
 | `docs/` | contracts | `INTEGRATION_CONTRACT.md` is authoritative. |
@@ -84,6 +85,10 @@ Only claim what the code does when executed. Verified as of this writing:
 - ✅ The Phase 9 agent renderer can join stable citizen IDs back to the simulator
   report and display six explicit behavior colors without changing the frozen
   canonical snapshot contract.
+- ✅ The `frontend/` dashboard renders the real report through fixtures shaped
+ like the *proposed* API. What it does NOT have: a Python backend, a job queue,
+ run persistence, WebRTC streaming, or any live simulation. A "run" replays the
+ recorded report and warns that it does not respond to the submitted scenario.
 - ✅ `integration/export_snapshot.py` closes the loop: simulator report ->
   canonical v1 snapshot -> USD. 12/12 integration tests pass, agents land within
   1mm of their route geometry, snapshots are `data_kind: simulation`.
@@ -101,6 +106,10 @@ python phase3\validate_mock_data.py <snapshot.json>
 # animated agents (60 frames of real walking, then press play in Kit)
 python integration\export_snapshot.py --state before --frames 60 --duration 60
 python phase9\agents_instancer.py data\simulation_before_*.json --behavior-report Simulation\urbantwin_demo_output.json
+
+# web dashboard (recorded fixtures; there is still no Python HTTP API)
+python integration\export_api_mocks.py      # refresh fixtures after a new run
+cd frontend; npm install; npm run dev
 ```
 
 Open `phase9/scene/main.usda` in Kit for the demo stage.

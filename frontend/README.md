@@ -1,0 +1,105 @@
+# UrbanTwin AI — web frontend
+
+Next.js App Router + TypeScript + Tailwind dashboard for the UrbanTwin
+simulator, built against the API proposed in `docs/FRONTEND_BACKEND_HANDOFF.md`.
+
+**That API does not exist yet.** This app ships with recorded fixtures and says
+so on screen. Nothing here should be presented as a live backend or a live
+Omniverse stream.
+
+```powershell
+cd C:\Users\arnav\Argus\frontend
+npm install
+npm run dev            # http://localhost:3000
+```
+
+## Where the data comes from
+
+```text
+Simulation/main.py
+  -> Simulation/urbantwin_demo_output.json      real simulator report
+  -> integration/export_api_mocks.py            THIS repo's exporter
+  -> frontend/mocks/*.json                      recorded API responses
+  -> frontend/app/api/*                         route handlers
+  -> the dashboard
+```
+
+Regenerate the fixtures after a new simulator run:
+
+```powershell
+cd C:\Users\arnav\Argus
+python integration\export_api_mocks.py
+```
+
+The fixtures carry the real numbers from that run — metrics, advisor text,
+problem buildings, behaviour counts. Only the API envelope (run ids, status,
+pagination, warnings) is added by the exporter.
+
+## Mock mode vs live mode
+
+| | `URBANTWIN_API_BASE` unset | `URBANTWIN_API_BASE=http://localhost:8000` |
+|---|---|---|
+| `/api/*` | serves `mocks/` | forwards to the Python service |
+| `/api/health` | `mode: "mock"`, all capabilities `false` | whatever the service reports |
+| Backend down | n/a | `502 upstream_unavailable`, the page says so |
+
+There is deliberately **no** fallback from live to mock. If a configured backend
+is unreachable the dashboard shows an error rather than quietly displaying
+recorded numbers as if they were live output.
+
+Every claim in the UI is driven by `/api/health` and `/api/stream/config`, not by
+build flags. A recorded run is labelled *Recorded data* in the header, *Recorded
+fixture* in the run card, and the first warning on every replayed run states that
+no simulator process ran.
+
+## Swapping in the real Omniverse stream
+
+The viewport contains no transport code. `lib/viewer/` owns it:
+
+| File | Role |
+|---|---|
+| `adapter.ts` | The `ViewerAdapter` interface and `ViewerState`. |
+| `mock-adapter.ts` | Reports offline from `/api/stream/config`. Renders no picture. |
+| `kit-webrtc-adapter.ts` | The NVIDIA Kit App Streaming path, with the connect call marked. |
+| `index.ts` | Picks the adapter from what the server reports. |
+
+`components/OmniverseViewer.tsx` renders whatever state the adapter reports and
+is mounted client-only (`ssr: false`), because WebRTC and media APIs do not exist
+during server rendering. To go live: build `urbantwin.streaming.kit`, return a
+signaling URL, ICE servers and a short-lived token from `/api/stream/config`
+server-side, then finish `kit-webrtc-adapter.ts`. No dashboard component changes.
+
+View commands (`state`, `camera`, `overlay`) are checked against a fixed
+allow-list in `app/api/runs/[runId]/view/route.ts`. Prim paths, file paths and
+arbitrary strings are rejected before anything could reach Kit.
+
+## Layout
+
+```text
+app/
+  page.tsx                     server-rendered dashboard
+  runs/[runId]/page.tsx        permalink for one run
+  api/                         mock-serving / proxying route handlers
+components/                    OmniverseViewer, ScenarioControls, MetricGrid,
+                               BeforeAfterChart, BehaviorLegend, ProblemAreas,
+                               AdvisorPanel, ModelTrustPanel, RunStatus, ...
+lib/
+  types.ts                     the API contract in TypeScript
+  api.ts                       browser client
+  metric-format.ts             metric direction, formatting, delta polarity
+  behaviors.ts                 the six fixed behaviour colours
+  viewer/                      the Omniverse transport boundary
+  server/                      fixtures, run store, bootstrap (server only)
+mocks/                         recorded API responses
+```
+
+## Conventions worth keeping
+
+- Metric direction lives in `lib/metric-format.ts`. Never decide "higher is
+  better" inside a component; a raw delta sign is meaningless on its own.
+- Behaviour colours are derived from the linear RGB triples in
+  `phase9/agents_instancer.py`, so the legend cannot drift from the viewport.
+- The large payloads stay on the server. The citizen fixture is ~220 KB and is
+  sliced by `app/api/runs/[runId]/citizens`; it is never imported by a component.
+- Population is always labelled *population equivalent* and kept distinct from
+  the ≤ 500 rendered agents.

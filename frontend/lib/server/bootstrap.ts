@@ -1,0 +1,102 @@
+import "server-only";
+
+import { fixtures } from "./fixtures";
+import { recordedRun, resolveRun } from "./run-store";
+import { upstreamBase } from "./upstream";
+import type {
+  Health,
+  ModelCard,
+  RunSummary,
+  ScenarioCatalog,
+  StreamConfig,
+} from "../types";
+
+/**
+ * Server-side page payload.
+ *
+ * The dashboard is rendered with data already in hand so the first paint is the
+ * real thing rather than a skeleton. In mock mode the fixtures are read from
+ * disk; with `URBANTWIN_API_BASE` set the same shapes are fetched from the
+ * Python service, and if that service is down the page says the backend is
+ * unreachable instead of quietly falling back to recorded numbers.
+ */
+export interface Bootstrap {
+  health: Health;
+  scenarios: ScenarioCatalog;
+  modelCard: ModelCard;
+  streamConfig: StreamConfig;
+  run: RunSummary | null;
+  /** Set when a configured live backend could not be reached. */
+  upstreamError: string | null;
+}
+
+const UNREACHABLE_HEALTH = (base: string, detail: string): Health => ({
+  status: "offline",
+  mode: "live",
+  source: "live",
+  checked_utc: new Date().toISOString(),
+  simulator: false,
+  omniverse_stream: "offline",
+  model_card: false,
+  capabilities: {
+    http_api: false,
+    live_simulation: false,
+    omniverse_streaming: false,
+    llm_advisor: false,
+    random_forest_inference: false,
+    run_persistence: false,
+  },
+  notes: [`Configured backend ${base} did not respond: ${detail}`],
+});
+
+export async function loadBootstrap(runId?: string): Promise<Bootstrap> {
+  const base = upstreamBase();
+
+  if (!base) {
+    const [health, scenarios, modelCard, streamConfig] = await Promise.all([
+      fixtures.health(),
+      fixtures.scenarios(),
+      fixtures.modelCard(),
+      fixtures.streamConfig(),
+    ]);
+    const run = runId ? await resolveRun(runId) : await recordedRun();
+    return { health, scenarios, modelCard, streamConfig, run, upstreamError: null };
+  }
+
+  try {
+    const get = async <T,>(path: string): Promise<T> => {
+      const response = await fetch(`${base}${path}`, {
+        cache: "no-store",
+        signal: AbortSignal.timeout(15_000),
+      });
+      if (!response.ok) throw new Error(`${path} returned ${response.status}`);
+      return (await response.json()) as T;
+    };
+
+    const [health, scenarios, modelCard, streamConfig] = await Promise.all([
+      get<Health>("/api/health"),
+      get<ScenarioCatalog>("/api/scenarios"),
+      get<ModelCard>("/api/model-card"),
+      get<StreamConfig>("/api/stream/config"),
+    ]);
+    const run = runId ? await get<RunSummary>(`/api/runs/${runId}`) : null;
+    return { health, scenarios, modelCard, streamConfig, run, upstreamError: null };
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : "unknown error";
+    const [scenarios, modelCard, streamConfig] = await Promise.all([
+      fixtures.scenarios(),
+      fixtures.modelCard(),
+      fixtures.streamConfig(),
+    ]);
+    return {
+      health: UNREACHABLE_HEALTH(base, detail),
+      // Constraints, the model card and the stream config are static reference
+      // data; the run is not, so nothing is shown in place of live results.
+      scenarios,
+      modelCard,
+      streamConfig: { ...streamConfig, status: "offline" },
+      run: null,
+      upstreamError: `Configured backend ${base} did not respond: ${detail}`,
+    };
+  }
+}

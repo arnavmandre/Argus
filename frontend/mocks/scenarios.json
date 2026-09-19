@@ -1,0 +1,54 @@
+{
+  "source": "recorded_fixture",
+  "constraints": {
+    "temperature": [
+      -10,
+      45
+    ],
+    "humidity": [
+      20,
+      90
+    ],
+    "rainfall": [
+      0,
+      100
+    ],
+    "population": [
+      25000,
+      100000
+    ]
+  },
+  "units": {
+    "temperature": "\u00b0C",
+    "humidity": "%",
+    "rainfall": "mm (prototype scale)",
+    "population": "population equivalent"
+  },
+  "presets": [
+    {
+      "id": "baseline",
+      "label": "Calm day",
+      "description": "The control arm of the recorded report.",
+      "temperature": 26,
+      "humidity": 40,
+      "rainfall": 5,
+      "population": 30000
+    },
+    {
+      "id": "extreme_heat_rain",
+      "label": "Extreme heat and rain",
+      "description": "The recorded run with full before/after data.",
+      "temperature": 40,
+      "humidity": 80,
+      "rainfall": 80,
+      "population": 100000
+    }
+  ],
+  "recorded_scenario": {
+    "run_id": "run_20260919_001",
+    "temperature": 40,
+    "humidity": 80,
+    "rainfall": 80,
+    "population": 100000
+  }
+}

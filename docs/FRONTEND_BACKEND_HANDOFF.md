@@ -333,11 +333,25 @@ All 12 current end-to-end checks pass. Agent positions are within 1 mm of their
 routes, route chains join within 0.54 m in the worst case, and sampled animation
 transitions contain no backward movement.
 
+### Web frontend
+
+Source: `frontend/`. Next.js App Router, TypeScript, Tailwind. It implements the
+dashboard described below against recorded fixtures in `frontend/mocks/`,
+exported from the real simulator report by `integration/export_api_mocks.py`.
+
+`/api/health` reports `mode: "mock"` with every capability false, and the UI is
+driven by that rather than by build flags, so a recorded run cannot be presented
+as a live backend. Setting `URBANTWIN_API_BASE` makes the same route handlers
+forward to the Python service instead; there is no fallback from live to mock.
+
+The Omniverse viewport is isolated behind `frontend/lib/viewer/`. The placeholder
+adapter renders no picture and reports offline; `kit-webrtc-adapter.ts` is the
+NVIDIA Kit App Streaming replacement path.
+
 ## What has not been built
 
 Do not assume any of the following exists:
 
-- Next.js application or other web frontend;
 - HTTP/FastAPI backend;
 - scenario job queue or run persistence;
 - database or authentication;
@@ -589,7 +603,7 @@ The frontend milestone is complete when:
 
 ## Immediate build sequence
 
-1. Scaffold Next.js and implement typed mock dashboard.
+1. ~~Scaffold Next.js and implement typed mock dashboard.~~ Done: `frontend/`.
 2. Build the one-command local simulation/orchestration workflow.
 3. Implement the small Python HTTP API around that workflow.
 4. Create `urbantwin.streaming.kit` and verify local WebRTC separately.
