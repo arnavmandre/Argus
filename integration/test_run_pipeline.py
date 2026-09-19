@@ -487,6 +487,70 @@ class PipelineTests(unittest.TestCase):
                 (root / "data" / "runs" / "test-run.backup").exists()
             )
 
+    @patch("integration.run_pipeline.run_stage")
+    def test_warning_manifest_rewrite_failure_returns_persisted_success(
+        self, run_stage
+    ):
+        run_stage.side_effect = self.complete_stage
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            completed = root / "data" / "runs" / "test-run"
+            completed.mkdir(parents=True)
+            (completed / "manifest.json").write_text(
+                '{"status":"complete","old":true}\n', encoding="utf-8"
+            )
+            real_rmtree = pipeline_module.shutil.rmtree
+            real_replace = pipeline_module.os.replace
+
+            def fail_backup_removal(path, *args, **kwargs):
+                if Path(path).name == "test-run.backup":
+                    raise OSError("injected backup cleanup failure")
+                return real_rmtree(path, *args, **kwargs)
+
+            def fail_warning_manifest_rewrite(source, destination):
+                if (
+                    Path(source) == completed / "manifest.json.tmp"
+                    and Path(destination) == completed / "manifest.json"
+                ):
+                    raise OSError("injected warning manifest rewrite failure")
+                return real_replace(source, destination)
+
+            error = io.StringIO()
+            with patch(
+                "integration.run_pipeline.shutil.rmtree",
+                side_effect=fail_backup_removal,
+            ), patch(
+                "integration.run_pipeline.os.replace",
+                side_effect=fail_warning_manifest_rewrite,
+            ), redirect_stderr(error):
+                manifest = run_pipeline(self.config(root))
+
+            persisted = json.loads(
+                (completed / "manifest.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(manifest, persisted)
+            self.assertEqual(manifest["status"], "complete")
+            self.assertIn(
+                "warning: could not record finalization warnings: "
+                "injected warning manifest rewrite failure",
+                error.getvalue(),
+            )
+            self.assertIn(
+                "unrecorded warnings: run backup cleanup failed: "
+                "injected backup cleanup failure",
+                error.getvalue(),
+            )
+            self.assertTrue(
+                json.loads(
+                    (completed / "simulation_report.json").read_text(
+                        encoding="utf-8"
+                    )
+                )["report"]
+            )
+            self.assertTrue(
+                (root / "data" / "runs" / "test-run.backup").exists()
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

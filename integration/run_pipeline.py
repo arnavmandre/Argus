@@ -615,9 +615,22 @@ def run_pipeline(config: PipelineConfig) -> dict:
                 os.replace(final_manifest_tmp, final_manifest)
             except OSError as exc:
                 print(
-                    f"warning: could not record finalization warnings: {exc}",
+                    f"warning: could not record finalization warnings: {exc}; "
+                    "run remains complete; unrecorded warnings: "
+                    + "; ".join(finalization_warnings),
                     file=sys.stderr,
                 )
+                try:
+                    manifest = json.loads(
+                        final_manifest.read_text(encoding="utf-8")
+                    )
+                except (OSError, json.JSONDecodeError) as reload_exc:
+                    print(
+                        "warning: could not reload the persisted complete "
+                        f"manifest: {reload_exc}",
+                        file=sys.stderr,
+                    )
+                    manifest.pop("warnings", None)
             finally:
                 if final_manifest_tmp.exists():
                     try:

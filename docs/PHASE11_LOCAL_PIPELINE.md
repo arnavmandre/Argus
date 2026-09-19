@@ -92,9 +92,12 @@ starting, so copy any needed evidence first.
 
 After promotion and compatibility publication commit, removal of obsolete
 backup files is best-effort. A cleanup failure leaves the completed run
-successful and records a `warnings` entry in its manifest instead of reporting
-the invocation as failed. A retained `<run-id>.backup` is removed by the next
-run; a warning naming a `.pipeline-backup` file identifies obsolete
+successful and normally records a `warnings` entry in its manifest instead of
+reporting the invocation as failed. If the warning-only manifest rewrite also
+fails, stderr reports the unrecorded warnings and persistence error; the
+returned manifest is reloaded from disk so it remains consistent with the
+complete manifest already published. A retained `<run-id>.backup` is removed by
+the next run; a warning naming a `.pipeline-backup` file identifies obsolete
 compatibility backup litter that can be inspected and removed manually.
 
 For fixture-only maintenance, without rerunning simulation or USD generation,
