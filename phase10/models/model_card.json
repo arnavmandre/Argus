@@ -1,0 +1,180 @@
+{
+  "created_utc": "2026-09-19T13:45:17.728768+00:00",
+  "random_seed": 29,
+  "sklearn_version": "1.9.1",
+  "dataset_sha256": "e29675983199b56b0f8c20c59044b1f3a7eb53ae29d4f760809d44982c952d12",
+  "split_policy": "participant-level; 8 final holdout people; 5-fold GroupKFold on remaining people",
+  "limitations": [
+    "Only 41 participants; most are under 25.",
+    "Temperature, crowding and shade co-vary across the four scenarios.",
+    "Labels are self-reported intentions, not observed pedestrian behavior.",
+    "Avoidance and route-choice each have only one labeled scenario per participant."
+  ],
+  "models": {
+    "comfort": {
+      "kind": "regression",
+      "labelled_rows": 123,
+      "train_rows": 99,
+      "final_holdout_rows": 24,
+      "cv": {
+        "mae": 0.8406712470758828,
+        "r2": 0.4376803169945497
+      },
+      "cv_baseline": {
+        "mae": 1.2301587301587302,
+        "r2": -0.042788347807892
+      },
+      "cv_shuffled_labels": {
+        "mae": 1.295651530285774,
+        "r2": -0.11840263706787701
+      },
+      "final_holdout": {
+        "mae": 0.8241561026936025,
+        "r2": 0.35203991916040744
+      },
+      "final_holdout_baseline": {
+        "mae": 1.25,
+        "r2": -0.02857142857142847
+      },
+      "beats_baseline": true,
+      "beats_shuffled_labels": true,
+      "trust_verdict": "promising",
+      "artifact": "comfort_random_forest.joblib",
+      "artifact_sha256": "17b85af422406f1695cb44c1ab83337c68d27af1a3ddc5a9913ec16ae102f880",
+      "observed_classes": null
+    },
+    "stress": {
+      "kind": "regression",
+      "labelled_rows": 82,
+      "train_rows": 66,
+      "final_holdout_rows": 16,
+      "cv": {
+        "mae": 0.7759178884937814,
+        "r2": 0.0646662753208314
+      },
+      "cv_baseline": {
+        "mae": 0.9952380952380953,
+        "r2": -0.368429265716482
+      },
+      "cv_shuffled_labels": {
+        "mae": 0.948099915601827,
+        "r2": -0.21325338288547324
+      },
+      "final_holdout": {
+        "mae": 0.713776905733156,
+        "r2": 0.14350641270935105
+      },
+      "final_holdout_baseline": {
+        "mae": 0.8125,
+        "r2": -0.03896103896103886
+      },
+      "beats_baseline": true,
+      "beats_shuffled_labels": true,
+      "trust_verdict": "supported_for_prototype",
+      "artifact": "stress_random_forest.joblib",
+      "artifact_sha256": "f5a0725cba0c1ca01a261eceeeb22799956bd05ca8e3b9fe04ef9504e5f6302a",
+      "observed_classes": null
+    },
+    "walking_likelihood": {
+      "kind": "regression",
+      "labelled_rows": 81,
+      "train_rows": 65,
+      "final_holdout_rows": 16,
+      "cv": {
+        "mae": 0.7905347708772708,
+        "r2": 0.5231359621372477
+      },
+      "cv_baseline": {
+        "mae": 1.1664835164835163,
+        "r2": -0.07228741564080372
+      },
+      "cv_shuffled_labels": {
+        "mae": 1.2265274024688175,
+        "r2": -0.11158576319630598
+      },
+      "final_holdout": {
+        "mae": 0.6975215576090571,
+        "r2": 0.5620886912681299
+      },
+      "final_holdout_baseline": {
+        "mae": 1.0625,
+        "r2": -0.1180722891566266
+      },
+      "beats_baseline": true,
+      "beats_shuffled_labels": true,
+      "trust_verdict": "supported_for_prototype",
+      "artifact": "walking_likelihood_random_forest.joblib",
+      "artifact_sha256": "691ac1094a293008d2ee473d52d6b7b91ebe19872f318a2c72c2622bf80af918",
+      "observed_classes": null
+    },
+    "avoidance_likelihood": {
+      "kind": "regression",
+      "labelled_rows": 41,
+      "train_rows": 33,
+      "final_holdout_rows": 8,
+      "cv": {
+        "mae": 1.753061838373267,
+        "r2": -0.5292119224388433
+      },
+      "cv_baseline": {
+        "mae": 1.5571428571428572,
+        "r2": -0.24987922705314008
+      },
+      "cv_shuffled_labels": {
+        "mae": 1.4400043084693084,
+        "r2": -0.135028808689251
+      },
+      "final_holdout": {
+        "mae": 1.2837248265623264,
+        "r2": -0.08315005144279541
+      },
+      "final_holdout_baseline": {
+        "mae": 1.375,
+        "r2": -0.22522522522522515
+      },
+      "beats_baseline": false,
+      "beats_shuffled_labels": false,
+      "trust_verdict": "not_validated",
+      "artifact": "avoidance_likelihood_random_forest.joblib",
+      "artifact_sha256": "8fb83638d0a74e2a577e83efb5786cec1991043f4ad9502f972dc1bf6b87d3f5",
+      "observed_classes": null
+    },
+    "route_choice": {
+      "kind": "classification",
+      "labelled_rows": 40,
+      "train_rows": 32,
+      "final_holdout_rows": 8,
+      "cv": {
+        "balanced_accuracy": 0.4083333333333333,
+        "macro_f1": 0.2677777777777778
+      },
+      "cv_baseline": {
+        "balanced_accuracy": 0.5,
+        "macro_f1": 0.4105050505050505
+      },
+      "cv_shuffled_labels": {
+        "balanced_accuracy": 0.5416666666666667,
+        "macro_f1": 0.3686868686868687
+      },
+      "final_holdout": {
+        "balanced_accuracy": 0.2857142857142857,
+        "macro_f1": 0.2222222222222222
+      },
+      "final_holdout_baseline": {
+        "balanced_accuracy": 0.5,
+        "macro_f1": 0.4666666666666667
+      },
+      "beats_baseline": false,
+      "beats_shuffled_labels": false,
+      "trust_verdict": "not_validated",
+      "artifact": "route_choice_random_forest.joblib",
+      "artifact_sha256": "5a0f6352d33f970113d79f5b91c02dae9c84d82c6619dc92153d16162540a878",
+      "observed_classes": [
+        "Depends on the weather",
+        "Either route",
+        "Shaded/less crowded route"
+      ]
+    }
+  },
+  "overall_verdict": "mixed_results_do_not_claim_overall_accuracy"
+}
