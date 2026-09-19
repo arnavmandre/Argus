@@ -1,16 +1,25 @@
 # UrbanTwin AI — web frontend
 
 Next.js App Router + TypeScript + Tailwind dashboard for the UrbanTwin
-simulator, built against the API proposed in `docs/FRONTEND_BACKEND_HANDOFF.md`.
+simulator, built against the API in `docs/FRONTEND_BACKEND_HANDOFF.md`.
 
-**That API does not exist yet.** This app ships with recorded fixtures and says
-so on screen. Nothing here should be presented as a live backend or a live
-Omniverse stream.
+**Default = recorded fixtures.** With `URBANTWIN_API_BASE` unset, every `/api/*`
+handler serves `mocks/` and labels `mode: "mock"`. A "run" replays a prior
+report and warns that no simulator process ran for the submitted scenario.
+
+**Optional live backend (Phase 12).** Start `python -m api` and set
+`URBANTWIN_API_BASE` so the same handlers proxy to the Python service
+(`mode: "live"`, `source: "live"`). Omniverse streaming is still offline. See
+`docs/PHASE12_LOCAL_API.md`.
 
 ```powershell
 cd C:\Users\arnav\Argus\frontend
 npm install
-npm run dev            # http://localhost:3000
+npm run dev            # http://localhost:3000  (mock mode)
+
+# live mode (second shell: python -m api --host 127.0.0.1 --port 8000)
+$env:URBANTWIN_API_BASE = "http://127.0.0.1:8000"
+npm run dev
 ```
 
 ## Where the data comes from
@@ -53,10 +62,10 @@ pagination, warnings) is added by the exporter.
 
 ## Mock mode vs live mode
 
-| | `URBANTWIN_API_BASE` unset | `URBANTWIN_API_BASE=http://localhost:8000` |
+| | `URBANTWIN_API_BASE` unset | `URBANTWIN_API_BASE=http://127.0.0.1:8000` |
 |---|---|---|
-| `/api/*` | serves `mocks/` | forwards to the Python service |
-| `/api/health` | `mode: "mock"`, all capabilities `false` | whatever the service reports |
+| `/api/*` | serves `mocks/` | forwards to `python -m api` |
+| `/api/health` | `mode: "mock"`, live-sim capabilities `false` | `mode: "live"`, `source: "live"` |
 | Backend down | n/a | `502 upstream_unavailable`, the page says so |
 
 There is deliberately **no** fallback from live to mock. If a configured backend
@@ -64,9 +73,11 @@ is unreachable the dashboard shows an error rather than quietly displaying
 recorded numbers as if they were live output.
 
 Every claim in the UI is driven by `/api/health` and `/api/stream/config`, not by
-build flags. A recorded run is labelled *Recorded data* in the header, *Recorded
-fixture* in the run card, and the first warning on every replayed run states that
-no simulator process ran.
+build flags. In mock mode a recorded run is labelled *Recorded data* in the
+header, *Recorded fixture* in the run card, and the first warning on every
+replayed run states that no simulator process ran. In live mode the header
+follows the proxied health payload (`mode: "live"`); streaming stays offline
+until a Kit signaling URL exists.
 
 ## Swapping in the real Omniverse stream
 

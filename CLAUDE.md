@@ -27,14 +27,16 @@ context loss.
 | `Simulation/` | simulation | `main.py` is self-contained, dependency-free, deterministic. `python main.py` runs ~80 asserts then the demo. |
 | `phase1/`–`phase8/` | visualisation | OSM city → semantics → contract → bridges → packaged states. **Treat as frozen.** |
 | `integration/` | boundary | Snapshot loader, route-mapping proposal tooling, and `export_api_mocks.py` (simulator report -> frontend fixtures). |
-| `frontend/` | web | Next.js dashboard against **recorded fixtures**. No Python API exists; `/api/health` says `mode: "mock"`. See `frontend/README.md`. |
+| `api/` | local HTTP | Phase 12 stdlib server: `python -m api`. Single-worker Phase 11 runs; see `docs/PHASE12_LOCAL_API.md`. |
+| `frontend/` | web | Next.js dashboard. Default = recorded fixtures (`mode: "mock"`). Set `URBANTWIN_API_BASE` to proxy Phase 12. See `frontend/README.md`. |
 | `phase9/` | realism + demo | Materials, heights, trees, lighting, cameras, overlays — all `over` layers — plus `build_city_from_osm.py`. **Open `phase9/scene/main.usda` for the demo.** |
 | `phase10/` | survey | Real survey -> calibrated synthetic citizens. `data/` holds the four-table dataset. |
 | `docs/` | contracts | `INTEGRATION_CONTRACT.md` is authoritative. |
 
-Frontend/backend product context and the proposed web API are consolidated in
-`docs/FRONTEND_BACKEND_HANDOFF.md`. It clearly marks planned capabilities so a
-frontend must not present mocks as a live backend or stream.
+Frontend/backend product context is in `docs/FRONTEND_BACKEND_HANDOFF.md`. Local
+live HTTP is documented in `docs/PHASE12_LOCAL_API.md`. Do not present mocks as
+a live backend, and do not claim Omniverse streaming — stream config stays
+offline until Phase 15.
 
 ## Hard rules
 
@@ -85,10 +87,14 @@ Only claim what the code does when executed. Verified as of this writing:
 - ✅ The Phase 9 agent renderer can join stable citizen IDs back to the simulator
   report and display six explicit behavior colors without changing the frozen
   canonical snapshot contract.
-- ✅ The `frontend/` dashboard renders the real report through fixtures shaped
- like the *proposed* API. What it does NOT have: a Python backend, a job queue,
- run persistence, WebRTC streaming, or any live simulation. A "run" replays the
- recorded report and warns that it does not respond to the submitted scenario.
+- ✅ The `frontend/` dashboard defaults to recorded fixtures shaped like the API
+  contract. Mock "runs" replay a prior report and warn that they do not respond
+  to the submitted scenario. With `URBANTWIN_API_BASE` set, the same routes proxy
+  to `python -m api` (`mode: "live"`). Still no durable job queue, cross-process
+  run persistence, or WebRTC streaming.
+- ✅ Phase 12: `python -m api` accepts scenario POSTs, runs the Phase 11 pipeline
+  on a single worker, and returns `source: "live"` summaries. Omniverse stream
+  config remains offline.
 - ✅ `integration/export_snapshot.py` closes the loop: simulator report ->
   canonical v1 snapshot -> USD. 12/12 integration tests pass, agents land within
   1mm of their route geometry, snapshots are `data_kind: simulation`.
@@ -119,9 +125,16 @@ python integration\run_pipeline.py `
 python integration\export_snapshot.py --state before --frames 60 --duration 60
 python phase9\agents_instancer.py data\simulation_before_*.json --behavior-report Simulation\urbantwin_demo_output.json
 
-# web dashboard (recorded fixtures; there is still no Python HTTP API)
+# web dashboard — mock fixtures (default)
 python integration\export_api_mocks.py      # refresh fixtures after a new run
 cd frontend; npm install; npm run dev
+
+# Phase 12 local HTTP API + proxied frontend
+python -m api --host 127.0.0.1 --port 8000
+# second shell:
+$env:URBANTWIN_API_BASE = "http://127.0.0.1:8000"
+cd frontend; npm run dev
+# operator notes: docs/PHASE12_LOCAL_API.md
 ```
 
 Open `phase9/scene/main.usda` in Kit for the demo stage.

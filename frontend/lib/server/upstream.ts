@@ -1,12 +1,11 @@
 import "server-only";
 
 /**
- * Swap point between the recorded fixtures and the planned Python API.
+ * Swap point between recorded fixtures and the Phase 12 Python API.
  *
- * The Python HTTP service in docs/FRONTEND_BACKEND_HANDOFF.md has not been
- * built. Until it is, every route handler serves fixtures and labels them
- * `mode: "mock"`. Set `URBANTWIN_API_BASE` and the same handlers forward to the
- * real service instead.
+ * Default (no env): every route handler serves fixtures and labels them
+ * `mode: "mock"`. Set `URBANTWIN_API_BASE` (e.g. http://127.0.0.1:8000) and the
+ * same handlers forward to `python -m api`. See docs/PHASE12_LOCAL_API.md.
  *
  * Deliberately there is no fallback from live to mock: if the configured
  * backend is unreachable the client gets 502 `upstream_unavailable`. Silently
