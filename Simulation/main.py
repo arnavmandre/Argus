@@ -28,6 +28,28 @@ What changed vs. the first version
       zone/building/route/citizen field, no route penalty, no intervention).
       HEI is re-weighted without it.
 
+What changed in the audit pass
+    * Corridor crowding is now EMERGENT. It used to be the population slider
+      multiplied by a fixed per-route constant, which meant a corridor nobody
+      walked down could report higher congestion than one carrying thousands.
+      Route choice and congestion are now solved together by iteration
+      (see route_congestion and the assignment loop in simulate), damped with
+      the method of successive averages so the flow does not stampede between
+      corridors. Routes declare capacity_pph.
+    * Citizen profiles now reach the headline metrics. Per-citizen comfort used
+      to be computed and then discarded, so identical results came out whether
+      the population was maximally heat-sensitive or maximally heat-tolerant.
+      It is now aggregated into `citizen_comfort` and carries the largest
+      single weight in the Human Experience Index.
+    * walking_speed_kmh is no longer a dead parameter. Route cost is a function
+      of travel TIME, and heat/rain/crowd exposure accumulate over that time,
+      so slow walkers and long detours cost more.
+    * greenery is its own route property instead of an alias for shade (an
+      arcade shades without being green). Falls back to shade when absent.
+    * HEI is a weighted average of four bounded pillars whose weights sum to
+      1.0. It previously re-added heat and crowding on top of pillars that
+      already contained them, double-counting both.
+
 Prototype metrics are intentionally heuristic and are NOT medical,
 meteorological, hydrological, or real-world predictive measurements.
 """
@@ -60,6 +82,53 @@ BUILDING_CROWD_WEIGHT = 0.30
 
 # A building is reported as a "problem building" when a signal passes these.
 BUILDING_ISSUE_THRESHOLDS = {"heat": 50.0, "rain": 40.0, "crowd": 70.0}
+
+# --- Emergent corridor crowding -------------------------------------------
+# Route crowding = ambient share (how intrinsically busy/narrow the corridor is,
+# independent of our agents) + induced share (how many simulated pedestrians
+# actually chose it, against its capacity). Raising AMBIENT_CROWD_SHARE makes
+# crowding more of a fixed property; lowering it makes crowding more emergent.
+AMBIENT_CROWD_SHARE = 0.30
+
+# Used when a route in city.json does not declare capacity_pph. Pedestrians per
+# hour the corridor absorbs before it reads as fully congested.
+DEFAULT_ROUTE_CAPACITY_PPH = 1500.0
+
+# Route choice is solved by iteration: choose -> measure congestion -> choose
+# again, so citizens react to the crowd they themselves create.
+#
+# Everyone picking the single cheapest route at once makes raw iteration
+# oscillate (the whole flow stampedes between two corridors and never settles).
+# We damp it with the method of successive averages: on pass k the measured
+# load is blended into the running load with weight 1/k, which is the standard
+# fix for this in traffic assignment and converges to a stable split.
+# Measured on the demo city: 4, 6 and 10 passes agree to within 0.3% on headline
+# crowding, so 8 is comfortably inside the converged range.
+CROWDING_PASSES = 8
+
+# --- Route cost weights ----------------------------------------------------
+# All in the same arbitrary "cost units". Ratios are what matter: they set how
+# many minutes of extra walking a citizen will accept to avoid heat/rain/crowds.
+# Exposure terms are per hour of travel, so a longer or slower trip accumulates
+# more stress; TIME_COST_PER_HOUR keeps a ~0.3 h walk near its old cost scale.
+TIME_COST_PER_HOUR = 8.0
+HEAT_COST_PER_HOUR = 24.0
+RAIN_COST_PER_HOUR = 24.0
+CROWD_COST_PER_HOUR = 18.0
+TRANSIT_BONUS = 1.5      # flat draw of a transit-served corridor
+GREEN_BONUS = 1.2        # flat draw of a green corridor
+
+# --- Human Experience Index ------------------------------------------------
+# Weights over four bounded 0..100 pillars; they sum to 1.0 so the index cannot
+# leave 0..100 by construction. citizen_comfort carries the largest single
+# weight: this is a human-centric twin, so what the simulated people actually
+# experienced should dominate the city-average environmental readings.
+HEI_WEIGHTS = {
+    "citizen_comfort": 0.35,
+    "comfort": 0.25,
+    "safety": 0.20,
+    "mobility": 0.20,
+}
 
 
 # ---------------------------------------------------------------------------
@@ -118,9 +187,16 @@ class Route:
     distance_km: float
     shade: float
     drainage: float
-    base_crowding: float
+    base_crowding: float          # ambient busyness when our agents are not counted
     transit: float = 0.0
+    greenery: float = -1.0        # 0..1 trees/planting. -1 => fall back to `shade`
+    capacity_pph: float = DEFAULT_ROUTE_CAPACITY_PPH   # pedestrians/hour before full congestion
     via_zones: Tuple[str, ...] = ()   # zones the route passes through (for reporting/visualisation)
+
+    @property
+    def green(self) -> float:
+        """Greenery, defaulting to shade for city files written before the split."""
+        return self.shade if self.greenery < 0 else self.greenery
 
 
 @dataclass
@@ -296,7 +372,9 @@ def load_city(path: Union[str, Path] = DEFAULT_CITY_PATH) -> Dict:
     zone      : id, drainage(0..1), shade(0..1)
     building  : id, name, type, zone, capacity(>=0), cooling(0..1), flood_exposure(0..1)
     route     : id, start, end, distance_km(>0), shade, drainage, base_crowding (0..1);
-                optional: transit (0..1, default 0), via_zones (list of zone ids)
+                optional: transit (0..1, default 0), greenery (0..1, defaults to
+                shade), capacity_pph (>0, pedestrians/hour before full
+                congestion), via_zones (list of zone ids)
 
     Unknown keys are ignored. Field-level problems are collected and reported
     together, then cross-references (building->zone, route->building/zone) are checked.
@@ -329,10 +407,12 @@ def load_city(path: Union[str, Path] = DEFAULT_CITY_PATH) -> Dict:
             distance_km=float(r["distance_km"]), shade=float(r["shade"]),
             drainage=float(r["drainage"]), base_crowding=float(r["base_crowding"]),
             transit=float(r.get("transit", 0.0)),
+            greenery=float(r["greenery"]) if "greenery" in r else -1.0,
+            capacity_pph=float(r.get("capacity_pph", DEFAULT_ROUTE_CAPACITY_PPH)),
             via_zones=tuple(str(z) for z in r.get("via_zones", [])),
         ),
-        problems, unit=("shade", "drainage", "base_crowding", "transit"),
-        positive=("distance_km",), extra_check=_check_via_zones,
+        problems, unit=("shade", "drainage", "base_crowding", "transit", "greenery"),
+        positive=("distance_km", "capacity_pph"), extra_check=_check_via_zones,
     )
 
     if problems:
@@ -472,14 +552,6 @@ def zone_rain_impact(rainfall: float, drainage: float) -> float:
     return clamp(raw * 100)
 
 
-def crowding_score(population: int, base_crowding: float = 0.50) -> float:
-    """
-    Population is scaled against 50K baseline.
-    """
-    population_factor = norm(population, 25_000, 100_000)
-    return clamp((0.25 + 0.75 * population_factor) * base_crowding * 100 / 0.50)
-
-
 def building_heat_exposure(hs: float, zone: Zone, building: Building) -> float:
     """
     Heat felt at a building's entrance/surroundings.
@@ -515,32 +587,42 @@ def route_cost(
     temperature: float,
     humidity: float,
     rainfall: float,
-    population: int,
+    crowd_level: float,
     shade_boost: float = 0.0,
     drainage_boost: float = 0.0,
-    route_capacity_boost: float = 0.0,
 ) -> Dict[str, float]:
+    """
+    Perceived cost of one route for one citizen, in arbitrary cost units.
 
+    Exposure is per hour of travel: the citizen's own walking speed sets how
+    long they are out in the heat/rain/crowd, so a slow walker on a long
+    sun-exposed route accumulates more stress than a fast walker on a short one.
+
+    `crowd_level` (0..1) is the corridor's current congestion, measured from how
+    many simulated pedestrians actually chose it (see route_congestion). It is
+    supplied by the caller rather than derived here, so that route choice and
+    congestion can be solved together.
+    """
     hs = heat_stress(temperature, humidity) / 100
     rain = rainfall_intensity(rainfall)
 
-    effective_shade = clamp(route.shade + shade_boost)
-    effective_drainage = clamp(route.drainage + drainage_boost)
+    effective_shade = clamp(route.shade + shade_boost, 0.0, 1.0)
+    effective_drainage = clamp(route.drainage + drainage_boost, 0.0, 1.0)
+    effective_green = clamp(route.green + shade_boost, 0.0, 1.0)
+    crowd_level = clamp(crowd_level, 0.0, 1.0)
 
-    # Population drives corridor crowding.
-    pop_factor = 0.55 + 0.75 * norm(population, 25_000, 100_000)
-    effective_crowd = clamp(route.base_crowding * pop_factor / (1 + route_capacity_boost))
+    # How long this citizen is exposed, in hours.
+    travel_h = route.distance_km / citizen.walking_speed_kmh
 
-    heat_penalty = hs * (1 - effective_shade) * (1 - citizen.heat_tolerance) * 8.0
-    rain_penalty = rain * (1 - effective_drainage) * (1 - citizen.rain_tolerance) * 8.0
-    crowd_penalty = effective_crowd * (1 - citizen.crowd_tolerance) * 6.0
-    transit_bonus = route.transit * citizen.transit_preference * 1.5
-    green_bonus = effective_shade * citizen.green_preference * 1.2
-
-    distance_cost = route.distance_km * 2.0
+    time_cost = travel_h * TIME_COST_PER_HOUR
+    heat_penalty = hs * (1 - effective_shade) * (1 - citizen.heat_tolerance) * travel_h * HEAT_COST_PER_HOUR
+    rain_penalty = rain * (1 - effective_drainage) * (1 - citizen.rain_tolerance) * travel_h * RAIN_COST_PER_HOUR
+    crowd_penalty = crowd_level * (1 - citizen.crowd_tolerance) * travel_h * CROWD_COST_PER_HOUR
+    transit_bonus = route.transit * citizen.transit_preference * TRANSIT_BONUS
+    green_bonus = effective_green * citizen.green_preference * GREEN_BONUS
 
     total = (
-        distance_cost
+        time_cost
         + heat_penalty
         + rain_penalty
         + crowd_penalty
@@ -550,11 +632,35 @@ def route_cost(
 
     return {
         "total": total,
-        "distance": distance_cost,
+        "time": time_cost,
+        "travel_hours": travel_h,
         "heat": heat_penalty,
         "rain": rain_penalty,
         "crowd": crowd_penalty,
+        "transit_bonus": transit_bonus,
+        "green_bonus": green_bonus,
     }
+
+
+def route_congestion(
+    route: Route,
+    pedestrians: float,
+    route_capacity_boost: float = 0.0,
+) -> float:
+    """
+    Corridor congestion, 0..1, as ambient busyness plus the load our own
+    simulated pedestrians put on it.
+
+    `pedestrians` is the peak-window headcount that chose this route.
+    Extra pedestrian capacity (the 'alternative routes' intervention) raises the
+    denominator, so the same crowd reads as less congested.
+    """
+    capacity = max(route.capacity_pph, 1e-9) * (1 + route_capacity_boost)
+    utilisation = clamp(pedestrians / capacity, 0.0, 1.0)
+    # An empty corridor still reads as somewhat busy if it is intrinsically
+    # narrow or has non-simulated traffic; a corridor at capacity reads as full.
+    ambient_floor = AMBIENT_CROWD_SHARE * route.base_crowding
+    return clamp(ambient_floor + (1 - ambient_floor) * utilisation, 0.0, 1.0)
 
 
 def choose_route(
@@ -563,7 +669,7 @@ def choose_route(
     temperature: float,
     humidity: float,
     rainfall: float,
-    population: int,
+    crowd_levels: Dict[str, float],
     interventions: Optional[Dict] = None,
 ) -> Tuple[str, Dict[str, float]]:
     """Pick the cheapest route among `routes` (already filtered to the citizen's home->destination)."""
@@ -574,10 +680,10 @@ def choose_route(
     for r in routes:
         # Target interventions can be attached globally for the MVP.
         costs[r.id] = route_cost(
-            r, citizen, temperature, humidity, rainfall, population,
+            r, citizen, temperature, humidity, rainfall,
+            crowd_level=crowd_levels.get(r.id, r.base_crowding),
             shade_boost=interventions.get("shade_boost", 0.0),
             drainage_boost=interventions.get("drainage_boost", 0.0),
-            route_capacity_boost=interventions.get("route_capacity_boost", 0.0),
         )
 
     chosen = min(costs, key=lambda rid: costs[rid]["total"])
@@ -669,12 +775,6 @@ def simulate(
     # (zone drainage x building flood exposure).
     rain = mean(m["rain"] for m in bmetrics.values())
 
-    # Route-level crowding and population scaling.
-    route_crowding = {}
-    for r in city["routes"]:
-        route_crowding[r.id] = crowding_score(population, r.base_crowding)
-    route_crowd = mean(route_crowding.values())
-
     # Entrance crowding: average over buildings that people actually travel to.
     destination_ids = [bid for bid, a in arrivals.items() if a > 0]
     building_crowd = mean(bmetrics[bid]["crowd"] for bid in destination_ids)
@@ -682,42 +782,89 @@ def simulate(
     # Interventions directly reduce exposure/stress in the prototype.
     effective_heat = clamp(hs * (1 - 0.30 * interventions.get("shade_boost", 0)))
     effective_rain = clamp(rain * (1 - 0.65 * interventions.get("drainage_boost", 0)))
-    # Alternative pedestrian routes relieve corridors, not building entrances.
-    effective_route_crowd = clamp(
-        route_crowd / (1 + 1.15 * interventions.get("route_capacity_boost", 0))
-    )
+    capacity_boost = interventions.get("route_capacity_boost", 0.0)
+
+    # --- Citizens choose routes; congestion emerges from those choices ------
+    # Solved by iteration: everyone picks a route against the congestion they
+    # can currently see, that load is measured, and they pick again. Crowded
+    # corridors therefore push later traffic onto alternatives.
+    route_ids = [r.id for r in city["routes"]]
+    candidates_for = {
+        c.id: routes_between(city["routes"], c.home, c.destination) for c in citizens
+    }
+    trip_people = {c.id: c.weight * people_per_weight * PEAK_TRIP_SHARE for c in citizens}
+
+    # Pass 0 sees ambient busyness only (no simulated pedestrians placed yet).
+    crowd_levels = {r.id: route_congestion(r, 0.0, capacity_boost) for r in city["routes"]}
+    chosen_by = {}
+    cost_of = {}
+    route_people = {rid: 0.0 for rid in route_ids}
+    route_counts = {rid: 0 for rid in route_ids}
+
+    for k in range(1, CROWDING_PASSES + 1):
+        pass_people = {rid: 0.0 for rid in route_ids}
+        route_counts = {rid: 0 for rid in route_ids}
+        for c in citizens:
+            chosen, costs = choose_route(
+                c, candidates_for[c.id], temperature, humidity, rainfall,
+                crowd_levels, interventions,
+            )
+            chosen_by[c.id] = chosen
+            cost_of[c.id] = costs
+            route_counts[chosen] += 1
+            pass_people[chosen] += trip_people[c.id]
+
+        # Method of successive averages: blend this pass's loads into the
+        # running loads with weight 1/k instead of replacing them outright.
+        step = 1.0 / k
+        route_people = {
+            rid: route_people[rid] + step * (pass_people[rid] - route_people[rid])
+            for rid in route_ids
+        }
+        crowd_levels = {
+            r.id: route_congestion(r, route_people[r.id], capacity_boost)
+            for r in city["routes"]
+        }
+
+    route_crowding = {rid: crowd_levels[rid] * 100.0 for rid in route_ids}
+
+    # Headline corridor crowding is what pedestrians actually walked through,
+    # so an empty corridor cannot drag the city average around.
+    walked = sum(route_people.values())
+    if walked > 0:
+        route_crowd = sum(route_crowding[rid] * route_people[rid] for rid in route_ids) / walked
+    else:
+        route_crowd = mean(route_crowding.values())
+
+    effective_route_crowd = clamp(route_crowd)
     effective_crowd = clamp(
         (1 - BUILDING_CROWD_WEIGHT) * effective_route_crowd
         + BUILDING_CROWD_WEIGHT * building_crowd
     )
 
-    # --- Citizens choose routes ---------------------------------------------
+    # --- Individual experience on the route each citizen settled on ---------
     citizen_results = []
-    route_counts = {r.id: 0 for r in city["routes"]}
-    route_people = {r.id: 0.0 for r in city["routes"]}
+    route_by_id_local = {r.id: r for r in city["routes"]}
 
     for c in citizens:
-        candidates = routes_between(city["routes"], c.home, c.destination)
-        chosen, costs = choose_route(
-            c, candidates, temperature, humidity, rainfall, population, interventions
-        )
-        route_counts[chosen] += 1
-        route_people[chosen] += c.weight * people_per_weight * PEAK_TRIP_SHARE
-
-        # Individual exposure is based on chosen route.
-        route = next(r for r in candidates if r.id == chosen)
+        chosen = chosen_by[c.id]
+        costs = cost_of[c.id]
+        route = route_by_id_local[chosen]
         dest = building_by_id[c.destination]
         dest_crowd = bmetrics[dest.id]["crowd"]
 
         local_heat = effective_heat * (1 - clamp(route.shade + interventions.get("shade_boost", 0), 0.0, 1.0))
         local_rain = effective_rain * (1 - clamp(route.drainage + interventions.get("drainage_boost", 0), 0.0, 1.0))
-        local_crowd = effective_route_crowd * (0.65 + 0.70 * route.base_crowding)
+        local_crowd = route_crowding[chosen]
+
+        # Longer exposure hurts more: scale against a 0.3 h reference walk.
+        exposure = clamp(costs["travel_hours"] / 0.30, 0.0, 2.0)
 
         personal_comfort = clamp(
             100
-            - 0.52 * local_heat * (1 - c.heat_tolerance)
-            - 0.24 * local_rain * (1 - c.rain_tolerance)
-            - 0.24 * local_crowd * (1 - c.crowd_tolerance)
+            - 0.52 * local_heat * (1 - c.heat_tolerance) * exposure
+            - 0.24 * local_rain * (1 - c.rain_tolerance) * exposure
+            - 0.24 * local_crowd * (1 - c.crowd_tolerance) * exposure
             # Arrival end of the trip: crowded entrance.
             - 0.08 * dest_crowd * (1 - c.crowd_tolerance)
         )
@@ -728,6 +875,7 @@ def simulate(
             "home": c.home,
             "destination": c.destination,
             "route": chosen,
+            "travel_minutes": round(costs["travel_hours"] * 60, 1),
             "heat_exposure": round(local_heat, 2),
             "rain_exposure": round(local_rain, 2),
             "crowd_exposure": round(local_crowd, 2),
@@ -735,6 +883,16 @@ def simulate(
             "comfort": round(personal_comfort, 2),
             "route_cost": round(costs["total"], 2),
         })
+
+    # What the simulated population actually experienced, weighted by how many
+    # real people each agent stands for. This is the human-centric metric.
+    total_citizen_weight = sum(c.weight for c in citizens)
+    citizen_comfort = sum(
+        row["comfort"] * c.weight for row, c in zip(citizen_results, citizens)
+    ) / total_citizen_weight
+    mean_travel_minutes = sum(
+        row["travel_minutes"] * c.weight for row, c in zip(citizen_results, citizens)
+    ) / total_citizen_weight
 
     # --- Human-centric aggregate metrics ------------------------------------
     safety = clamp(
@@ -758,15 +916,21 @@ def simulate(
         - 0.20 * effective_crowd
     )
 
-    # Normalize the original conceptual HEI into a readable 0..100 score.
-    # Higher comfort/safety/mobility is better.
-    # Heat/crowd are penalties.
+    # Human Experience Index: a weighted average of four bounded 0..100 pillars.
+    #
+    # citizen_comfort is what the simulated citizens actually experienced on the
+    # routes they chose, so their heat/rain/crowd tolerances and walking speeds
+    # move this index. The other three are city-average environmental readings.
+    #
+    # Weights sum to 1.0, so the result is inside 0..100 by construction rather
+    # than by clamping. Heat, rain and crowding are not re-added on top: they
+    # already sit inside every pillar, and adding them again would silently
+    # double-count them.
     hei = clamp(
-        0.40 * comfort
-        + 0.20 * safety
-        + 0.25 * mobility
-        + 0.15 * (100 - effective_heat)
-        - 0.10 * effective_crowd
+        HEI_WEIGHTS["citizen_comfort"] * citizen_comfort
+        + HEI_WEIGHTS["comfort"] * comfort
+        + HEI_WEIGHTS["safety"] * safety
+        + HEI_WEIGHTS["mobility"] * mobility
     )
 
     # --- Problem spotting for the Advisor -----------------------------------
@@ -834,7 +998,11 @@ def simulate(
             "crowding": round(effective_crowd, 2),
             "safety": round(safety, 2),
             "mobility": round(mobility, 2),
+            # City-average environmental comfort (from heat/rain/crowd readings).
             "comfort": round(comfort, 2),
+            # Population-weighted mean of what the simulated citizens experienced.
+            "citizen_comfort": round(citizen_comfort, 2),
+            "mean_travel_minutes": round(mean_travel_minutes, 2),
             "human_experience_index": round(hei, 2),
         },
         "zones": [
@@ -857,6 +1025,12 @@ def simulate(
                 "crowding": round(route_crowding[r.id], 2),
                 "chosen_by_agents": route_counts[r.id],
                 "peak_pedestrians": round(route_people[r.id]),
+                "capacity_pph": round(r.capacity_pph),
+                "utilisation": round(
+                    min(route_people[r.id] / max(r.capacity_pph, 1e-9), 1.0), 3
+                ),
+                "shade": round(r.shade, 2),
+                "greenery": round(r.green, 2),
             }
             for r in city["routes"]
         ],
@@ -987,6 +1161,14 @@ def run_demo(
     intervention = recommended_interventions(advisor)
     after = simulate(**scenario, city_state=city_state, citizens=citizens, interventions=intervention)
 
+    # Control scenario: a mild day on the same city with the same citizens.
+    # The Advisor's thresholds are not hardwired to always fire - on a calm day
+    # it should recommend nothing. Shown in the demo so the compound-stress
+    # result above cannot be mistaken for a predetermined script.
+    calm_scenario = dict(temperature=26, humidity=40, rainfall=5, population=30_000)
+    calm = simulate(**calm_scenario, city_state=city_state, citizens=citizens)
+    calm_advisor = urban_advisor(calm)
+
     before_m = before["metrics"]
     after_m = after["metrics"]
 
@@ -1002,6 +1184,11 @@ def run_demo(
         "intervention": intervention,
         "after": after,
         "delta": delta,
+        "control": {
+            "scenario": calm_scenario,
+            "metrics": calm["metrics"],
+            "recommendations": calm_advisor["recommendations"],
+        },
     }
 
 
@@ -1021,7 +1208,47 @@ def run_tests() -> None:
     assert heat_stress(40, 80) > heat_stress(40, 30)          # humidity matters
     assert zone_rain_impact(80, 0.20) > zone_rain_impact(80, 0.90)
     assert zone_rain_impact(0, 0.20) == 0
-    assert crowding_score(100_000) > crowding_score(25_000)
+
+    # --- emergent congestion -------------------------------------------------
+    r_test = Route("RT", "A", "B", 1.0, 0.5, 0.5, 0.40, capacity_pph=1000)
+    empty = route_congestion(r_test, 0)
+    busy = route_congestion(r_test, 1000)
+    assert empty < busy, (empty, busy)                    # usage drives congestion
+    assert empty == AMBIENT_CROWD_SHARE * 0.40            # ambient floor only
+    assert busy == 1.0                                    # at capacity
+    assert route_congestion(r_test, 5000) == 1.0          # saturates, never exceeds 1
+    # Extra capacity relieves the same crowd.
+    assert route_congestion(r_test, 1000, 0.40) < busy
+
+    # Congestion tracks the pedestrians who actually chose each route: the
+    # busiest corridors must be ones agents picked, not ones they avoided.
+    base_for_crowd = simulate(40, 80, 80, 100_000)
+    used = [r for r in base_for_crowd["routes"] if r["chosen_by_agents"] > 0]
+    unused = [r for r in base_for_crowd["routes"] if r["chosen_by_agents"] == 0]
+    assert used, "no route was chosen by anyone"
+    assert max(r["crowding"] for r in used) > max(r["crowding"] for r in unused), (
+        "unused routes are more congested than used ones - congestion is not emergent"
+    )
+
+    # The iterative assignment must be converged, not still oscillating:
+    # nearby pass counts have to agree closely.
+    global CROWDING_PASSES
+    _passes = CROWDING_PASSES
+    try:
+        seen = []
+        for n in (6, 8, 12):
+            CROWDING_PASSES = n
+            seen.append(simulate(40, 80, 80, 100_000)["metrics"]["crowding"])
+        assert max(seen) - min(seen) < 1.0, f"route assignment has not converged: {seen}"
+    finally:
+        CROWDING_PASSES = _passes
+
+    # Congestion must respond to demand being concentrated on one corridor.
+    # Same population, different travel demand => different corridor crowding.
+    cits_for_demand = load_citizens()
+    concentrated = [Citizen(**{**c.__dict__, "home": "H1", "destination": "T1"}) for c in cits_for_demand]
+    conc = simulate(40, 80, 80, 100_000, citizens=concentrated)
+    assert conc["metrics"]["crowding"] != base_for_crowd["metrics"]["crowding"]
 
     # --- interventions on headline metrics ---
     base = simulate(40, 80, 80, 100_000)
@@ -1090,6 +1317,45 @@ def run_tests() -> None:
     doubled = [Citizen(**{**c.__dict__, "weight": c.weight * 2}) for c in loaded]
     assert simulate(40, 80, 80, 100_000, citizens=doubled)["metrics"] == base["metrics"]
 
+    # --- citizen profiles must reach the headline metrics -------------------
+    # This is the whole point of a human-centric twin: swapping the population
+    # for a more vulnerable one must move the Human Experience Index.
+    sensitive = [Citizen(**{**c.__dict__, "heat_tolerance": 0.0,
+                            "rain_tolerance": 0.0, "crowd_tolerance": 0.0}) for c in loaded]
+    tolerant = [Citizen(**{**c.__dict__, "heat_tolerance": 1.0,
+                           "rain_tolerance": 1.0, "crowd_tolerance": 1.0}) for c in loaded]
+    m_sens = simulate(40, 80, 80, 100_000, citizens=sensitive)["metrics"]
+    m_tol = simulate(40, 80, 80, 100_000, citizens=tolerant)["metrics"]
+    assert m_sens["citizen_comfort"] < m_tol["citizen_comfort"]
+    assert m_sens["human_experience_index"] < m_tol["human_experience_index"], (
+        "citizen tolerances do not affect HEI"
+    )
+
+    # Walking speed is a real parameter: slower walkers are exposed for longer.
+    slow = [Citizen(**{**c.__dict__, "walking_speed_kmh": 2.0}) for c in loaded]
+    fast = [Citizen(**{**c.__dict__, "walking_speed_kmh": 5.5}) for c in loaded]
+    m_slow = simulate(40, 80, 80, 100_000, citizens=slow)["metrics"]
+    m_fast = simulate(40, 80, 80, 100_000, citizens=fast)["metrics"]
+    assert m_slow["mean_travel_minutes"] > m_fast["mean_travel_minutes"]
+    assert m_slow["citizen_comfort"] < m_fast["citizen_comfort"], "walking speed has no effect"
+
+    # Greenery is its own route property, not an alias for shade.
+    green_city = load_city()
+    for r in green_city["routes"]:
+        r.greenery = 0.0
+    keen = [Citizen(**{**c.__dict__, "green_preference": 1.0}) for c in loaded]
+    assert (simulate(40, 80, 80, 100_000, citizens=keen, city_state=green_city)["citizens"]
+            != simulate(40, 80, 80, 100_000, citizens=keen)["citizens"])
+
+    # HEI stays inside 0..100 across the corners of the scenario box.
+    for T in (20, 45):
+        for H in (20, 90):
+            for R in (0, 100):
+                for P in (25_000, 100_000):
+                    for k, v in simulate(T, H, R, P)["metrics"].items():
+                        if k != "mean_travel_minutes":
+                            assert 0.0 <= v <= 100.0, (k, v, T, H, R, P)
+
     # Determinism: same inputs => same outputs.
     a = simulate(40, 80, 80, 100_000)
     b = simulate(40, 80, 80, 100_000)
@@ -1102,6 +1368,12 @@ def run_tests() -> None:
     assert all("accessibility" not in row for row in base["buildings"])
     assert all("accessibility" not in row for row in base["zones"])
     assert all("accessibility" not in row for row in base["routes"])
+
+    # --- advisor is threshold-driven, not hardwired --------------------------
+    calm = simulate(26, 40, 5, 30_000)
+    assert urban_advisor(calm)["recommendations"] == ["no_major_intervention"]
+    harsh = urban_advisor(simulate(45, 90, 100, 100_000))["recommendations"]
+    assert "no_major_intervention" not in harsh and len(harsh) >= 2, harsh
 
     # --- validation / error paths ---
     def expect_error(fn, exc=ValueError):
@@ -1205,6 +1477,15 @@ def print_demo_summary(demo: Dict) -> None:
     for k, v in demo["delta"].items():
         sign = "+" if v >= 0 else ""
         print(f"  {k:26s}: {sign}{v:6.2f}")
+
+    c = demo["control"]
+    cs = c["scenario"]
+    print(
+        f"\nCONTROL RUN (thresholds are not hardwired): {cs['temperature']}°C | "
+        f"{cs['humidity']}% RH | {cs['rainfall']} mm | population {cs['population']:,}"
+    )
+    print(f"  HEI {c['metrics']['human_experience_index']:.2f} -> advisor says: "
+          f"{', '.join(c['recommendations'])}")
 
     print("\nBUILDINGS  (before -> after)")
     print(f"  {'':5s} {'name':24s} {'heat':>11s} {'rain':>11s} {'crowd':>11s}")

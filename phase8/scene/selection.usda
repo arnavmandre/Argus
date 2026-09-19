@@ -1,0 +1,11 @@
+#usda 1.0
+
+over "World" (
+    variants = {
+        string demoState = "Stressed"
+    }
+    prepend variantSets = "demoState"
+)
+{
+}
+

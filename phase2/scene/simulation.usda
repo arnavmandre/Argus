@@ -1,0 +1,29 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "World"
+{
+    def Scope "Simulation"
+    {
+        def Scope "Agents"
+        {
+        }
+
+        def Scope "Routes"
+        {
+        }
+
+        def Scope "HeatZones"
+        {
+        }
+
+        def Scope "CrowdZones"
+        {
+        }
+    }
+}
+

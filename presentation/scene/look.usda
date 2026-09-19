@@ -1,0 +1,93 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    metersPerUnit = 1
+    upAxis = "Z"
+    doc = """UrbanTwin presentation materials.
+
+    Two jobs:
+      1. Give buildings a matte, slightly warm off-white surface. The Phase 1
+         flat displayColor read as uniform plastic and destroyed form
+         readability at overview zoom.
+      2. Extend and darken the ground so the imported tile stops looking like
+         a slab floating on the viewport grid.
+
+    Material bindings on the Buildings/Roads scopes inherit to every mesh
+    below them, so no per-prim edits are needed for 623 buildings."""
+)
+
+over "World"
+{
+    def Scope "Looks"
+    {
+        def Material "BuildingSurface"
+        {
+            token outputs:surface.connect = </World/Looks/BuildingSurface/Shader.outputs:surface>
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.82, 0.8, 0.76)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.78
+                token outputs:surface
+            }
+        }
+
+        def Material "GroundSurface"
+        {
+            token outputs:surface.connect = </World/Looks/GroundSurface/Shader.outputs:surface>
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.14, 0.15, 0.16)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.95
+                token outputs:surface
+            }
+        }
+
+        def Material "RoadSurface"
+        {
+            token outputs:surface.connect = </World/Looks/RoadSurface/Shader.outputs:surface>
+
+            def Shader "Shader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.27, 0.28, 0.3)
+                float inputs:metallic = 0
+                float inputs:roughness = 0.9
+                token outputs:surface
+            }
+        }
+    }
+
+    over "Buildings" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </World/Looks/BuildingSurface>
+    }
+
+    over "Roads" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </World/Looks/RoadSurface>
+    }
+
+    over "Environment"
+    {
+        over "Ground" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            rel material:binding = </World/Looks/GroundSurface>
+            # Much wider than the 762x779 m tile so the city fades into ground
+            # instead of ending at a hard edge. Top face stays at z = -0.05,
+            # just under the z = 0.1 pedestrian ribbons.
+            float3 xformOp:scale = (2600, 2600, 0.5)
+        }
+    }
+}

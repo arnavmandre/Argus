@@ -1,0 +1,18 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    metersPerUnit = 1
+    subLayers = [
+        @interventions.usda@,
+        @metrics.usda@,
+        @routes.usda@,
+        @agents.usda@,
+        @../../../phase2/scene/main.usda@
+    ]
+    upAxis = "Z"
+)
+
+def Xform "World"
+{
+}
+

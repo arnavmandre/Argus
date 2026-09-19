@@ -1,0 +1,20 @@
+{
+  "result": "PASS: OpenUSD readback and structural checks",
+  "openusd_version": [
+    0,
+    26,
+    8
+  ],
+  "mesh_counts": {
+    "Buildings": 623,
+    "Roads": 1033,
+    "PedestrianPaths": 2291,
+    "GreenSpaces": 52,
+    "Transit": 18
+  },
+  "mesh_points": 22911,
+  "mesh_faces": 8580,
+  "mapped_pedestrian_segments": 2291,
+  "viewport_rendering": "NOT TESTED \u2014 manual Kit inspection required",
+  "navigation_performance": "NOT TESTED"
+}

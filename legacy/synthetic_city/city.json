@@ -1,0 +1,958 @@
+{
+  "meta": {
+    "generator": "urbantwin_city.py",
+    "seed": 42,
+    "units": "metres, Y-up",
+    "baseline_population": 50000,
+    "flow_capacity_pph_per_m": 1500,
+    "notes": "shade_pct = base_shade + (1-base_shade)*tree_shade. capacity_pph = width_m * flow_capacity_pph_per_m (ASSUMPTION)."
+  },
+  "nodes": [
+    {
+      "id": "R1",
+      "type": "residential",
+      "name": "Residential A",
+      "x": -150.0,
+      "z": -150.0,
+      "gx": -1,
+      "gz": -1
+    },
+    {
+      "id": "S1",
+      "type": "school",
+      "name": "School",
+      "x": 0.0,
+      "z": -150.0,
+      "gx": 0,
+      "gz": -1
+    },
+    {
+      "id": "PK",
+      "type": "park",
+      "name": "Central Park",
+      "x": 150.0,
+      "z": -150.0,
+      "gx": 1,
+      "gz": -1
+    },
+    {
+      "id": "T1",
+      "type": "transit",
+      "name": "Transit Hub",
+      "x": -150.0,
+      "z": 0.0,
+      "gx": -1,
+      "gz": 0
+    },
+    {
+      "id": "C1",
+      "type": "commercial",
+      "name": "Commercial Core",
+      "x": 0.0,
+      "z": 0.0,
+      "gx": 0,
+      "gz": 0
+    },
+    {
+      "id": "H1",
+      "type": "hospital",
+      "name": "Hospital",
+      "x": 150.0,
+      "z": 0.0,
+      "gx": 1,
+      "gz": 0
+    },
+    {
+      "id": "R2",
+      "type": "residential",
+      "name": "Residential B",
+      "x": -150.0,
+      "z": 150.0,
+      "gx": -1,
+      "gz": 1
+    },
+    {
+      "id": "O1",
+      "type": "office",
+      "name": "Office District",
+      "x": 0.0,
+      "z": 150.0,
+      "gx": 0,
+      "gz": 1
+    },
+    {
+      "id": "R3",
+      "type": "residential",
+      "name": "Residential C",
+      "x": 150.0,
+      "z": 150.0,
+      "gx": 1,
+      "gz": 1
+    }
+  ],
+  "buildings": [
+    {
+      "id": "bld_R1_0",
+      "node": "R1",
+      "type": "residential",
+      "x": -115.0,
+      "z": -115.0,
+      "w": 23.8,
+      "d": 23.8,
+      "h": 30.5,
+      "residents": 6250
+    },
+    {
+      "id": "bld_R1_1",
+      "node": "R1",
+      "type": "residential",
+      "x": -185.0,
+      "z": -115.0,
+      "w": 21.7,
+      "d": 21.7,
+      "h": 34.5,
+      "residents": 6250
+    },
+    {
+      "id": "bld_R1_2",
+      "node": "R1",
+      "type": "residential",
+      "x": -115.0,
+      "z": -185.0,
+      "w": 24.4,
+      "d": 24.4,
+      "h": 43.5,
+      "residents": 6250
+    },
+    {
+      "id": "bld_S1_0",
+      "node": "S1",
+      "type": "school",
+      "x": 35.0,
+      "z": -115.0,
+      "w": 26.0,
+      "d": 26.0,
+      "h": 12.0,
+      "residents": 0
+    },
+    {
+      "id": "bld_T1_0",
+      "node": "T1",
+      "type": "transit",
+      "x": -115.0,
+      "z": 35.0,
+      "w": 30.0,
+      "d": 30.0,
+      "h": 10.0,
+      "residents": 0
+    },
+    {
+      "id": "bld_C1_0",
+      "node": "C1",
+      "type": "commercial",
+      "x": 35.0,
+      "z": 35.0,
+      "w": 23.3,
+      "d": 23.3,
+      "h": 27.6,
+      "residents": 0
+    },
+    {
+      "id": "bld_C1_1",
+      "node": "C1",
+      "type": "commercial",
+      "x": -35.0,
+      "z": 35.0,
+      "w": 22.2,
+      "d": 22.2,
+      "h": 23.0,
+      "residents": 0
+    },
+    {
+      "id": "bld_C1_2",
+      "node": "C1",
+      "type": "commercial",
+      "x": 35.0,
+      "z": -35.0,
+      "w": 25.9,
+      "d": 25.9,
+      "h": 28.2,
+      "residents": 0
+    },
+    {
+      "id": "bld_H1_0",
+      "node": "H1",
+      "type": "hospital",
+      "x": 185.0,
+      "z": 35.0,
+      "w": 28.0,
+      "d": 28.0,
+      "h": 30.0,
+      "residents": 0
+    },
+    {
+      "id": "bld_R2_0",
+      "node": "R2",
+      "type": "residential",
+      "x": -115.0,
+      "z": 185.0,
+      "w": 24.9,
+      "d": 24.9,
+      "h": 30.1,
+      "residents": 6250
+    },
+    {
+      "id": "bld_R2_1",
+      "node": "R2",
+      "type": "residential",
+      "x": -185.0,
+      "z": 185.0,
+      "w": 24.8,
+      "d": 24.8,
+      "h": 44.0,
+      "residents": 6250
+    },
+    {
+      "id": "bld_O1_0",
+      "node": "O1",
+      "type": "office",
+      "x": 35.0,
+      "z": 185.0,
+      "w": 23.4,
+      "d": 23.4,
+      "h": 64.7,
+      "residents": 0
+    },
+    {
+      "id": "bld_O1_1",
+      "node": "O1",
+      "type": "office",
+      "x": -35.0,
+      "z": 185.0,
+      "w": 25.8,
+      "d": 25.8,
+      "h": 70.1,
+      "residents": 0
+    },
+    {
+      "id": "bld_R3_0",
+      "node": "R3",
+      "type": "residential",
+      "x": 185.0,
+      "z": 185.0,
+      "w": 20.6,
+      "d": 20.6,
+      "h": 31.9,
+      "residents": 6250
+    },
+    {
+      "id": "bld_R3_1",
+      "node": "R3",
+      "type": "residential",
+      "x": 115.0,
+      "z": 185.0,
+      "w": 25.1,
+      "d": 25.1,
+      "h": 42.1,
+      "residents": 6250
+    },
+    {
+      "id": "bld_R3_2",
+      "node": "R3",
+      "type": "residential",
+      "x": 185.0,
+      "z": 115.0,
+      "w": 24.8,
+      "d": 24.8,
+      "h": 44.6,
+      "residents": 6250
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_R1_S1",
+      "a": "R1",
+      "b": "S1",
+      "width_m": 4.0,
+      "base_shade": 0.157,
+      "p0": [
+        -130.0,
+        -139.5
+      ],
+      "p1": [
+        -20.0,
+        -139.5
+      ],
+      "length_m": 110.0,
+      "tree_shade": 0.145,
+      "shade_pct": 0.279,
+      "capacity_pph": 6000,
+      "trees": [
+        "tree_0025",
+        "tree_0026"
+      ]
+    },
+    {
+      "id": "e_R1_T1",
+      "a": "R1",
+      "b": "T1",
+      "width_m": 4.0,
+      "base_shade": 0.245,
+      "p0": [
+        -160.5,
+        -130.0
+      ],
+      "p1": [
+        -160.5,
+        -20.0
+      ],
+      "length_m": 110.0,
+      "tree_shade": 0.2,
+      "shade_pct": 0.396,
+      "capacity_pph": 6000,
+      "trees": [
+        "tree_0027",
+        "tree_0028",
+        "tree_0029"
+      ]
+    },
+    {
+      "id": "e_T1_C1",
+      "a": "T1",
+      "b": "C1",
+      "width_m": 4.0,
+      "base_shade": 0.126,
+      "p0": [
+        -130.0,
+        10.5
+      ],
+      "p1": [
+        -20.0,
+        10.5
+      ],
+      "length_m": 110.0,
+      "tree_shade": 0.0,
+      "shade_pct": 0.126,
+      "capacity_pph": 6000,
+      "trees": []
+    },
+    {
+      "id": "e_T1_R2",
+      "a": "T1",
+      "b": "R2",
+      "width_m": 4.0,
+      "base_shade": 0.16,
+      "p0": [
+        -160.5,
+        20.0
+      ],
+      "p1": [
+        -160.5,
+        130.0
+      ],
+      "length_m": 110.0,
+      "tree_shade": 0.145,
+      "shade_pct": 0.282,
+      "capacity_pph": 6000,
+      "trees": [
+        "tree_0030",
+        "tree_0031"
+      ]
+    },
+    {
+      "id": "e_R2_O1",
+      "a": "R2",
+      "b": "O1",
+      "width_m": 4.0,
+      "base_shade": 0.216,
+      "p0": [
+        -130.0,
+        160.5
+      ],
+      "p1": [
+        -20.0,
+        160.5
+      ],
+      "length_m": 110.0,
+      "tree_shade": 0.145,
+      "shade_pct": 0.33,
+      "capacity_pph": 6000,
+      "trees": [
+        "tree_0032",
+        "tree_0033"
+      ]
+    },
+    {
+      "id": "e_S1_PK",
+      "a": "S1",
+      "b": "PK",
+      "width_m": 4.0,
+      "base_shade": 0.243,
+      "p0": [
+        20.0,
+        -139.5
+      ],
+      "p1": [
+        130.0,
+        -139.5
+      ],
+      "length_m": 110.0,
+      "tree_shade": 0.4,
+      "shade_pct": 0.546,
+      "capacity_pph": 6000,
+      "trees": [
+        "tree_0034",
+        "tree_0035",
+        "tree_0036",
+        "tree_0037",
+        "tree_0038",
+        "tree_0039"
+      ]
+    },
+    {
+      "id": "e_S1_C1",
+      "a": "S1",
+      "b": "C1",
+      "width_m": 4.0,
+      "base_shade": 0.222,
+      "p0": [
+        -10.5,
+        -130.0
+      ],
+      "p1": [
+        -10.5,
+        -20.0
+      ],
+      "length_m": 110.0,
+      "tree_shade": 0.2,
+      "shade_pct": 0.378,
+      "capacity_pph": 6000,
+      "trees": [
+        "tree_0040",
+        "tree_0041",
+        "tree_0042"
+      ]
+    },
+    {
+      "id": "e_C1_H1",
+      "a": "C1",
+      "b": "H1",
+      "width_m": 4.0,
+      "base_shade": 0.165,
+      "p0": [
+        20.0,
+        10.5
+      ],
+      "p1": [
+        130.0,
+        10.5
+      ],
+      "length_m": 110.0,
+      "tree_shade": 0.145,
+      "shade_pct": 0.286,
+      "capacity_pph": 6000,
+      "trees": [
+        "tree_0043",
+        "tree_0044"
+      ]
+    },
+    {
+      "id": "e_C1_O1",
+      "a": "C1",
+      "b": "O1",
+      "width_m": 4.0,
+      "base_shade": 0.191,
+      "p0": [
+        -10.5,
+        20.0
+      ],
+      "p1": [
+        -10.5,
+        130.0
+      ],
+      "length_m": 110.0,
+      "tree_shade": 0.2,
+      "shade_pct": 0.353,
+      "capacity_pph": 6000,
+      "trees": [
+        "tree_0045",
+        "tree_0046",
+        "tree_0047"
+      ]
+    },
+    {
+      "id": "e_O1_R3",
+      "a": "O1",
+      "b": "R3",
+      "width_m": 4.0,
+      "base_shade": 0.059,
+      "p0": [
+        20.0,
+        160.5
+      ],
+      "p1": [
+        130.0,
+        160.5
+      ],
+      "length_m": 110.0,
+      "tree_shade": 0.055,
+      "shade_pct": 0.111,
+      "capacity_pph": 6000,
+      "trees": [
+        "tree_0048"
+      ]
+    },
+    {
+      "id": "e_PK_H1",
+      "a": "PK",
+      "b": "H1",
+      "width_m": 4.0,
+      "base_shade": 0.184,
+      "p0": [
+        139.5,
+        -130.0
+      ],
+      "p1": [
+        139.5,
+        -20.0
+      ],
+      "length_m": 110.0,
+      "tree_shade": 0.436,
+      "shade_pct": 0.54,
+      "capacity_pph": 6000,
+      "trees": [
+        "tree_0049",
+        "tree_0050",
+        "tree_0051",
+        "tree_0052",
+        "tree_0053",
+        "tree_0054"
+      ]
+    },
+    {
+      "id": "e_H1_R3",
+      "a": "H1",
+      "b": "R3",
+      "width_m": 4.0,
+      "base_shade": 0.108,
+      "p0": [
+        139.5,
+        20.0
+      ],
+      "p1": [
+        139.5,
+        130.0
+      ],
+      "length_m": 110.0,
+      "tree_shade": 0.2,
+      "shade_pct": 0.286,
+      "capacity_pph": 6000,
+      "trees": [
+        "tree_0055",
+        "tree_0056",
+        "tree_0057"
+      ]
+    }
+  ],
+  "trees": [
+    {
+      "id": "tree_0001",
+      "x": 129.83,
+      "z": -162.83,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0002",
+      "x": 130.85,
+      "z": -160.66,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0003",
+      "x": 156.51,
+      "z": -156.49,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0004",
+      "x": 143.77,
+      "z": -163.94,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0005",
+      "x": 138.81,
+      "z": -129.04,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0006",
+      "x": 157.11,
+      "z": -144.76,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0007",
+      "x": 134.21,
+      "z": -139.0,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0008",
+      "x": 133.84,
+      "z": -155.79,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0009",
+      "x": 173.5,
+      "z": -143.28,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0010",
+      "x": 152.73,
+      "z": -141.14,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0011",
+      "x": 166.46,
+      "z": -136.75,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0012",
+      "x": 136.99,
+      "z": -172.46,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0013",
+      "x": 141.14,
+      "z": -161.15,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0014",
+      "x": 136.13,
+      "z": -128.74,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0015",
+      "x": 168.07,
+      "z": -158.9,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0016",
+      "x": 157.46,
+      "z": -155.01,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0017",
+      "x": 169.9,
+      "z": -151.98,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0018",
+      "x": 138.71,
+      "z": -162.16,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0019",
+      "x": 152.95,
+      "z": -161.39,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0020",
+      "x": 154.06,
+      "z": -130.9,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0021",
+      "x": 145.17,
+      "z": -163.47,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0022",
+      "x": 173.88,
+      "z": -149.54,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0023",
+      "x": 130.36,
+      "z": -171.74,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0024",
+      "x": 131.26,
+      "z": -143.88,
+      "edge": null,
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0025",
+      "x": -102.5,
+      "z": -138.0,
+      "edge": "e_R1_S1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0026",
+      "x": -47.5,
+      "z": -141.0,
+      "edge": "e_R1_S1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0027",
+      "x": -162.0,
+      "z": -111.67,
+      "edge": "e_R1_T1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0028",
+      "x": -159.0,
+      "z": -75.0,
+      "edge": "e_R1_T1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0029",
+      "x": -162.0,
+      "z": -38.33,
+      "edge": "e_R1_T1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0030",
+      "x": -162.0,
+      "z": 47.5,
+      "edge": "e_T1_R2",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0031",
+      "x": -159.0,
+      "z": 102.5,
+      "edge": "e_T1_R2",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0032",
+      "x": -102.5,
+      "z": 162.0,
+      "edge": "e_R2_O1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0033",
+      "x": -47.5,
+      "z": 159.0,
+      "edge": "e_R2_O1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0034",
+      "x": 29.17,
+      "z": -138.0,
+      "edge": "e_S1_PK",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0035",
+      "x": 47.5,
+      "z": -141.0,
+      "edge": "e_S1_PK",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0036",
+      "x": 65.83,
+      "z": -138.0,
+      "edge": "e_S1_PK",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0037",
+      "x": 84.17,
+      "z": -141.0,
+      "edge": "e_S1_PK",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0038",
+      "x": 102.5,
+      "z": -138.0,
+      "edge": "e_S1_PK",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0039",
+      "x": 120.83,
+      "z": -141.0,
+      "edge": "e_S1_PK",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0040",
+      "x": -12.0,
+      "z": -111.67,
+      "edge": "e_S1_C1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0041",
+      "x": -9.0,
+      "z": -75.0,
+      "edge": "e_S1_C1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0042",
+      "x": -12.0,
+      "z": -38.33,
+      "edge": "e_S1_C1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0043",
+      "x": 47.5,
+      "z": 12.0,
+      "edge": "e_C1_H1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0044",
+      "x": 102.5,
+      "z": 9.0,
+      "edge": "e_C1_H1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0045",
+      "x": -12.0,
+      "z": 38.33,
+      "edge": "e_C1_O1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0046",
+      "x": -9.0,
+      "z": 75.0,
+      "edge": "e_C1_O1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0047",
+      "x": -12.0,
+      "z": 111.67,
+      "edge": "e_C1_O1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0048",
+      "x": 75.0,
+      "z": 162.0,
+      "edge": "e_O1_R3",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0049",
+      "x": 138.0,
+      "z": -120.83,
+      "edge": "e_PK_H1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0050",
+      "x": 141.0,
+      "z": -102.5,
+      "edge": "e_PK_H1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0051",
+      "x": 138.0,
+      "z": -84.17,
+      "edge": "e_PK_H1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0052",
+      "x": 141.0,
+      "z": -65.83,
+      "edge": "e_PK_H1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0053",
+      "x": 138.0,
+      "z": -47.5,
+      "edge": "e_PK_H1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0054",
+      "x": 141.0,
+      "z": -29.17,
+      "edge": "e_PK_H1",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0055",
+      "x": 138.0,
+      "z": 38.33,
+      "edge": "e_H1_R3",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0056",
+      "x": 141.0,
+      "z": 75.0,
+      "edge": "e_H1_R3",
+      "canopy_r": 4.0
+    },
+    {
+      "id": "tree_0057",
+      "x": 138.0,
+      "z": 111.67,
+      "edge": "e_H1_R3",
+      "canopy_r": 4.0
+    }
+  ]
+}

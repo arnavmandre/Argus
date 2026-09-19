@@ -1,0 +1,53 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "World"
+{
+    def Scope "Environment"
+    {
+        def Cube "Ground"
+        {
+            color3f[] primvars:displayColor = [(0.38, 0.4, 0.36)]
+            double size = 1
+            float3 xformOp:scale = (771.90173, 789.23645, 0.5)
+            double3 xformOp:translate = (0, 0, -0.3)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def DistantLight "Sun"
+        {
+            float inputs:intensity = 2500
+            float3 xformOp:rotateXYZ = (25, -30, -25)
+            uniform token[] xformOpOrder = ["xformOp:rotateXYZ"]
+        }
+
+        def DomeLight "Sky"
+        {
+            float inputs:intensity = 500
+        }
+    }
+
+    def "Cameras"
+    {
+        def Camera "Overview"
+        {
+            float2 clippingRange = (0.1, 10000)
+            float focalLength = 30
+            matrix4d xformOp:transform = ( (0.7761140001162656, 0.6305926250944658, 0, 0), (-0.40118870990143896, 0.49377071987869414, 0.7715167498104596, -0), (0.48651277256732783, -0.5987849508520958, 0.6362090102803518, 0), (650, -800, 850, 1) )
+            uniform token[] xformOpOrder = ["xformOp:transform"]
+        }
+
+        def Camera "StudyArea"
+        {
+            float2 clippingRange = (0.1, 10000)
+            float focalLength = 30
+            matrix4d xformOp:transform = ( (0.7808688094430302, 0.6246950475544242, 2.77555756156289e-17, 0), (-0.3309715215136484, 0.4137144018920605, 0.8481145238787241, -0), (0.5298129428260175, -0.6622661785325218, 0.5298129428260174, 0), (199.99999999999994, -249.99999999999997, 200, 1) )
+            uniform token[] xformOpOrder = ["xformOp:transform"]
+        }
+    }
+}
+

@@ -1,0 +1,33 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    metersPerUnit = 1
+    upAxis = "Z"
+    doc = """UrbanTwin presentation stage - open THIS for demos.
+
+    Composes the Phase 2 semantic city and adds a presentation layer on top:
+    real sun shadows, matte materials, an extended ground plane and saved
+    demo cameras. Nothing here changes geometry or semantics, so the Phase 1/2
+    contract and city_id are untouched.
+
+    Generated overlays (path colours, agent instancer) are sublayered above
+    when present; both are produced by the scripts in presentation/ and are
+    optional - the stage opens fine without them.
+
+    Viewport checklist before recording:
+      - turn the viewport grid OFF
+      - pick /World/Cameras/Overview, Corridor or ProblemZone
+      - RTX - Real-Time is enough; Path Traced looks better if it holds up"""
+    subLayers = [
+        @generated/agents.usda@,
+        @generated/path_colors.usda@,
+        @cameras.usda@,
+        @look.usda@,
+        @lighting.usda@,
+        @../../phase2/scene/main.usda@
+    ]
+)
+
+over "World"
+{
+}

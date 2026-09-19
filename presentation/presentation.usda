@@ -1,0 +1,159 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "World"
+{
+    def Scope "Presentation" (
+        variants = {
+            string lighting = "baseline"
+        }
+        prepend variantSets = "lighting"
+    )
+    {
+        custom string urbantwin:note = "Demo presentation layer: lighting, ground, materials, cameras. Visual only - contributes no simulation values."
+
+        def Mesh "DemoGround" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            float3[] extent = [(-1904.75, -1948, -0.45), (1904.75, 1948, -0.45)]
+            int[] faceVertexCounts = [4]
+            int[] faceVertexIndices = [0, 1, 2, 3]
+            rel material:binding = </World/Presentation/Materials/GroundSurface>
+            point3f[] points = [(-1904.75, -1948, -0.45), (1904.75, -1948, -0.45), (1904.75, 1948, -0.45), (-1904.75, 1948, -0.45)]
+            color3f[] primvars:displayColor = [(0.055, 0.06, 0.07)]
+        }
+
+        def Scope "Materials"
+        {
+            def Material "BuildingSurface"
+            {
+                token outputs:surface.connect = </World/Presentation/Materials/BuildingSurface/Surface.outputs:surface>
+
+                def Shader "Surface"
+                {
+                    uniform token info:id = "UsdPreviewSurface"
+                    color3f inputs:diffuseColor = (0.8, 0.785, 0.76)
+                    float inputs:metallic = 0
+                    float inputs:roughness = 0.72
+                    token outputs:surface
+                }
+            }
+
+            def Material "GroundSurface"
+            {
+                token outputs:surface.connect = </World/Presentation/Materials/GroundSurface/Surface.outputs:surface>
+
+                def Shader "Surface"
+                {
+                    uniform token info:id = "UsdPreviewSurface"
+                    color3f inputs:diffuseColor = (0.055, 0.06, 0.07)
+                    float inputs:metallic = 0
+                    float inputs:roughness = 0.95
+                    token outputs:surface
+                }
+            }
+        }
+
+        def Scope "Lighting"
+        {
+            def DistantLight "KeySun"
+            {
+                float inputs:angle = 0.53
+                color3f inputs:color = (1, 0.96, 0.9)
+                float inputs:colorTemperature = 5600
+                bool inputs:enableColorTemperature = 1
+                float inputs:intensity = 3200
+                custom string urbantwin:note = "Shadow-casting key light. Shade readability depends on this staying enabled."
+                float3 xformOp:rotateXYZ = (-38, 0, 35)
+                uniform token[] xformOpOrder = ["xformOp:rotateXYZ"]
+            }
+
+            def DomeLight "Sky"
+            {
+                color3f inputs:color = (0.72, 0.8, 0.95)
+                float inputs:intensity = 320
+            }
+        }
+
+        def Scope "DemoCameras"
+        {
+            def Camera "Demo_01_Overview"
+            {
+                float2 clippingRange = (0.1, 10000)
+                float focalLength = 32
+                custom string urbantwin:shotNote = "Opening shot. Whole tile, low enough to show massing."
+                matrix4d xformOp:transform = ( (0.8340190351965205, 0.5517356694376983, -0, 0), (-0.215128290469689, 0.325193927454181, 0.9208521749914664, 0), (0.5080669912220771, -0.7680082425450002, 0.38991187698438473, 0), (430, -620, 330, 1) )
+                uniform token[] xformOpOrder = ["xformOp:transform"]
+            }
+
+            def Camera "Demo_02_Corridor"
+            {
+                float2 clippingRange = (0.1, 10000)
+                float focalLength = 40
+                custom string urbantwin:shotNote = "Street level. Aim at the corridor the advisor actually changes."
+                matrix4d xformOp:transform = ( (0.8837879163470617, 0.4678877204190326, -0, 0), (-0.02429152009587944, 0.04588398240332784, 0.9986513817194882, 0), (0.4672567184860485, -0.8825960238069805, 0.0519174131651165, 0), (120, -230, 14, 1) )
+                uniform token[] xformOpOrder = ["xformOp:transform"]
+            }
+
+            def Camera "Demo_03_ProblemZone"
+            {
+                float2 clippingRange = (0.1, 10000)
+                float focalLength = 45
+                custom string urbantwin:shotNote = "Tight on the flagged cluster for the advisor beat."
+                matrix4d xformOp:transform = ( (0.7568230077691597, 0.6536198703460924, -0, 0), (-0.266839194682004, 0.30897169910547834, 0.9128709291752768, 0), (0.5966705783702614, -0.6908817223234606, 0.4082482904638631, 0), (250, -330, 130, 1) )
+                uniform token[] xformOpOrder = ["xformOp:transform"]
+            }
+        }
+        variantSet "lighting" = {
+            "baseline" {
+                over "Lighting"
+                {
+                    over "KeySun"
+                    {
+                        color3f inputs:color = (1, 0.96, 0.9)
+                        float inputs:colorTemperature = 5600
+                        float inputs:intensity = 3200
+                    }
+
+                    over "Sky"
+                    {
+                        color3f inputs:color = (0.72, 0.8, 0.95)
+                        float inputs:intensity = 320
+                    }
+                }
+
+            }
+            "extreme_heat" {
+                over "Lighting"
+                {
+                    over "KeySun"
+                    {
+                        color3f inputs:color = (1, 0.89, 0.74)
+                        float inputs:colorTemperature = 4200
+                        float inputs:intensity = 5200
+                    }
+
+                    over "Sky"
+                    {
+                        color3f inputs:color = (0.95, 0.8, 0.62)
+                        float inputs:intensity = 210
+                    }
+                }
+
+            }
+        }
+    }
+
+    over "Buildings" (
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </World/Presentation/Materials/BuildingSurface>
+    }
+}
+

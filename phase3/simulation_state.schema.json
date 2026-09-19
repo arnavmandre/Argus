@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://urbantwin.local/schemas/simulation-state-1.0.json",
+  "title": "UrbanTwin visualization snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "city_id", "run_id", "sequence", "timestamp", "data_kind", "label", "scenario", "agents", "edges", "interventions"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "city_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "run_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "sequence": {"type": "integer", "minimum": 0},
+    "timestamp": {"type": "number", "minimum": 0},
+    "data_kind": {"enum": ["mock", "simulation"]},
+    "label": {"type": "string", "minLength": 1, "maxLength": 256},
+    "scenario": {"$ref": "#/$defs/scenario"},
+    "agents": {"type": "array", "maxItems": 500, "items": {"$ref": "#/$defs/agent"}},
+    "edges": {
+      "type": "object",
+      "propertyNames": {"type": "string", "minLength": 1},
+      "additionalProperties": {"$ref": "#/$defs/edgeMetrics"}
+    },
+    "interventions": {"type": "array", "items": {"$ref": "#/$defs/intervention"}}
+  },
+  "allOf": [
+    {"if": {"properties": {"data_kind": {"const": "mock"}}, "required": ["data_kind"]},
+     "then": {"properties": {"label": {"pattern": "^DEMO / MOCK SIMULATION DATA"}}}}
+  ],
+  "$defs": {
+    "unitMetric": {"type": "number", "minimum": 0, "maximum": 1},
+    "point": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}},
+    "scenario": {
+      "type": "object", "additionalProperties": false,
+      "required": ["temperature_c", "population_equivalent"],
+      "properties": {
+        "temperature_c": {"type": "number"},
+        "population_equivalent": {"type": "integer", "minimum": 0}
+      }
+    },
+    "agent": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "x", "y", "z", "route", "stress", "heat_exposure"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "x": {"type": "number"}, "y": {"type": "number"}, "z": {"type": "number"},
+        "route": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "stress": {"$ref": "#/$defs/unitMetric"},
+        "heat_exposure": {"$ref": "#/$defs/unitMetric"}
+      }
+    },
+    "edgeMetrics": {
+      "type": "object", "additionalProperties": false, "minProperties": 1,
+      "properties": {
+        "crowding": {"$ref": "#/$defs/unitMetric"},
+        "heat_exposure": {"$ref": "#/$defs/unitMetric"},
+        "accessibility": {"$ref": "#/$defs/unitMetric"}
+      }
+    },
+    "intervention": {
+      "oneOf": [
+        {"$ref": "#/$defs/existingEdgeIntervention"},
+        {"$ref": "#/$defs/addRouteIntervention"}
+      ]
+    },
+    "existingEdgeIntervention": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "type", "target", "amount"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "type": {"enum": ["ADD_SHADE", "ADD_GREENERY", "INCREASE_PATH_CAPACITY", "IMPROVE_ACCESSIBILITY"]},
+        "target": {"type": "string", "minLength": 1},
+        "amount": {"$ref": "#/$defs/unitMetric"}
+      }
+    },
+    "addRouteIntervention": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "type", "new_edge_id", "points"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "type": {"const": "ADD_ROUTE"},
+        "new_edge_id": {"type": "string", "pattern": "^proposal_[A-Za-z0-9_-]+$"},
+        "points": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/point"}}
+      }
+    }
+  }
+}

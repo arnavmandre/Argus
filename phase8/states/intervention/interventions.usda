@@ -1,0 +1,56 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "World"
+{
+    def Scope "Interventions"
+    {
+        custom int urbantwin:count = 1
+        custom string urbantwin:status = "PROPOSED - EFFECT NOT SIMULATED"
+
+        def Xform "proposal_001_a17631e8e1"
+        {
+            custom double urbantwin:amount = 0.5
+            custom string urbantwin:interventionId = "proposal_001"
+            custom string urbantwin:status = "proposed"
+            custom string urbantwin:target = "edge_1255"
+            custom string urbantwin:type = "ADD_SHADE"
+            custom bool urbantwin:visualOnly = 1
+
+            def Cube "Canopy"
+            {
+                color3f[] primvars:displayColor = [(0, 0.9, 1)]
+                double size = 1
+                float xformOp:rotateZ = -52.10006
+                float3 xformOp:scale = (51.957626, 3, 0.18)
+                double3 xformOp:translate = (-165.69977738967788, -134.81903530002018, 3)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ", "xformOp:scale"]
+            }
+
+            def Cylinder "Post_1"
+            {
+                uniform token axis = "Z"
+                double height = 3
+                color3f[] primvars:displayColor = [(0, 0.9, 1)]
+                double radius = 0.12
+                double3 xformOp:translate = (-180.06231797385354, -116.36949949331415, 1.5)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+
+            def Cylinder "Post_2"
+            {
+                uniform token axis = "Z"
+                double height = 3
+                color3f[] primvars:displayColor = [(0, 0.9, 1)]
+                double radius = 0.12
+                double3 xformOp:translate = (-151.33723680550222, -153.2685711067262, 1.5)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+        }
+    }
+}
+

@@ -1,0 +1,15 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    metersPerUnit = 1
+    subLayers = [
+        @agents.usda@,
+        @../../phase2/scene/main.usda@
+    ]
+    upAxis = "Z"
+)
+
+def Xform "World"
+{
+}
+

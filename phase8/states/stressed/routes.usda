@@ -1,0 +1,2359 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "World"
+{
+    def "Simulation"
+    {
+        def Scope "Routes"
+        {
+            custom int urbantwin:segmentCount = 156
+            custom string urbantwin:visualization = "Supplied route usage; orange curves are not calculated routes"
+
+            def BasisCurves "edge_1034"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(7.120318, -388.52728, 0.45), (43.670822, -362.65665, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1034"
+                custom string urbantwin:sourceId = "osm_w1476454015_n12393390129_n13543059311"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1145"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(380.95087, -155.99355, 0.45), (367.49292, -161.65816, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1145"
+                custom string urbantwin:sourceId = "osm_w1515768955_n13830469817_n13842100294"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1146"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(367.49292, -161.65816, 0.45), (366.34314, -162.42627, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1146"
+                custom string urbantwin:sourceId = "osm_w1515768955_n13842100294_n13842100295"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1147"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(366.34314, -162.42627, 0.45), (365.08255, -163.36136, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1147"
+                custom string urbantwin:sourceId = "osm_w1515768955_n13842100295_n13842100296"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1148"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(365.08255, -163.36136, 0.45), (364.47995, -164.83076, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1148"
+                custom string urbantwin:sourceId = "osm_w1515768955_n13842100296_n13842100297"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1149"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(364.47995, -164.83076, 0.45), (364.47995, -166.2, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1149"
+                custom string urbantwin:sourceId = "osm_w1515768955_n13842100297_n13842100298"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1150"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(364.47995, -166.2, 0.45), (364.85397, -167.96999, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1150"
+                custom string urbantwin:sourceId = "osm_w1515768955_n13842100298_n13842100299"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1151"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(364.85397, -167.96999, 0.45), (366.50937, -172.50069, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1151"
+                custom string urbantwin:sourceId = "osm_w1515768955_n13842100299_n13842100300"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1152"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(366.50937, -172.50069, 0.45), (374.93185, -191.65877, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1152"
+                custom string urbantwin:sourceId = "osm_w1515768955_n13842100300_n12277849292"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1190"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(380.95087, 347.1044, 0.45), (357.80984, 339.05692, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1190"
+                custom string urbantwin:sourceId = "osm_w1515821919_n13842516737_n13842516738"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1191"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(357.80984, 339.05692, 0.45), (341.85147, 332.94547, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1191"
+                custom string urbantwin:sourceId = "osm_w1515821919_n13842516738_n13842516739"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1236"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-40.311527, -57.418594, 0.45), (-54.863853, -36.646378, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1236"
+                custom string urbantwin:sourceId = "osm_w177478735_n12393556854_n889216372"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1237"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-112.94847, -178.26703, 0.45), (-105.39179, -176.28555, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1237"
+                custom string urbantwin:sourceId = "osm_w177478735_n12750120187_n889094129"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1238"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-36.086437, -134.96375, 0.45), (-27.719372, -126.2697, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1238"
+                custom string urbantwin:sourceId = "osm_w177478735_n1879146440_n257810107"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1239"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-74.1746, -11.343456, 0.45), (-80.50531, -8.716316, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1239"
+                custom string urbantwin:sourceId = "osm_w177478735_n257810075_n257810076"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1240"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-80.50531, -8.716316, 0.45), (-88.15203, -4.753342, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1240"
+                custom string urbantwin:sourceId = "osm_w177478735_n257810076_n889094064"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1241"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-95.93036, -4.8646617, 0.45), (-105.01777, -4.196745, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1241"
+                custom string urbantwin:sourceId = "osm_w177478735_n257810077_n257810078"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1242"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-105.01777, -4.196745, 0.45), (-113.68267, -6.11144, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1242"
+                custom string urbantwin:sourceId = "osm_w177478735_n257810078_n889094118"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1243"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-126.38565, -12.022505, 0.45), (-189.15942, -52.353558, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1243"
+                custom string urbantwin:sourceId = "osm_w177478735_n257810079_n257810082"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1244"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-189.15942, -52.353558, 0.45), (-196.70918, -58.30915, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1244"
+                custom string urbantwin:sourceId = "osm_w177478735_n257810082_n257810083"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1245"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-196.70918, -58.30915, 0.45), (-200.50484, -67.715645, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1245"
+                custom string urbantwin:sourceId = "osm_w177478735_n257810083_n889094053"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1246"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-201.71695, -77.66761, 0.45), (-200.94812, -86.07223, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1246"
+                custom string urbantwin:sourceId = "osm_w177478735_n257810084_n257810085"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1247"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-200.94812, -86.07223, 0.45), (-197.61653, -93.82007, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1247"
+                custom string urbantwin:sourceId = "osm_w177478735_n257810085_n257810102"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1248"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-133.78302, -175.81801, 0.45), (-126.86357, -178.61212, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1248"
+                custom string urbantwin:sourceId = "osm_w177478735_n257810089_n889094068"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1249"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-120.70602, -178.61212, 0.45), (-112.94847, -178.26703, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1249"
+                custom string urbantwin:sourceId = "osm_w177478735_n257810090_n12750120187"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1250"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-97.57191, -171.66579, 0.45), (-79.244705, -157.9735, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1250"
+                custom string urbantwin:sourceId = "osm_w177478735_n257810091_n1879146439"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1251"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-20.342777, -120.436554, 0.45), (-16.865734, -115.182274, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1251"
+                custom string urbantwin:sourceId = "osm_w177478735_n257810095_n889094114"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1252"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-13.437177, -104.2507, 0.45), (-14.455354, -95.9574, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1252"
+                custom string urbantwin:sourceId = "osm_w177478735_n257810096_n257810097"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1253"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-14.455354, -95.9574, 0.45), (-21.326323, -84.52489, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1253"
+                custom string urbantwin:sourceId = "osm_w177478735_n257810097_n257810098"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1254"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-21.326323, -84.52489, 0.45), (-40.311527, -57.418594, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1254"
+                custom string urbantwin:sourceId = "osm_w177478735_n257810098_n12393556854"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1255"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-197.61653, -93.82007, 0.45), (-133.78302, -175.81801, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1255"
+                custom string urbantwin:sourceId = "osm_w177478735_n257810102_n257810089"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1256"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-27.719372, -126.2697, 0.45), (-20.342777, -120.436554, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1256"
+                custom string urbantwin:sourceId = "osm_w177478735_n257810107_n257810095"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1257"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-200.50484, -67.715645, 0.45), (-201.71695, -77.66761, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1257"
+                custom string urbantwin:sourceId = "osm_w177478735_n889094053_n257810084"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1258"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-88.15203, -4.753342, 0.45), (-95.93036, -4.8646617, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1258"
+                custom string urbantwin:sourceId = "osm_w177478735_n889094064_n257810077"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1259"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-126.86357, -178.61212, 0.45), (-120.70602, -178.61212, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1259"
+                custom string urbantwin:sourceId = "osm_w177478735_n889094068_n257810090"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1260"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-16.865734, -115.182274, 0.45), (-13.437177, -104.2507, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1260"
+                custom string urbantwin:sourceId = "osm_w177478735_n889094114_n257810096"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1261"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-113.68267, -6.11144, 0.45), (-126.38565, -12.022505, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1261"
+                custom string urbantwin:sourceId = "osm_w177478735_n889094118_n257810079"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1262"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-105.39179, -176.28555, 0.45), (-97.57191, -171.66579, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1262"
+                custom string urbantwin:sourceId = "osm_w177478735_n889094129_n257810091"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1263"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-54.863853, -36.646378, 0.45), (-74.1746, -11.343456, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1263"
+                custom string urbantwin:sourceId = "osm_w177478735_n889216372_n257810075"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1278"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(220.75757, 387.46976, 0.45), (213.63725, 377.06137, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1278"
+                custom string urbantwin:sourceId = "osm_w23231484_n1230374486_n7523542946"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1279"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(171.4833, 353.31693, 0.45), (168.34566, 353.01636, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1279"
+                custom string urbantwin:sourceId = "osm_w23231484_n1230374681_n7523561494"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1280"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(187.71873, 357.46915, 0.45), (184.42871, 356.07767, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1280"
+                custom string urbantwin:sourceId = "osm_w23231484_n1455621441_n7523561489"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1281"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(202.0425, 366.87564, 0.45), (195.19923, 362.3004, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1281"
+                custom string urbantwin:sourceId = "osm_w23231484_n251336398_n7523542984"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1282"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(223.7485, 389.61823, 0.45), (220.75757, 387.46976, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1282"
+                custom string urbantwin:sourceId = "osm_w23231484_n7523542944_n1230374486"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1283"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(213.63725, 377.06137, 0.45), (202.0425, 366.87564, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1283"
+                custom string urbantwin:sourceId = "osm_w23231484_n7523542946_n251336398"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1284"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(195.19923, 362.3004, 0.45), (187.71873, 357.46915, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1284"
+                custom string urbantwin:sourceId = "osm_w23231484_n7523542984_n1455621441"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1285"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(184.42871, 356.07767, 0.45), (181.77591, 355.2873, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1285"
+                custom string urbantwin:sourceId = "osm_w23231484_n7523561489_n7523561490"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1286"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(181.77591, 355.2873, 0.45), (179.17851, 354.58597, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1286"
+                custom string urbantwin:sourceId = "osm_w23231484_n7523561490_n7523561491"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1287"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(179.17851, 354.58597, 0.45), (176.13783, 354.08502, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1287"
+                custom string urbantwin:sourceId = "osm_w23231484_n7523561491_n7523561492"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1288"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(176.13783, 354.08502, 0.45), (171.4833, 353.31693, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1288"
+                custom string urbantwin:sourceId = "osm_w23231484_n7523561492_n1230374681"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1289"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(168.34566, 353.01636, 0.45), (164.05823, 352.96072, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1289"
+                custom string urbantwin:sourceId = "osm_w23231484_n7523561494_n7523561495"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1290"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(164.05823, 352.96072, 0.45), (160.65045, 352.91617, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_1290"
+                custom string urbantwin:sourceId = "osm_w23231484_n7523561495_n251336399"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_157"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-154.7561, 146.67456, 0.45), (-138.87392, 155.7805, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_157"
+                custom string urbantwin:sourceId = "osm_w1253425345_n11650682092_n11650682094"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_158"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-138.87392, 155.7805, 0.45), (-135.73627, 156.97162, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_158"
+                custom string urbantwin:sourceId = "osm_w1253425345_n11650682094_n11650682096"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_159"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-135.73627, 156.97162, 0.45), (-92.875824, 173.22426, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_159"
+                custom string urbantwin:sourceId = "osm_w1253425345_n11650682096_n12409633920"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_160"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-92.875824, 173.22426, 0.45), (-91.5044, 173.6584, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_160"
+                custom string urbantwin:sourceId = "osm_w1253425345_n12409633920_n11650682095"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1823"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-368.144, -343.85477, 0.45), (-356.81937, -344.30005, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1823"
+                custom string urbantwin:sourceId = "osm_w61156104_n764870824_n764870850"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1824"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-380.95087, -346.8969, 0.45), (-368.144, -343.85477, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1824"
+                custom string urbantwin:sourceId = "osm_w61156104_n764870832_n764870824"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1825"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-325.25586, -369.91467, 0.45), (-324.9234, -378.8759, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1825"
+                custom string urbantwin:sourceId = "osm_w61156104_n764870840_n764870864"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1826"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-346.04886, -347.37247, 0.45), (-337.0307, -352.45978, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1826"
+                custom string urbantwin:sourceId = "osm_w61156104_n764870842_n764870865"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1827"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-327.0013, -364.97208, 0.45), (-325.25586, -369.91467, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1827"
+                custom string urbantwin:sourceId = "osm_w61156104_n764870849_n764870840"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1828"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-356.81937, -344.30005, 0.45), (-346.04886, -347.37247, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1828"
+                custom string urbantwin:sourceId = "osm_w61156104_n764870850_n764870842"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1829"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-324.9234, -378.8759, 0.45), (-326.71158, -389.61823, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1829"
+                custom string urbantwin:sourceId = "osm_w61156104_n764870864_n764870855"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1830"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-337.0307, -352.45978, 0.45), (-330.00043, -357.93668, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1830"
+                custom string urbantwin:sourceId = "osm_w61156104_n764870865_n8998120945"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1831"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-330.00043, -357.93668, 0.45), (-327.0013, -364.97208, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1831"
+                custom string urbantwin:sourceId = "osm_w61156104_n8998120945_n764870849"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1893"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(357.512, -371.82938, 0.45), (355.2263, -373.24313, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1893"
+                custom string urbantwin:sourceId = "osm_w75818729_n12923018660_n869389500"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1894"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(356.9856, -389.1618, 0.45), (357.93445, -389.61823, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1894"
+                custom string urbantwin:sourceId = "osm_w75818729_n869389489_n895178679"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1895"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(353.16223, -376.01498, 0.45), (352.35876, -378.64212, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1895"
+                custom string urbantwin:sourceId = "osm_w75818729_n869389495_n895178432"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1896"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(355.2263, -373.24313, 0.45), (353.16223, -376.01498, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1896"
+                custom string urbantwin:sourceId = "osm_w75818729_n869389500_n869389495"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1897"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(352.6497, -385.13205, 0.45), (354.6514, -387.67014, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1897"
+                custom string urbantwin:sourceId = "osm_w75818729_n869389545_n869389583"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1898"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(352.01245, -381.7368, 0.45), (352.6497, -385.13205, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1898"
+                custom string urbantwin:sourceId = "osm_w75818729_n869389547_n869389545"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1899"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(380.95087, -360.5466, 0.45), (357.512, -371.82938, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1899"
+                custom string urbantwin:sourceId = "osm_w75818729_n869389567_n12923018660"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1900"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(354.6514, -387.67014, 0.45), (356.9856, -389.1618, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1900"
+                custom string urbantwin:sourceId = "osm_w75818729_n869389583_n869389489"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_1901"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(352.35876, -378.64212, 0.45), (352.01245, -381.7368, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_1901"
+                custom string urbantwin:sourceId = "osm_w75818729_n895178432_n869389547"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_2017"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(139.43495, 193.68478, 0.45), (142.37866, 190.0669, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_2017"
+                custom string urbantwin:sourceId = "osm_w825631926_n7555011011_n7708993471"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_2018"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(187.5525, 160.19987, 0.45), (191.42435, 160.80101, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_2018"
+                custom string urbantwin:sourceId = "osm_w825631926_n7708993463_n7708993465"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_2019"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(149.6652, 180.25966, 0.45), (157.5682, 172.27805, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_2019"
+                custom string urbantwin:sourceId = "osm_w825631926_n7708993464_n7708993469"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_2020"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(191.42435, 160.80101, 0.45), (230.90471, 175.15009, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_2020"
+                custom string urbantwin:sourceId = "osm_w825631926_n7708993465_n7708993466"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_2021"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(164.9725, 166.93471, 0.45), (168.94824, 164.15172, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_2021"
+                custom string urbantwin:sourceId = "osm_w825631926_n7708993468_n7799409178"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_2022"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(157.5682, 172.27805, 0.45), (164.9725, 166.93471, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_2022"
+                custom string urbantwin:sourceId = "osm_w825631926_n7708993469_n7708993468"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_2023"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(179.414, 160.8344, 0.45), (187.5525, 160.19987, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_2023"
+                custom string urbantwin:sourceId = "osm_w825631926_n7708993470_n7708993463"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_2024"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(142.37866, 190.0669, 0.45), (149.6652, 180.25966, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_2024"
+                custom string urbantwin:sourceId = "osm_w825631926_n7708993471_n7708993464"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_2025"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(168.94824, 164.15172, 0.45), (171.98201, 163.06079, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_2025"
+                custom string urbantwin:sourceId = "osm_w825631926_n7799409178_n7799480588"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_2026"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(171.98201, 163.06079, 0.45), (179.414, 160.8344, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_2026"
+                custom string urbantwin:sourceId = "osm_w825631926_n7799480588_n7708993470"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_2168"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(365.78903, 116.81867, 0.45), (365.6713, 117.72036, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_2168"
+                custom string urbantwin:sourceId = "osm_w969615133_n13838008660_n8972724038"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_2169"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(378.38812, 44.527798, 0.45), (377.37686, 45.607594, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_2169"
+                custom string urbantwin:sourceId = "osm_w969615133_n8972724018_n8972724028"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_2170"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(377.37686, 45.607594, 0.45), (363.64185, 86.784676, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_2170"
+                custom string urbantwin:sourceId = "osm_w969615133_n8972724028_n8972724029"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_2171"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(363.64185, 86.784676, 0.45), (362.51285, 91.59367, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_2171"
+                custom string urbantwin:sourceId = "osm_w969615133_n8972724029_n8972724030"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_2172"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(362.51285, 91.59367, 0.45), (362.67215, 94.96666, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_2172"
+                custom string urbantwin:sourceId = "osm_w969615133_n8972724030_n8972724031"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_2173"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(362.67215, 94.96666, 0.45), (364.95786, 100.365654, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_2173"
+                custom string urbantwin:sourceId = "osm_w969615133_n8972724031_n8972724032"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_2174"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(364.95786, 100.365654, 0.45), (366.90417, 104.785034, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_2174"
+                custom string urbantwin:sourceId = "osm_w969615133_n8972724032_n8972724033"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_2175"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(366.90417, 104.785034, 0.45), (366.5925, 110.76289, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_2175"
+                custom string urbantwin:sourceId = "osm_w969615133_n8972724033_n8972724034"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_2176"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(366.5925, 110.76289, 0.45), (365.78903, 116.81867, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_2176"
+                custom string urbantwin:sourceId = "osm_w969615133_n8972724034_n13838008660"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_2229"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-199.35506, -207.13217, 0.45), (-242.57567, -238.54654, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_2229"
+                custom string urbantwin:sourceId = "osm_w970347258_n12507067532_n8979782877"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_284"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-295.0153, 194.83138, 0.45), (-286.65515, 200.95395, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_284"
+                custom string urbantwin:sourceId = "osm_w131668736_n11650666780_n12388406513"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_285"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-296.8092, 193.16158, 0.45), (-295.0153, 194.83138, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_285"
+                custom string urbantwin:sourceId = "osm_w131668736_n12388329143_n11650666780"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_286"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-241.49515, 232.80244, 0.45), (-240.06139, 233.80432, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_286"
+                custom string urbantwin:sourceId = "osm_w131668736_n12388329148_n12388329154"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_287"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-240.06139, 233.80432, 0.45), (-239.1194, 233.84886, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_287"
+                custom string urbantwin:sourceId = "osm_w131668736_n12388329154_n12932620321"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_288"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-286.65515, 200.95395, 0.45), (-241.49515, 232.80244, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_288"
+                custom string urbantwin:sourceId = "osm_w131668736_n12388406513_n12388329148"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_289"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-213.92816, 384.68677, 0.45), (-191.18886, 348.85303, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_289"
+                custom string urbantwin:sourceId = "osm_w131668737_n1448891845_n1448891859"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_290"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-191.18886, 348.85303, 0.45), (-185.71008, 341.6061, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_290"
+                custom string urbantwin:sourceId = "osm_w131668737_n1448891859_n1448891860"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_291"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-217.27557, 389.61823, 0.45), (-213.92816, 384.68677, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_291"
+                custom string urbantwin:sourceId = "osm_w131668737_n4680880996_n1448891845"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_361"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(236.88219, -368.64563, 0.45), (239.42416, -369.5362, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_361"
+                custom string urbantwin:sourceId = "osm_w1327147066_n12292980248_n12299677514"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_362"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(231.44498, -365.23926, 0.45), (236.88219, -368.64563, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_362"
+                custom string urbantwin:sourceId = "osm_w1327147066_n12292980249_n12292980248"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_363"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(222.14977, -357.83652, 0.45), (231.44498, -365.23926, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_363"
+                custom string urbantwin:sourceId = "osm_w1327147066_n12292980250_n12292980249"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_364"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(217.21126, -353.47278, 0.45), (222.14977, -357.83652, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_364"
+                custom string urbantwin:sourceId = "osm_w1327147066_n12292980251_n12292980250"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_365"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(212.31432, -348.5747, 0.45), (217.21126, -353.47278, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_365"
+                custom string urbantwin:sourceId = "osm_w1327147066_n12292980252_n12292980251"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_366"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(204.4875, -337.47617, 0.45), (212.31432, -348.5747, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_366"
+                custom string urbantwin:sourceId = "osm_w1327147066_n12292980253_n12292980252"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_367"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(189.29103, -315.40152, 0.45), (204.4875, -337.47617, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_367"
+                custom string urbantwin:sourceId = "osm_w1327147066_n12292980254_n12292980253"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_368"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(161.27382, -276.50647, 0.45), (172.36989, -291.9131, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_368"
+                custom string urbantwin:sourceId = "osm_w1327147066_n12292980255_n12292980295"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_369"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(150.17084, -261.1778, 0.45), (161.27382, -276.50647, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_369"
+                custom string urbantwin:sourceId = "osm_w1327147066_n12292980256_n12292980255"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_370"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(113.41254, -212.264, 0.45), (150.17084, -261.1778, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_370"
+                custom string urbantwin:sourceId = "osm_w1327147066_n12292980257_n12292980256"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_371"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(104.87924, -201.83337, 0.45), (113.41254, -212.264, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_371"
+                custom string urbantwin:sourceId = "osm_w1327147066_n12292980258_n12292980257"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_372"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(59.587643, -144.44817, 0.45), (90.32691, -182.92018, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_372"
+                custom string urbantwin:sourceId = "osm_w1327147066_n12292980259_n12292980260"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_373"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(90.32691, -182.92018, 0.45), (94.21954, -188.16333, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_373"
+                custom string urbantwin:sourceId = "osm_w1327147066_n12292980260_n12365328531"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_374"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(172.36989, -291.9131, 0.45), (189.29103, -315.40152, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_374"
+                custom string urbantwin:sourceId = "osm_w1327147066_n12292980295_n12292980254"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_375"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(239.42416, -369.5362, 0.45), (240.37308, -369.87015, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_375"
+                custom string urbantwin:sourceId = "osm_w1327147066_n12299677514_n12292980247"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_376"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(94.21954, -188.16333, 0.45), (104.87924, -201.83337, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_376"
+                custom string urbantwin:sourceId = "osm_w1327147066_n12365328531_n12292980258"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_521"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(194.81136, -115.805664, 0.45), (246.2051, -89.033325, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_521"
+                custom string urbantwin:sourceId = "osm_w1328706161_n12292981957_n12292981958"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_522"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(246.2051, -89.033325, 0.45), (246.2051, -87.586174, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_522"
+                custom string urbantwin:sourceId = "osm_w1328706161_n12292981958_n12292981959"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_523"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(246.2051, -87.586174, 0.45), (245.38777, -85.83846, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_523"
+                custom string urbantwin:sourceId = "osm_w1328706161_n12292981959_n12292981960"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_524"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(245.38777, -85.83846, 0.45), (229.8519, -58.810085, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_524"
+                custom string urbantwin:sourceId = "osm_w1328706161_n12292981960_n12292981961"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_525"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(229.8519, -58.810085, 0.45), (206.8771, -18.768467, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_525"
+                custom string urbantwin:sourceId = "osm_w1328706161_n12292981961_n12292981962"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_644"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-343.777, 33.451508, 0.45), (-359.36136, 56.99558, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_644"
+                custom string urbantwin:sourceId = "osm_w1338916967_n12384997302_n12723986985"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_645"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-366.48166, 67.74904, 0.45), (-380.95087, 89.611755, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_645"
+                custom string urbantwin:sourceId = "osm_w1338916967_n12723986984_n12723986989"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_646"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-359.36136, 56.99558, 0.45), (-363.00464, 62.494762, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_646"
+                custom string urbantwin:sourceId = "osm_w1338916967_n12723986985_n12723986986"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_647"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-363.00464, 62.494762, 0.45), (-366.48166, 67.74904, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_647"
+                custom string urbantwin:sourceId = "osm_w1338916967_n12723986986_n12723986984"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_695"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-118.254074, -216.43849, 0.45), (-118.1294, -220.04524, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_695"
+                custom string urbantwin:sourceId = "osm_w1339799302_n12393390122_n12393390123"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_696"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-118.1294, -220.04524, 0.45), (-64.81706, -291.96875, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_696"
+                custom string urbantwin:sourceId = "osm_w1339799302_n12393390123_n12393390127"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_697"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-64.81706, -291.96875, 0.45), (-61.076817, -297.01154, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_697"
+                custom string urbantwin:sourceId = "osm_w1339799302_n12393390127_n5371271713"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_719"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-263.4795, -26.605358, 0.45), (-246.9739, -52.353558, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_719"
+                custom string urbantwin:sourceId = "osm_w1339802965_n12393412238_n12393412239"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_720"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-246.9739, -52.353558, 0.45), (-242.02847, -55.57069, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_720"
+                custom string urbantwin:sourceId = "osm_w1339802965_n12393412239_n12393412248"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_721"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-238.17049, -56.049362, 0.45), (-234.8943, -52.77657, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_721"
+                custom string urbantwin:sourceId = "osm_w1339802965_n12393412240_n12393412241"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_722"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-234.8943, -52.77657, 0.45), (-227.42767, -46.798714, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_722"
+                custom string urbantwin:sourceId = "osm_w1339802965_n12393412241_n12393412242"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_723"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-227.42767, -46.798714, 0.45), (-172.01663, -10.530824, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_723"
+                custom string urbantwin:sourceId = "osm_w1339802965_n12393412242_n11650666774"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_724"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-242.02847, -55.57069, 0.45), (-238.17049, -56.049362, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_724"
+                custom string urbantwin:sourceId = "osm_w1339802965_n12393412248_n12393412240"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_738"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-350.01074, -179.91457, 0.45), (-348.82632, -181.4953, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_738"
+                custom string urbantwin:sourceId = "osm_w1339806112_n12393467742_n12393471474"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_739"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-380.95087, -136.03677, 0.45), (-350.01074, -179.91457, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_739"
+                custom string urbantwin:sourceId = "osm_w1339806112_n12393471471_n12393467742"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_768"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(30.392954, -107.92425, 0.45), (34.500298, -112.78891, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_768"
+                custom string urbantwin:sourceId = "osm_w1339818157_n12393556868_n12393556871"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_769"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(34.500298, -112.78891, 0.45), (59.587643, -144.44817, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_769"
+                custom string urbantwin:sourceId = "osm_w1339818157_n12393556871_n12292980259"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_800"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(28.820665, 4.85353, 0.45), (41.579056, 9.373101, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_800"
+                custom string urbantwin:sourceId = "osm_w1339847627_n12393855006_n13840037579"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_801"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(89.52345, 26.349323, 0.45), (176.08241, 59.28876, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_801"
+                custom string urbantwin:sourceId = "osm_w1339847627_n12393855007_n13840037577"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_802"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(13.838906, -0.06679169, 0.45), (28.820665, 4.85353, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_802"
+                custom string urbantwin:sourceId = "osm_w1339847627_n12393855011_n12393855006"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_803"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(176.08241, 59.28876, 0.45), (176.88588, 59.600456, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_803"
+                custom string urbantwin:sourceId = "osm_w1339847627_n13840037577_n12393855012"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_804"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(41.579056, 9.373101, 0.45), (89.52345, 26.349323, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_804"
+                custom string urbantwin:sourceId = "osm_w1339847627_n13840037579_n12393855007"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_820"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-22.046665, 365.66226, 0.45), (-22.86398, 365.27264, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_820"
+                custom string urbantwin:sourceId = "osm_w1340351255_n12398421787_n12363291002"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_821"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-21.44407, 366.29678, 0.45), (-22.046665, 365.66226, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_821"
+                custom string urbantwin:sourceId = "osm_w1340351255_n12398421788_n12398421787"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_822"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-20.245808, 366.73093, 0.45), (-21.44407, 366.29678, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_822"
+                custom string urbantwin:sourceId = "osm_w1340351255_n12398421789_n12398421788"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_823"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(43.40762, 388.6386, 0.45), (-20.245808, 366.73093, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_823"
+                custom string urbantwin:sourceId = "osm_w1340351255_n12398421790_n12398421789"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_824"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(46.0692, 389.61823, 0.45), (43.40762, 388.6386, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_824"
+                custom string urbantwin:sourceId = "osm_w1340351255_n12398421791_n12398421790"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_828"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-380.95087, 331.43265, 0.45), (-379.0946, 332.27756, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_828"
+                custom string urbantwin:sourceId = "osm_w1341547864_n12409499683_n12409499684"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_829"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-379.0946, 332.27756, 0.45), (-326.33636, 367.95544, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 13
+                custom string urbantwin:edgeId = "edge_829"
+                custom string urbantwin:sourceId = "osm_w1341547864_n12409499684_n12409499686"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_860"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-8.1523485, 196.234, 0.45), (2.6597297, 178.28929, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_860"
+                custom string urbantwin:sourceId = "osm_w1341564519_n12409633932_n12409633935"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_861"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(2.6597297, 178.28929, 0.45), (29.353996, 102.97053, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_861"
+                custom string urbantwin:sourceId = "osm_w1341564519_n12409633935_n12409633936"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_862"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(29.353996, 102.97053, 0.45), (30.891653, 97.42682, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_862"
+                custom string urbantwin:sourceId = "osm_w1341564519_n12409633936_n11666838657"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+
+            def BasisCurves "edge_863"
+            {
+                int[] curveVertexCounts = [2]
+                point3f[] points = [(-10.784373, 202.646, 0.45), (-8.1523485, 196.234, 0.45)]
+                color3f[] primvars:displayColor = [(1, 0.22, 0.03)]
+                uniform token type = "linear"
+                custom int urbantwin:agentUsageCount = 12
+                custom string urbantwin:edgeId = "edge_863"
+                custom string urbantwin:sourceId = "osm_w1341564519_n8972731438_n12409633932"
+                float[] widths = [0.7] (
+                    interpolation = "constant"
+                )
+                uniform token wrap = "nonperiodic"
+            }
+        }
+    }
+}
+

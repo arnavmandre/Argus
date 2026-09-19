@@ -1,0 +1,367 @@
+{
+  "schema_version": 1,
+  "status": "PROPOSAL - distances are real OSM path lengths; all 0..1 attributes are nulls a human must fill in. Do not simulate until filled.",
+  "zones": [
+    {
+      "id": "Zone A",
+      "drainage": null,
+      "shade": null
+    }
+  ],
+  "buildings": [
+    {
+      "id": "N1A",
+      "name": "Node N1A",
+      "type": "unset",
+      "zone": "Zone A",
+      "capacity": null,
+      "cooling": null,
+      "flood_exposure": null
+    },
+    {
+      "id": "N1B",
+      "name": "Node N1B",
+      "type": "unset",
+      "zone": "Zone A",
+      "capacity": null,
+      "cooling": null,
+      "flood_exposure": null
+    },
+    {
+      "id": "N2A",
+      "name": "Node N2A",
+      "type": "unset",
+      "zone": "Zone A",
+      "capacity": null,
+      "cooling": null,
+      "flood_exposure": null
+    },
+    {
+      "id": "N2B",
+      "name": "Node N2B",
+      "type": "unset",
+      "zone": "Zone A",
+      "capacity": null,
+      "cooling": null,
+      "flood_exposure": null
+    },
+    {
+      "id": "N3A",
+      "name": "Node N3A",
+      "type": "unset",
+      "zone": "Zone A",
+      "capacity": null,
+      "cooling": null,
+      "flood_exposure": null
+    },
+    {
+      "id": "N3B",
+      "name": "Node N3B",
+      "type": "unset",
+      "zone": "Zone A",
+      "capacity": null,
+      "cooling": null,
+      "flood_exposure": null
+    },
+    {
+      "id": "N4A",
+      "name": "Node N4A",
+      "type": "unset",
+      "zone": "Zone A",
+      "capacity": null,
+      "cooling": null,
+      "flood_exposure": null
+    },
+    {
+      "id": "N4B",
+      "name": "Node N4B",
+      "type": "unset",
+      "zone": "Zone A",
+      "capacity": null,
+      "cooling": null,
+      "flood_exposure": null
+    },
+    {
+      "id": "N5A",
+      "name": "Node N5A",
+      "type": "unset",
+      "zone": "Zone A",
+      "capacity": null,
+      "cooling": null,
+      "flood_exposure": null
+    },
+    {
+      "id": "N5B",
+      "name": "Node N5B",
+      "type": "unset",
+      "zone": "Zone A",
+      "capacity": null,
+      "cooling": null,
+      "flood_exposure": null
+    },
+    {
+      "id": "N6A",
+      "name": "Node N6A",
+      "type": "unset",
+      "zone": "Zone A",
+      "capacity": null,
+      "cooling": null,
+      "flood_exposure": null
+    },
+    {
+      "id": "N6B",
+      "name": "Node N6B",
+      "type": "unset",
+      "zone": "Zone A",
+      "capacity": null,
+      "cooling": null,
+      "flood_exposure": null
+    },
+    {
+      "id": "N7A",
+      "name": "Node N7A",
+      "type": "unset",
+      "zone": "Zone A",
+      "capacity": null,
+      "cooling": null,
+      "flood_exposure": null
+    },
+    {
+      "id": "N7B",
+      "name": "Node N7B",
+      "type": "unset",
+      "zone": "Zone A",
+      "capacity": null,
+      "cooling": null,
+      "flood_exposure": null
+    },
+    {
+      "id": "N8A",
+      "name": "Node N8A",
+      "type": "unset",
+      "zone": "Zone A",
+      "capacity": null,
+      "cooling": null,
+      "flood_exposure": null
+    },
+    {
+      "id": "N8B",
+      "name": "Node N8B",
+      "type": "unset",
+      "zone": "Zone A",
+      "capacity": null,
+      "cooling": null,
+      "flood_exposure": null
+    }
+  ],
+  "routes": [
+    {
+      "id": "R1",
+      "start": "N1A",
+      "end": "N1B",
+      "distance_km": 1.181,
+      "edge_count": 108,
+      "shade": null,
+      "drainage": null,
+      "base_crowding": null,
+      "capacity_pph": null,
+      "greenery": null,
+      "transit": null
+    },
+    {
+      "id": "R2",
+      "start": "N1A",
+      "end": "N1B",
+      "distance_km": 1.277,
+      "edge_count": 128,
+      "shade": null,
+      "drainage": null,
+      "base_crowding": null,
+      "capacity_pph": null,
+      "greenery": null,
+      "transit": null
+    },
+    {
+      "id": "R3",
+      "start": "N2A",
+      "end": "N2B",
+      "distance_km": 1.256,
+      "edge_count": 125,
+      "shade": null,
+      "drainage": null,
+      "base_crowding": null,
+      "capacity_pph": null,
+      "greenery": null,
+      "transit": null
+    },
+    {
+      "id": "R4",
+      "start": "N2A",
+      "end": "N2B",
+      "distance_km": 1.303,
+      "edge_count": 113,
+      "shade": null,
+      "drainage": null,
+      "base_crowding": null,
+      "capacity_pph": null,
+      "greenery": null,
+      "transit": null
+    },
+    {
+      "id": "R5",
+      "start": "N3A",
+      "end": "N3B",
+      "distance_km": 0.505,
+      "edge_count": 17,
+      "shade": null,
+      "drainage": null,
+      "base_crowding": null,
+      "capacity_pph": null,
+      "greenery": null,
+      "transit": null
+    },
+    {
+      "id": "R6",
+      "start": "N3A",
+      "end": "N3B",
+      "distance_km": 0.942,
+      "edge_count": 74,
+      "shade": null,
+      "drainage": null,
+      "base_crowding": null,
+      "capacity_pph": null,
+      "greenery": null,
+      "transit": null
+    },
+    {
+      "id": "R7",
+      "start": "N4A",
+      "end": "N4B",
+      "distance_km": 0.655,
+      "edge_count": 47,
+      "shade": null,
+      "drainage": null,
+      "base_crowding": null,
+      "capacity_pph": null,
+      "greenery": null,
+      "transit": null
+    },
+    {
+      "id": "R8",
+      "start": "N4A",
+      "end": "N4B",
+      "distance_km": 0.848,
+      "edge_count": 49,
+      "shade": null,
+      "drainage": null,
+      "base_crowding": null,
+      "capacity_pph": null,
+      "greenery": null,
+      "transit": null
+    },
+    {
+      "id": "R9",
+      "start": "N5A",
+      "end": "N5B",
+      "distance_km": 1.117,
+      "edge_count": 95,
+      "shade": null,
+      "drainage": null,
+      "base_crowding": null,
+      "capacity_pph": null,
+      "greenery": null,
+      "transit": null
+    },
+    {
+      "id": "R10",
+      "start": "N5A",
+      "end": "N5B",
+      "distance_km": 1.164,
+      "edge_count": 87,
+      "shade": null,
+      "drainage": null,
+      "base_crowding": null,
+      "capacity_pph": null,
+      "greenery": null,
+      "transit": null
+    },
+    {
+      "id": "R11",
+      "start": "N6A",
+      "end": "N6B",
+      "distance_km": 0.614,
+      "edge_count": 66,
+      "shade": null,
+      "drainage": null,
+      "base_crowding": null,
+      "capacity_pph": null,
+      "greenery": null,
+      "transit": null
+    },
+    {
+      "id": "R12",
+      "start": "N6A",
+      "end": "N6B",
+      "distance_km": 0.696,
+      "edge_count": 63,
+      "shade": null,
+      "drainage": null,
+      "base_crowding": null,
+      "capacity_pph": null,
+      "greenery": null,
+      "transit": null
+    },
+    {
+      "id": "R13",
+      "start": "N7A",
+      "end": "N7B",
+      "distance_km": 0.31,
+      "edge_count": 31,
+      "shade": null,
+      "drainage": null,
+      "base_crowding": null,
+      "capacity_pph": null,
+      "greenery": null,
+      "transit": null
+    },
+    {
+      "id": "R14",
+      "start": "N7A",
+      "end": "N7B",
+      "distance_km": 0.397,
+      "edge_count": 59,
+      "shade": null,
+      "drainage": null,
+      "base_crowding": null,
+      "capacity_pph": null,
+      "greenery": null,
+      "transit": null
+    },
+    {
+      "id": "R15",
+      "start": "N8A",
+      "end": "N8B",
+      "distance_km": 0.56,
+      "edge_count": 52,
+      "shade": null,
+      "drainage": null,
+      "base_crowding": null,
+      "capacity_pph": null,
+      "greenery": null,
+      "transit": null
+    },
+    {
+      "id": "R16",
+      "start": "N8A",
+      "end": "N8B",
+      "distance_km": 0.624,
+      "edge_count": 54,
+      "shade": null,
+      "drainage": null,
+      "base_crowding": null,
+      "capacity_pph": null,
+      "greenery": null,
+      "transit": null
+    }
+  ]
+}

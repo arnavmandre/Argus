@@ -1,0 +1,2778 @@
+{
+  "schema_version": "1.0",
+  "city_id": "4927ea678dbb115a6ab09a017d6dcad73cbf8c938592be5e83159d5235fa8213",
+  "run_id": "urbantwin-distributed-demo-002",
+  "sequence": 0,
+  "timestamp": 0.0,
+  "data_kind": "mock",
+  "label": "DEMO / MOCK SIMULATION DATA - DISTRIBUTED NORMAL",
+  "scenario": {
+    "temperature_c": 32,
+    "population_equivalent": 50000
+  },
+  "agents": [
+    {
+      "id": "citizen_001",
+      "x": -15.003,
+      "y": -94.308,
+      "z": 0.15,
+      "route": [
+        "edge_1238",
+        "edge_1256",
+        "edge_1251",
+        "edge_1260",
+        "edge_1252",
+        "edge_1253",
+        "edge_1254",
+        "edge_1236",
+        "edge_1263",
+        "edge_1239",
+        "edge_1240",
+        "edge_1258",
+        "edge_1241",
+        "edge_1242",
+        "edge_1261",
+        "edge_1243",
+        "edge_1244",
+        "edge_1245",
+        "edge_1257",
+        "edge_1246",
+        "edge_1247",
+        "edge_1255",
+        "edge_1248",
+        "edge_1259",
+        "edge_1249",
+        "edge_1237",
+        "edge_1262",
+        "edge_1250"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_002",
+      "x": 376.898,
+      "y": 346.097,
+      "z": 0.15,
+      "route": [
+        "edge_1190",
+        "edge_1191"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_003",
+      "x": 376.413,
+      "y": -362.309,
+      "z": 0.15,
+      "route": [
+        "edge_1899",
+        "edge_1893",
+        "edge_1896",
+        "edge_1895",
+        "edge_1901",
+        "edge_1898",
+        "edge_1897",
+        "edge_1900",
+        "edge_1894"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_004",
+      "x": -375.126,
+      "y": 334.502,
+      "z": 0.15,
+      "route": [
+        "edge_828",
+        "edge_829"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_005",
+      "x": -372.33,
+      "y": -345.24,
+      "z": 0.15,
+      "route": [
+        "edge_1824",
+        "edge_1823",
+        "edge_1828",
+        "edge_1826",
+        "edge_1830",
+        "edge_1831",
+        "edge_1827",
+        "edge_1825",
+        "edge_1829"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_006",
+      "x": 39.043,
+      "y": 387.538,
+      "z": 0.15,
+      "route": [
+        "edge_824",
+        "edge_823",
+        "edge_822",
+        "edge_821",
+        "edge_820"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_007",
+      "x": 207.285,
+      "y": -109.736,
+      "z": 0.15,
+      "route": [
+        "edge_521",
+        "edge_522",
+        "edge_523",
+        "edge_524",
+        "edge_525"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_008",
+      "x": 10.995,
+      "y": -386.25,
+      "z": 0.15,
+      "route": [
+        "edge_1034"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_009",
+      "x": -347.178,
+      "y": 39.277,
+      "z": 0.15,
+      "route": [
+        "edge_644",
+        "edge_646",
+        "edge_647",
+        "edge_645"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_010",
+      "x": 145.683,
+      "y": 184.982,
+      "z": 0.15,
+      "route": [
+        "edge_2017",
+        "edge_2024",
+        "edge_2019",
+        "edge_2022",
+        "edge_2021",
+        "edge_2025",
+        "edge_2026",
+        "edge_2023",
+        "edge_2018",
+        "edge_2020"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_011",
+      "x": -148.586,
+      "y": 149.774,
+      "z": 0.15,
+      "route": [
+        "edge_157",
+        "edge_158",
+        "edge_159",
+        "edge_160"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_012",
+      "x": 375.772,
+      "y": 51.619,
+      "z": 0.15,
+      "route": [
+        "edge_2169",
+        "edge_2170",
+        "edge_2171",
+        "edge_2172",
+        "edge_2173",
+        "edge_2174",
+        "edge_2175",
+        "edge_2176",
+        "edge_2168"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_013",
+      "x": -378.054,
+      "y": -140.805,
+      "z": 0.15,
+      "route": [
+        "edge_739",
+        "edge_738"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_014",
+      "x": 218.202,
+      "y": 384.406,
+      "z": 0.15,
+      "route": [
+        "edge_1282",
+        "edge_1278",
+        "edge_1283",
+        "edge_1281",
+        "edge_1284",
+        "edge_1280",
+        "edge_1285",
+        "edge_1286",
+        "edge_1287",
+        "edge_1288",
+        "edge_1279",
+        "edge_1289",
+        "edge_1290"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_015",
+      "x": 77.426,
+      "y": -167.383,
+      "z": 0.15,
+      "route": [
+        "edge_372",
+        "edge_373",
+        "edge_376",
+        "edge_371",
+        "edge_370",
+        "edge_369",
+        "edge_368",
+        "edge_374",
+        "edge_367",
+        "edge_366",
+        "edge_365",
+        "edge_364",
+        "edge_363",
+        "edge_362",
+        "edge_361",
+        "edge_375"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_016",
+      "x": 30.451,
+      "y": 5.028,
+      "z": 0.15,
+      "route": [
+        "edge_802",
+        "edge_800",
+        "edge_804",
+        "edge_801",
+        "edge_803"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_017",
+      "x": 376.373,
+      "y": -157.508,
+      "z": 0.15,
+      "route": [
+        "edge_1145",
+        "edge_1146",
+        "edge_1147",
+        "edge_1148",
+        "edge_1149",
+        "edge_1150",
+        "edge_1151",
+        "edge_1152"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_018",
+      "x": -114.664,
+      "y": -225.359,
+      "z": 0.15,
+      "route": [
+        "edge_695",
+        "edge_696",
+        "edge_697"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_019",
+      "x": -214.361,
+      "y": 384.649,
+      "z": 0.15,
+      "route": [
+        "edge_291",
+        "edge_289",
+        "edge_290"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_020",
+      "x": -291.059,
+      "y": 197.258,
+      "z": 0.15,
+      "route": [
+        "edge_285",
+        "edge_284",
+        "edge_288",
+        "edge_286",
+        "edge_287"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_021",
+      "x": 33.119,
+      "y": -111.742,
+      "z": 0.15,
+      "route": [
+        "edge_768",
+        "edge_769"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_022",
+      "x": -257.281,
+      "y": -36.98,
+      "z": 0.15,
+      "route": [
+        "edge_719",
+        "edge_720",
+        "edge_724",
+        "edge_721",
+        "edge_722",
+        "edge_723"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_023",
+      "x": -203.901,
+      "y": -209.966,
+      "z": 0.15,
+      "route": [
+        "edge_2229"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_024",
+      "x": -6.195,
+      "y": 192.249,
+      "z": 0.15,
+      "route": [
+        "edge_863",
+        "edge_860",
+        "edge_861",
+        "edge_862"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_025",
+      "x": -72.433,
+      "y": -14.252,
+      "z": 0.15,
+      "route": [
+        "edge_1238",
+        "edge_1256",
+        "edge_1251",
+        "edge_1260",
+        "edge_1252",
+        "edge_1253",
+        "edge_1254",
+        "edge_1236",
+        "edge_1263",
+        "edge_1239",
+        "edge_1240",
+        "edge_1258",
+        "edge_1241",
+        "edge_1242",
+        "edge_1261",
+        "edge_1243",
+        "edge_1244",
+        "edge_1245",
+        "edge_1257",
+        "edge_1246",
+        "edge_1247",
+        "edge_1255",
+        "edge_1248",
+        "edge_1259",
+        "edge_1249",
+        "edge_1237",
+        "edge_1262",
+        "edge_1250"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_026",
+      "x": 369.291,
+      "y": 342.647,
+      "z": 0.15,
+      "route": [
+        "edge_1190",
+        "edge_1191"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_027",
+      "x": 367.998,
+      "y": -367.203,
+      "z": 0.15,
+      "route": [
+        "edge_1899",
+        "edge_1893",
+        "edge_1896",
+        "edge_1895",
+        "edge_1901",
+        "edge_1898",
+        "edge_1897",
+        "edge_1900",
+        "edge_1894"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_028",
+      "x": -364.663,
+      "y": 342.496,
+      "z": 0.15,
+      "route": [
+        "edge_828",
+        "edge_829"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_029",
+      "x": -354.968,
+      "y": -344.433,
+      "z": 0.15,
+      "route": [
+        "edge_1824",
+        "edge_1823",
+        "edge_1828",
+        "edge_1826",
+        "edge_1830",
+        "edge_1831",
+        "edge_1827",
+        "edge_1825",
+        "edge_1829"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_030",
+      "x": 25.446,
+      "y": 382.055,
+      "z": 0.15,
+      "route": [
+        "edge_824",
+        "edge_823",
+        "edge_822",
+        "edge_821",
+        "edge_820"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_031",
+      "x": 231.53,
+      "y": -96.25,
+      "z": 0.15,
+      "route": [
+        "edge_521",
+        "edge_522",
+        "edge_523",
+        "edge_524",
+        "edge_525"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_032",
+      "x": 17.866,
+      "y": -380.456,
+      "z": 0.15,
+      "route": [
+        "edge_1034"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_033",
+      "x": -355.246,
+      "y": 50.09,
+      "z": 0.15,
+      "route": [
+        "edge_644",
+        "edge_646",
+        "edge_647",
+        "edge_645"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_034",
+      "x": 161.064,
+      "y": 170.224,
+      "z": 0.15,
+      "route": [
+        "edge_2017",
+        "edge_2024",
+        "edge_2019",
+        "edge_2022",
+        "edge_2021",
+        "edge_2025",
+        "edge_2026",
+        "edge_2023",
+        "edge_2018",
+        "edge_2020"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_035",
+      "x": -136.789,
+      "y": 156.979,
+      "z": 0.15,
+      "route": [
+        "edge_157",
+        "edge_158",
+        "edge_159",
+        "edge_160"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_036",
+      "x": 370.185,
+      "y": 65.968,
+      "z": 0.15,
+      "route": [
+        "edge_2169",
+        "edge_2170",
+        "edge_2171",
+        "edge_2172",
+        "edge_2173",
+        "edge_2174",
+        "edge_2175",
+        "edge_2176",
+        "edge_2168"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_037",
+      "x": -371.017,
+      "y": -149.465,
+      "z": 0.15,
+      "route": [
+        "edge_739",
+        "edge_738"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_038",
+      "x": 208.878,
+      "y": 372.375,
+      "z": 0.15,
+      "route": [
+        "edge_1282",
+        "edge_1278",
+        "edge_1283",
+        "edge_1281",
+        "edge_1284",
+        "edge_1280",
+        "edge_1285",
+        "edge_1286",
+        "edge_1287",
+        "edge_1288",
+        "edge_1279",
+        "edge_1289",
+        "edge_1290"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_039",
+      "x": 114.061,
+      "y": -212.494,
+      "z": 0.15,
+      "route": [
+        "edge_372",
+        "edge_373",
+        "edge_376",
+        "edge_371",
+        "edge_370",
+        "edge_369",
+        "edge_368",
+        "edge_374",
+        "edge_367",
+        "edge_366",
+        "edge_365",
+        "edge_364",
+        "edge_363",
+        "edge_362",
+        "edge_361",
+        "edge_375"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_040",
+      "x": 62.934,
+      "y": 17.337,
+      "z": 0.15,
+      "route": [
+        "edge_802",
+        "edge_800",
+        "edge_804",
+        "edge_801",
+        "edge_803"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_041",
+      "x": 367.806,
+      "y": -161.939,
+      "z": 0.15,
+      "route": [
+        "edge_1145",
+        "edge_1146",
+        "edge_1147",
+        "edge_1148",
+        "edge_1149",
+        "edge_1150",
+        "edge_1151",
+        "edge_1152"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_042",
+      "x": -102.213,
+      "y": -240.88,
+      "z": 0.15,
+      "route": [
+        "edge_695",
+        "edge_696",
+        "edge_697"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_043",
+      "x": -207.561,
+      "y": 375.362,
+      "z": 0.15,
+      "route": [
+        "edge_291",
+        "edge_289",
+        "edge_290"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_044",
+      "x": -279.996,
+      "y": 206.115,
+      "z": 0.15,
+      "route": [
+        "edge_285",
+        "edge_284",
+        "edge_288",
+        "edge_286",
+        "edge_287"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_045",
+      "x": 39.556,
+      "y": -118.558,
+      "z": 0.15,
+      "route": [
+        "edge_768",
+        "edge_769"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_046",
+      "x": -242.028,
+      "y": -55.118,
+      "z": 0.15,
+      "route": [
+        "edge_719",
+        "edge_720",
+        "edge_724",
+        "edge_721",
+        "edge_722",
+        "edge_723"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_047",
+      "x": -212.098,
+      "y": -216.864,
+      "z": 0.15,
+      "route": [
+        "edge_2229"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_048",
+      "x": 5.083,
+      "y": 172.59,
+      "z": 0.15,
+      "route": [
+        "edge_863",
+        "edge_860",
+        "edge_861",
+        "edge_862"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_049",
+      "x": -160.199,
+      "y": -33.295,
+      "z": 0.15,
+      "route": [
+        "edge_1238",
+        "edge_1256",
+        "edge_1251",
+        "edge_1260",
+        "edge_1252",
+        "edge_1253",
+        "edge_1254",
+        "edge_1236",
+        "edge_1263",
+        "edge_1239",
+        "edge_1240",
+        "edge_1258",
+        "edge_1241",
+        "edge_1242",
+        "edge_1261",
+        "edge_1243",
+        "edge_1244",
+        "edge_1245",
+        "edge_1257",
+        "edge_1246",
+        "edge_1247",
+        "edge_1255",
+        "edge_1248",
+        "edge_1259",
+        "edge_1249",
+        "edge_1237",
+        "edge_1262",
+        "edge_1250"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_050",
+      "x": 361.185,
+      "y": 340.633,
+      "z": 0.15,
+      "route": [
+        "edge_1190",
+        "edge_1191"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_051",
+      "x": 358.923,
+      "y": -370.728,
+      "z": 0.15,
+      "route": [
+        "edge_1899",
+        "edge_1893",
+        "edge_1896",
+        "edge_1895",
+        "edge_1901",
+        "edge_1898",
+        "edge_1897",
+        "edge_1900",
+        "edge_1894"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_052",
+      "x": -353.347,
+      "y": 349.23,
+      "z": 0.15,
+      "route": [
+        "edge_828",
+        "edge_829"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_053",
+      "x": -339.13,
+      "y": -351.712,
+      "z": 0.15,
+      "route": [
+        "edge_1824",
+        "edge_1823",
+        "edge_1828",
+        "edge_1826",
+        "edge_1830",
+        "edge_1831",
+        "edge_1827",
+        "edge_1825",
+        "edge_1829"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_054",
+      "x": 11.354,
+      "y": 378.008,
+      "z": 0.15,
+      "route": [
+        "edge_824",
+        "edge_823",
+        "edge_822",
+        "edge_821",
+        "edge_820"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_055",
+      "x": 241.727,
+      "y": -78.707,
+      "z": 0.15,
+      "route": [
+        "edge_521",
+        "edge_522",
+        "edge_523",
+        "edge_524",
+        "edge_525"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_056",
+      "x": 25.615,
+      "y": -375.902,
+      "z": 0.15,
+      "route": [
+        "edge_1034"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_057",
+      "x": -362.049,
+      "y": 61.74,
+      "z": 0.15,
+      "route": [
+        "edge_644",
+        "edge_646",
+        "edge_647",
+        "edge_645"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_058",
+      "x": 179.887,
+      "y": 160.416,
+      "z": 0.15,
+      "route": [
+        "edge_2017",
+        "edge_2024",
+        "edge_2019",
+        "edge_2022",
+        "edge_2021",
+        "edge_2025",
+        "edge_2026",
+        "edge_2023",
+        "edge_2018",
+        "edge_2020"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_059",
+      "x": -123.627,
+      "y": 161.157,
+      "z": 0.15,
+      "route": [
+        "edge_157",
+        "edge_158",
+        "edge_159",
+        "edge_160"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_060",
+      "x": 366.039,
+      "y": 80.799,
+      "z": 0.15,
+      "route": [
+        "edge_2169",
+        "edge_2170",
+        "edge_2171",
+        "edge_2172",
+        "edge_2173",
+        "edge_2174",
+        "edge_2175",
+        "edge_2176",
+        "edge_2168"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_061",
+      "x": -365.222,
+      "y": -159.002,
+      "z": 0.15,
+      "route": [
+        "edge_739",
+        "edge_738"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_062",
+      "x": 196.391,
+      "y": 363.554,
+      "z": 0.15,
+      "route": [
+        "edge_1282",
+        "edge_1278",
+        "edge_1283",
+        "edge_1281",
+        "edge_1284",
+        "edge_1280",
+        "edge_1285",
+        "edge_1286",
+        "edge_1287",
+        "edge_1288",
+        "edge_1279",
+        "edge_1289",
+        "edge_1290"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_063",
+      "x": 148.361,
+      "y": -259.402,
+      "z": 0.15,
+      "route": [
+        "edge_372",
+        "edge_373",
+        "edge_376",
+        "edge_371",
+        "edge_370",
+        "edge_369",
+        "edge_368",
+        "edge_374",
+        "edge_367",
+        "edge_366",
+        "edge_365",
+        "edge_364",
+        "edge_363",
+        "edge_362",
+        "edge_361",
+        "edge_375"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_064",
+      "x": 95.879,
+      "y": 28.361,
+      "z": 0.15,
+      "route": [
+        "edge_802",
+        "edge_800",
+        "edge_804",
+        "edge_801",
+        "edge_803"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_065",
+      "x": 365.086,
+      "y": -169.712,
+      "z": 0.15,
+      "route": [
+        "edge_1145",
+        "edge_1146",
+        "edge_1147",
+        "edge_1148",
+        "edge_1149",
+        "edge_1150",
+        "edge_1151",
+        "edge_1152"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_066",
+      "x": -90.984,
+      "y": -257.306,
+      "z": 0.15,
+      "route": [
+        "edge_695",
+        "edge_696",
+        "edge_697"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_067",
+      "x": -202.042,
+      "y": 365.247,
+      "z": 0.15,
+      "route": [
+        "edge_291",
+        "edge_289",
+        "edge_290"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_068",
+      "x": -267.992,
+      "y": 213.651,
+      "z": 0.15,
+      "route": [
+        "edge_285",
+        "edge_284",
+        "edge_288",
+        "edge_286",
+        "edge_287"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_069",
+      "x": 44.769,
+      "y": -126.36,
+      "z": 0.15,
+      "route": [
+        "edge_768",
+        "edge_769"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_070",
+      "x": -222.343,
+      "y": -43.925,
+      "z": 0.15,
+      "route": [
+        "edge_719",
+        "edge_720",
+        "edge_724",
+        "edge_721",
+        "edge_722",
+        "edge_723"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_071",
+      "x": -221.189,
+      "y": -222.532,
+      "z": 0.15,
+      "route": [
+        "edge_2229"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_072",
+      "x": 11.953,
+      "y": 150.932,
+      "z": 0.15,
+      "route": [
+        "edge_863",
+        "edge_860",
+        "edge_861",
+        "edge_862"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_073",
+      "x": -186.73,
+      "y": -107.186,
+      "z": 0.15,
+      "route": [
+        "edge_1238",
+        "edge_1256",
+        "edge_1251",
+        "edge_1260",
+        "edge_1252",
+        "edge_1253",
+        "edge_1254",
+        "edge_1236",
+        "edge_1263",
+        "edge_1239",
+        "edge_1240",
+        "edge_1258",
+        "edge_1241",
+        "edge_1242",
+        "edge_1261",
+        "edge_1243",
+        "edge_1244",
+        "edge_1245",
+        "edge_1257",
+        "edge_1246",
+        "edge_1247",
+        "edge_1255",
+        "edge_1248",
+        "edge_1259",
+        "edge_1249",
+        "edge_1237",
+        "edge_1262",
+        "edge_1250"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_074",
+      "x": 353.639,
+      "y": 337.053,
+      "z": 0.15,
+      "route": [
+        "edge_1190",
+        "edge_1191"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_075",
+      "x": 352.995,
+      "y": -377.86,
+      "z": 0.15,
+      "route": [
+        "edge_1899",
+        "edge_1893",
+        "edge_1896",
+        "edge_1895",
+        "edge_1901",
+        "edge_1898",
+        "edge_1897",
+        "edge_1900",
+        "edge_1894"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_076",
+      "x": -342.884,
+      "y": 357.224,
+      "z": 0.15,
+      "route": [
+        "edge_828",
+        "edge_829"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_077",
+      "x": -327.128,
+      "y": -363.707,
+      "z": 0.15,
+      "route": [
+        "edge_1824",
+        "edge_1823",
+        "edge_1828",
+        "edge_1826",
+        "edge_1830",
+        "edge_1831",
+        "edge_1827",
+        "edge_1825",
+        "edge_1829"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_078",
+      "x": -2.244,
+      "y": 372.525,
+      "z": 0.15,
+      "route": [
+        "edge_824",
+        "edge_823",
+        "edge_822",
+        "edge_821",
+        "edge_820"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_079",
+      "x": 227.25,
+      "y": -55.04,
+      "z": 0.15,
+      "route": [
+        "edge_521",
+        "edge_522",
+        "edge_523",
+        "edge_524",
+        "edge_525"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_080",
+      "x": 32.486,
+      "y": -370.108,
+      "z": 0.15,
+      "route": [
+        "edge_1034"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_081",
+      "x": -370.117,
+      "y": 72.553,
+      "z": 0.15,
+      "route": [
+        "edge_644",
+        "edge_646",
+        "edge_647",
+        "edge_645"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_082",
+      "x": 200.558,
+      "y": 164.525,
+      "z": 0.15,
+      "route": [
+        "edge_2017",
+        "edge_2024",
+        "edge_2019",
+        "edge_2022",
+        "edge_2021",
+        "edge_2025",
+        "edge_2026",
+        "edge_2023",
+        "edge_2018",
+        "edge_2020"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_083",
+      "x": -111.004,
+      "y": 166.756,
+      "z": 0.15,
+      "route": [
+        "edge_157",
+        "edge_158",
+        "edge_159",
+        "edge_160"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_084",
+      "x": 362.566,
+      "y": 95.692,
+      "z": 0.15,
+      "route": [
+        "edge_2169",
+        "edge_2170",
+        "edge_2171",
+        "edge_2172",
+        "edge_2173",
+        "edge_2174",
+        "edge_2175",
+        "edge_2176",
+        "edge_2168"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_085",
+      "x": -358.185,
+      "y": -167.662,
+      "z": 0.15,
+      "route": [
+        "edge_739",
+        "edge_738"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_086",
+      "x": 183.442,
+      "y": 355.387,
+      "z": 0.15,
+      "route": [
+        "edge_1282",
+        "edge_1278",
+        "edge_1283",
+        "edge_1281",
+        "edge_1284",
+        "edge_1280",
+        "edge_1285",
+        "edge_1286",
+        "edge_1287",
+        "edge_1288",
+        "edge_1279",
+        "edge_1289",
+        "edge_1290"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_087",
+      "x": 183.015,
+      "y": -306.04,
+      "z": 0.15,
+      "route": [
+        "edge_372",
+        "edge_373",
+        "edge_376",
+        "edge_371",
+        "edge_370",
+        "edge_369",
+        "edge_368",
+        "edge_374",
+        "edge_367",
+        "edge_366",
+        "edge_365",
+        "edge_364",
+        "edge_363",
+        "edge_362",
+        "edge_361",
+        "edge_375"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_088",
+      "x": 128.066,
+      "y": 41.423,
+      "z": 0.15,
+      "route": [
+        "edge_802",
+        "edge_800",
+        "edge_804",
+        "edge_801",
+        "edge_803"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_089",
+      "x": 369.476,
+      "y": -178.304,
+      "z": 0.15,
+      "route": [
+        "edge_1145",
+        "edge_1146",
+        "edge_1147",
+        "edge_1148",
+        "edge_1149",
+        "edge_1150",
+        "edge_1151",
+        "edge_1152"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_090",
+      "x": -78.533,
+      "y": -272.826,
+      "z": 0.15,
+      "route": [
+        "edge_695",
+        "edge_696",
+        "edge_697"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_091",
+      "x": -195.24,
+      "y": 355.947,
+      "z": 0.15,
+      "route": [
+        "edge_291",
+        "edge_289",
+        "edge_290"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_092",
+      "x": -256.863,
+      "y": 222.429,
+      "z": 0.15,
+      "route": [
+        "edge_285",
+        "edge_284",
+        "edge_288",
+        "edge_286",
+        "edge_287"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_093",
+      "x": 51.173,
+      "y": -133.217,
+      "z": 0.15,
+      "route": [
+        "edge_768",
+        "edge_769"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_094",
+      "x": -202.545,
+      "y": -30.058,
+      "z": 0.15,
+      "route": [
+        "edge_719",
+        "edge_720",
+        "edge_724",
+        "edge_721",
+        "edge_722",
+        "edge_723"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_095",
+      "x": -229.386,
+      "y": -229.43,
+      "z": 0.15,
+      "route": [
+        "edge_2229"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_096",
+      "x": 20.255,
+      "y": 129.781,
+      "z": 0.15,
+      "route": [
+        "edge_863",
+        "edge_860",
+        "edge_861",
+        "edge_862"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_097",
+      "x": -122.448,
+      "y": -178.992,
+      "z": 0.15,
+      "route": [
+        "edge_1238",
+        "edge_1256",
+        "edge_1251",
+        "edge_1260",
+        "edge_1252",
+        "edge_1253",
+        "edge_1254",
+        "edge_1236",
+        "edge_1263",
+        "edge_1239",
+        "edge_1240",
+        "edge_1258",
+        "edge_1241",
+        "edge_1242",
+        "edge_1261",
+        "edge_1243",
+        "edge_1244",
+        "edge_1245",
+        "edge_1257",
+        "edge_1246",
+        "edge_1247",
+        "edge_1255",
+        "edge_1248",
+        "edge_1259",
+        "edge_1249",
+        "edge_1237",
+        "edge_1262",
+        "edge_1250"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_098",
+      "x": 345.599,
+      "y": 334.788,
+      "z": 0.15,
+      "route": [
+        "edge_1190",
+        "edge_1191"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_099",
+      "x": 353.715,
+      "y": -387.097,
+      "z": 0.15,
+      "route": [
+        "edge_1899",
+        "edge_1893",
+        "edge_1896",
+        "edge_1895",
+        "edge_1901",
+        "edge_1898",
+        "edge_1897",
+        "edge_1900",
+        "edge_1894"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_100",
+      "x": -331.568,
+      "y": 363.959,
+      "z": 0.15,
+      "route": [
+        "edge_828",
+        "edge_829"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_101",
+      "x": -325.646,
+      "y": -380.904,
+      "z": 0.15,
+      "route": [
+        "edge_1824",
+        "edge_1823",
+        "edge_1828",
+        "edge_1826",
+        "edge_1830",
+        "edge_1831",
+        "edge_1827",
+        "edge_1825",
+        "edge_1829"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_102",
+      "x": -16.336,
+      "y": 368.479,
+      "z": 0.15,
+      "route": [
+        "edge_824",
+        "edge_823",
+        "edge_822",
+        "edge_821",
+        "edge_820"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_103",
+      "x": 214.108,
+      "y": -30.607,
+      "z": 0.15,
+      "route": [
+        "edge_521",
+        "edge_522",
+        "edge_523",
+        "edge_524",
+        "edge_525"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_104",
+      "x": 40.235,
+      "y": -365.554,
+      "z": 0.15,
+      "route": [
+        "edge_1034"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_105",
+      "x": -376.917,
+      "y": 84.205,
+      "z": 0.15,
+      "route": [
+        "edge_644",
+        "edge_646",
+        "edge_647",
+        "edge_645"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_106",
+      "x": 220.962,
+      "y": 171.132,
+      "z": 0.15,
+      "route": [
+        "edge_2017",
+        "edge_2024",
+        "edge_2019",
+        "edge_2022",
+        "edge_2021",
+        "edge_2025",
+        "edge_2026",
+        "edge_2023",
+        "edge_2018",
+        "edge_2020"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_107",
+      "x": -97.842,
+      "y": 170.935,
+      "z": 0.15,
+      "route": [
+        "edge_157",
+        "edge_158",
+        "edge_159",
+        "edge_160"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_108",
+      "x": 367.007,
+      "y": 110.112,
+      "z": 0.15,
+      "route": [
+        "edge_2169",
+        "edge_2170",
+        "edge_2171",
+        "edge_2172",
+        "edge_2173",
+        "edge_2174",
+        "edge_2175",
+        "edge_2176",
+        "edge_2168"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_109",
+      "x": -352.391,
+      "y": -177.199,
+      "z": 0.15,
+      "route": [
+        "edge_739",
+        "edge_738"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_110",
+      "x": 168.299,
+      "y": 353.396,
+      "z": 0.15,
+      "route": [
+        "edge_1282",
+        "edge_1278",
+        "edge_1283",
+        "edge_1281",
+        "edge_1284",
+        "edge_1280",
+        "edge_1285",
+        "edge_1286",
+        "edge_1287",
+        "edge_1288",
+        "edge_1279",
+        "edge_1289",
+        "edge_1290"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_111",
+      "x": 216.614,
+      "y": -353.413,
+      "z": 0.15,
+      "route": [
+        "edge_372",
+        "edge_373",
+        "edge_376",
+        "edge_371",
+        "edge_370",
+        "edge_369",
+        "edge_368",
+        "edge_374",
+        "edge_367",
+        "edge_366",
+        "edge_365",
+        "edge_364",
+        "edge_363",
+        "edge_362",
+        "edge_361",
+        "edge_375"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_112",
+      "x": 160.794,
+      "y": 53.064,
+      "z": 0.15,
+      "route": [
+        "edge_802",
+        "edge_800",
+        "edge_804",
+        "edge_801",
+        "edge_803"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_113",
+      "x": 372.649,
+      "y": -187.411,
+      "z": 0.15,
+      "route": [
+        "edge_1145",
+        "edge_1146",
+        "edge_1147",
+        "edge_1148",
+        "edge_1149",
+        "edge_1150",
+        "edge_1151",
+        "edge_1152"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_114",
+      "x": -67.304,
+      "y": -289.252,
+      "z": 0.15,
+      "route": [
+        "edge_695",
+        "edge_696",
+        "edge_697"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_115",
+      "x": -189.48,
+      "y": 345.962,
+      "z": 0.15,
+      "route": [
+        "edge_291",
+        "edge_289",
+        "edge_290"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_116",
+      "x": -244.859,
+      "y": 229.965,
+      "z": 0.15,
+      "route": [
+        "edge_285",
+        "edge_284",
+        "edge_288",
+        "edge_286",
+        "edge_287"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_117",
+      "x": 56.386,
+      "y": -141.019,
+      "z": 0.15,
+      "route": [
+        "edge_768",
+        "edge_769"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_118",
+      "x": -181.915,
+      "y": -17.464,
+      "z": 0.15,
+      "route": [
+        "edge_719",
+        "edge_720",
+        "edge_724",
+        "edge_721",
+        "edge_722",
+        "edge_723"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_119",
+      "x": -238.477,
+      "y": -235.098,
+      "z": 0.15,
+      "route": [
+        "edge_2229"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    },
+    {
+      "id": "citizen_120",
+      "x": 27.125,
+      "y": 108.123,
+      "z": 0.15,
+      "route": [
+        "edge_863",
+        "edge_860",
+        "edge_861",
+        "edge_862"
+      ],
+      "stress": 0.24,
+      "heat_exposure": 0.32
+    }
+  ],
+  "edges": {
+    "edge_1034": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1145": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1146": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1147": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1148": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1149": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1150": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1151": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1152": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1190": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1191": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1236": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1237": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1238": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1239": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1240": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1241": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1242": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1243": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1244": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1245": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1246": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1247": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1248": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1249": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1250": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1251": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1252": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1253": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1254": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1255": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1256": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1257": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1258": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1259": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1260": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1261": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1262": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1263": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1278": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1279": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1280": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1281": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1282": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1283": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1284": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1285": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1286": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1287": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1288": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1289": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1290": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_157": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_158": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_159": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_160": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1823": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1824": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1825": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1826": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1827": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1828": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1829": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1830": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1831": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1893": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1894": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1895": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1896": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1897": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1898": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1899": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1900": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_1901": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_2017": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_2018": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_2019": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_2020": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_2021": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_2022": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_2023": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_2024": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_2025": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_2026": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_2168": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_2169": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_2170": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_2171": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_2172": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_2173": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_2174": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_2175": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_2176": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_2229": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_284": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_285": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_286": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_287": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_288": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_289": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_290": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_291": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_361": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_362": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_363": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_364": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_365": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_366": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_367": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_368": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_369": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_370": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_371": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_372": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_373": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_374": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_375": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_376": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_521": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_522": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_523": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_524": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_525": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_644": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_645": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_646": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_647": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_695": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_696": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_697": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_719": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_720": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_721": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_722": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_723": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_724": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_738": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_739": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_768": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_769": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_800": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_801": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_802": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_803": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_804": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_820": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_821": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_822": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_823": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_824": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_828": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_829": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_860": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_861": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_862": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    },
+    "edge_863": {
+      "crowding": 0.24,
+      "heat_exposure": 0.34,
+      "accessibility": 0.76
+    }
+  },
+  "interventions": []
+}
