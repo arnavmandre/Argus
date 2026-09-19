@@ -52,12 +52,9 @@ BEHAVIORS = (
     "AVOID_AREA",
 )
 
-# Kept verbatim from CLAUDE.md / the handoff. The UI renders these; it must not
-# write its own version of them.
-RUN_WARNINGS = [
-    "Recorded fixture: these numbers come from a real run of Simulation/main.py "
-    "on city_osm.json, replayed by the mock API. No simulator process ran for "
-    "this request.",
+# Shared integrity disclaimers (after the source-specific lead-in). The UI
+# renders these; it must not write its own version of them.
+_SHARED_RUN_WARNINGS = [
     "Environmental, comfort and intervention formulas are heuristic prototypes, "
     "not medical, meteorological, hydraulic or engineering models.",
     "Population is a population equivalent, not a headcount. At most 500 "
@@ -69,6 +66,38 @@ RUN_WARNINGS = [
     "inferred from building class or interpolated from neighbours.",
     "The animation interpolates positions between 60 fixed snapshots. It is not "
     "a time-evolving behavioural or collision simulation.",
+]
+
+RUN_WARNINGS = [
+    "Recorded fixture: these numbers come from a real run of Simulation/main.py "
+    "on city_osm.json, replayed by the mock API. No simulator process ran for "
+    "this request.",
+    *_SHARED_RUN_WARNINGS,
+]
+
+LIVE_RUN_WARNINGS = [
+    "Live run: these numbers came from a just-executed simulator run of "
+    "Simulation/main.py on city_osm.json for this request.",
+    *_SHARED_RUN_WARNINGS,
+]
+
+MOCK_HEALTH_NOTES = [
+    "No Python HTTP API is running. Responses are recorded fixtures "
+    "exported by integration/export_api_mocks.py.",
+    "No streaming-enabled Kit application exists yet, so the viewport "
+    "shows a recorded-stage placeholder rather than an RTX stream.",
+    "The Random Forest models are trained but not wired into the "
+    "simulator; the simulator still uses transparent rules.",
+]
+
+LIVE_HEALTH_NOTES = [
+    "Python HTTP API is live. Runs execute Simulation/main.py through the "
+    "Phase 11 local pipeline; the simulator remains the only authority for "
+    "metrics and intervention effectiveness.",
+    "No streaming-enabled Kit application exists yet, so Omniverse streaming "
+    "stays offline; the viewport may still show a recorded-stage placeholder.",
+    "The Random Forest models are trained but not wired into the "
+    "simulator; the simulator still uses transparent rules.",
 ]
 
 
@@ -94,13 +123,22 @@ def state_summary(state):
     }
 
 
-def run_summary(report, generated_at, run_id):
+def run_summary(
+    report,
+    generated_at,
+    run_id,
+    *,
+    source="recorded_fixture",
+    status="complete",
+    warnings=None,
+    error=None,
+):
     before, after = report["before"], report["after"]
     control = report["control"]
-    return {
+    payload = {
         "run_id": run_id,
-        "status": "complete",
-        "source": "recorded_fixture",
+        "status": status,
+        "source": source,
         "created_utc": generated_at,
         "scenario": report["scenario"],
         "before": state_summary(before),
@@ -135,8 +173,11 @@ def run_summary(report, generated_at, run_id):
             "detail": "Not an LLM. The simulator is the only authority for "
                       "metrics and intervention effectiveness.",
         },
-        "warnings": list(RUN_WARNINGS),
+        "warnings": list(RUN_WARNINGS if warnings is None else warnings),
     }
+    if error is not None:
+        payload["error"] = error
+    return payload
 
 
 def citizen_page_fixture(report, generated_at, run_id):
@@ -157,10 +198,10 @@ def citizen_page_fixture(report, generated_at, run_id):
     }
 
 
-def scenarios_fixture(run_id):
+def scenarios_fixture(run_id=None, *, source="recorded_fixture"):
     """Ranges are the simulator's accepted inputs, per the handoff."""
-    return {
-        "source": "recorded_fixture",
+    payload = {
+        "source": source,
         "constraints": {
             "temperature": [-10, 45],
             "humidity": [20, 90],
@@ -193,49 +234,45 @@ def scenarios_fixture(run_id):
                 "population": 100000,
             },
         ],
-        "recorded_scenario": {
+    }
+    if run_id is not None:
+        payload["recorded_scenario"] = {
             "run_id": run_id,
             "temperature": 40,
             "humidity": 80,
             "rainfall": 80,
             "population": 100000,
-        },
-    }
+        }
+    return payload
 
 
-def health_fixture(generated_at):
-    """Mock mode. Every capability is false so the UI cannot claim otherwise."""
+def health_fixture(generated_at, *, source="recorded_fixture"):
+    """Capability envelope. Fixture default stays fully mock; live flips API flags."""
+    live = source == "live"
     return {
-        "status": "mock",
-        "mode": "mock",
-        "source": "recorded_fixture",
+        "status": "ready" if live else "mock",
+        "mode": "live" if live else "mock",
+        "source": source,
         "checked_utc": generated_at,
-        "simulator": False,
+        "simulator": live,
         "omniverse_stream": "offline",
         "model_card": True,
         "capabilities": {
-            "http_api": False,
-            "live_simulation": False,
+            "http_api": live,
+            "live_simulation": live,
             "omniverse_streaming": False,
             "llm_advisor": False,
             "random_forest_inference": False,
             "run_persistence": False,
         },
-        "notes": [
-            "No Python HTTP API is running. Responses are recorded fixtures "
-            "exported by integration/export_api_mocks.py.",
-            "No streaming-enabled Kit application exists yet, so the viewport "
-            "shows a recorded-stage placeholder rather than an RTX stream.",
-            "The Random Forest models are trained but not wired into the "
-            "simulator; the simulator still uses transparent rules.",
-        ],
+        "notes": list(LIVE_HEALTH_NOTES if live else MOCK_HEALTH_NOTES),
     }
 
 
-def stream_config_fixture(generated_at):
+def stream_config_fixture(generated_at, *, source="recorded_fixture"):
     return {
         "status": "offline",
-        "source": "recorded_fixture",
+        "source": source,
         "checked_utc": generated_at,
         "signaling_url": None,
         "ice_servers": [],
@@ -251,7 +288,7 @@ def stream_config_fixture(generated_at):
     }
 
 
-def model_card_fixture(card, generated_at):
+def model_card_fixture(card, generated_at, *, source="recorded_fixture"):
     """Sanitized subset: verdicts, holdout scores, limitations. No artifact hashes."""
     models = []
     for target, m in card["models"].items():
@@ -270,7 +307,7 @@ def model_card_fixture(card, generated_at):
             entry["observed_classes"] = m["observed_classes"]
         models.append(entry)
     return {
-        "source": "recorded_fixture",
+        "source": source,
         "exported_utc": generated_at,
         "created_utc": card["created_utc"],
         "sklearn_version": card["sklearn_version"],
