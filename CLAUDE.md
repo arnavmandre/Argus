@@ -31,6 +31,10 @@ context loss.
 | `phase10/` | survey | Real survey -> calibrated synthetic citizens. `data/` holds the four-table dataset. |
 | `docs/` | contracts | `INTEGRATION_CONTRACT.md` is authoritative. |
 
+Frontend/backend product context and the proposed web API are consolidated in
+`docs/FRONTEND_BACKEND_HANDOFF.md`. It clearly marks planned capabilities so a
+frontend must not present mocks as a live backend or stream.
+
 ## Hard rules
 
 1. **Never edit `phase1/`–`phase8/` scene layers.** `city_id` is the SHA-256 of
