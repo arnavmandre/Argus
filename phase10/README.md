@@ -27,6 +27,21 @@ python phase10\assign_homes.py
 python phase10\validate_survey.py
 ```
 
+## Random Forest behavior benchmark
+
+Install once and train:
+
+```powershell
+python -m pip install -r phase10\requirements.txt
+python -u phase10\train_random_forest.py 2>&1 | Tee-Object phase10\training.log
+```
+
+The trainer prevents participant leakage, runs five-fold grouped cross-validation,
+keeps eight participants untouched for a final test, compares against simple and
+shuffled-label baselines, and writes deployable artifacts plus
+`models/model_card.json` and `models/MODEL_REPORT.md`. A target marked
+`not_validated` must not drive claims or replace the transparent simulator rule.
+
 Deterministic: same seed, same population.
 
 ## Where each parameter comes from

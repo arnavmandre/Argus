@@ -11,17 +11,9 @@ This is a small-sample hackathon benchmark, not proof of real-world accuracy.
 from __future__ import annotations
 
 import csv
-<<<<<<< ours
-<<<<<<< ours
 import hashlib
 import json
 import warnings
-=======
-import json
->>>>>>> theirs
-=======
-import json
->>>>>>> theirs
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -107,22 +99,12 @@ def score(kind, y_true, y_pred):
     if kind == "regression":
         return {"mae": float(mean_absolute_error(y_true, y_pred)),
                 "r2": float(r2_score(y_true, y_pred)) if len(y_true) > 1 else None}
-<<<<<<< ours
-<<<<<<< ours
     # Tiny grouped folds can omit a rare class. That is recorded through the
     # low score and trust verdict; suppress sklearn's repetitive console warning.
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", UserWarning)
         return {"balanced_accuracy": float(balanced_accuracy_score(y_true, y_pred)),
                 "macro_f1": float(f1_score(y_true, y_pred, average="macro", zero_division=0))}
-=======
-    return {"balanced_accuracy": float(balanced_accuracy_score(y_true, y_pred)),
-            "macro_f1": float(f1_score(y_true, y_pred, average="macro", zero_division=0))}
->>>>>>> theirs
-=======
-    return {"balanced_accuracy": float(balanced_accuracy_score(y_true, y_pred)),
-            "macro_f1": float(f1_score(y_true, y_pred, average="macro", zero_division=0))}
->>>>>>> theirs
 
 
 def average(items, key):
@@ -149,13 +131,7 @@ def main() -> None:
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "random_seed": SEED,
         "sklearn_version": sklearn.__version__,
-<<<<<<< ours
-<<<<<<< ours
         "dataset_sha256": hashlib.sha256(DATA.read_bytes()).hexdigest(),
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
         "split_policy": "participant-level; 8 final holdout people; 5-fold GroupKFold on remaining people",
         "limitations": [
             "Only 41 participants; most are under 25.",
@@ -224,14 +200,8 @@ def main() -> None:
             "final_holdout": hold, "final_holdout_baseline": hold_base,
             "beats_baseline": beats_baseline, "beats_shuffled_labels": beats_shuffle,
             "trust_verdict": trust, "artifact": artifact.name,
-<<<<<<< ours
-<<<<<<< ours
             "artifact_sha256": hashlib.sha256(artifact.read_bytes()).hexdigest(),
             "observed_classes": sorted(set(all_y.tolist())) if kind == "classification" else None,
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
         }
 
     card["overall_verdict"] = (
@@ -239,8 +209,6 @@ def main() -> None:
         else "mixed_results_do_not_claim_overall_accuracy"
     )
     (OUT / "model_card.json").write_text(json.dumps(card, indent=2), encoding="utf-8")
-<<<<<<< ours
-<<<<<<< ours
     lines = [
         "# UrbanTwin Random Forest validation report", "",
         f"Overall verdict: **{card['overall_verdict']}**", "",
@@ -263,10 +231,6 @@ def main() -> None:
               "", "## Known limitations", ""]
     lines.extend(f"- {x}" for x in card["limitations"])
     (OUT / "MODEL_REPORT.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
     log(f"complete: overall verdict={card['overall_verdict']}")
     log(f"artifacts and model card written to {OUT}")
 
