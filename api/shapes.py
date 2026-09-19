@@ -17,6 +17,45 @@ from integration.export_api_mocks import (  # noqa: E402
     stream_config_fixture,
 )
 
+# Shorter status notes when there is no completed / executed report yet.
+# Do not claim "just-executed simulator run" for these.
+_LIVE_STATUS_WARNINGS = {
+    "queued": [
+        "Live run: queued. The simulator has not executed for this request yet; "
+        "any metrics below are placeholders until the run completes.",
+    ],
+    "running": [
+        "Live run: running. The simulator is in progress; any metrics below are "
+        "placeholders until the run completes.",
+    ],
+    "cancelled": [
+        "Live run: cancelled. No complete simulator report was published for "
+        "this request.",
+    ],
+    "failed": [
+        "Live run: failed before a simulator report was available for this "
+        "request.",
+    ],
+}
+
+
+def live_warnings_for(status: str, *, has_report: bool = False) -> list[str]:
+    """Full live integrity list only when a report was actually produced.
+
+    Complete runs always qualify. Failed runs qualify only when the worker
+    attached a real simulator report (``has_report=True``). Queued, running,
+    cancelled, and failed-without-report use short status notes instead.
+    """
+    if status == "complete" or (status == "failed" and has_report):
+        return list(LIVE_RUN_WARNINGS)
+    notes = _LIVE_STATUS_WARNINGS.get(status)
+    if notes is not None:
+        return list(notes)
+    return [
+        f"Live run: status is {status!r}. Full live-result warnings apply only "
+        "after a simulator report exists."
+    ]
+
 
 def live_run_summary(
     report,
@@ -25,16 +64,21 @@ def live_run_summary(
     *,
     status="complete",
     warnings=None,
+    has_report=None,
     error=None,
 ) -> dict:
     """Shape a simulator report as a live RunSummary envelope."""
+    if warnings is None:
+        if has_report is None:
+            has_report = status == "complete"
+        warnings = live_warnings_for(status, has_report=bool(has_report))
     return run_summary(
         report,
         created_utc,
         run_id,
         source="live",
         status=status,
-        warnings=LIVE_RUN_WARNINGS if warnings is None else warnings,
+        warnings=warnings,
         error=error,
     )
 

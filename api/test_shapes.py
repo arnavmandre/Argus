@@ -2,7 +2,8 @@ import json
 import unittest
 from pathlib import Path
 
-from api.shapes import live_run_summary, live_health
+from api.shapes import live_run_summary, live_health, live_warnings_for
+from integration.export_api_mocks import LIVE_RUN_WARNINGS
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -18,6 +19,64 @@ class ShapeTests(unittest.TestCase):
         self.assertEqual(summary["source"], "live")
         self.assertEqual(summary["status"], "complete")
         self.assertTrue(all("Recorded fixture" not in w for w in summary["warnings"]))
+        self.assertTrue(any("just-executed" in w for w in summary["warnings"]))
+
+    def test_live_warnings_gated_by_status_and_report(self):
+        report = json.loads(
+            (ROOT / "Simulation" / "urbantwin_demo_output.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        for status in ("queued", "running", "cancelled"):
+            with self.subTest(status=status):
+                summary = live_run_summary(
+                    report,
+                    "2026-09-19T12:00:00+00:00",
+                    "live-run-pending",
+                    status=status,
+                    has_report=False,
+                )
+                self.assertTrue(
+                    all("just-executed" not in w for w in summary["warnings"]),
+                    summary["warnings"],
+                )
+                self.assertNotEqual(summary["warnings"], LIVE_RUN_WARNINGS)
+                self.assertEqual(
+                    summary["warnings"],
+                    live_warnings_for(status, has_report=False),
+                )
+
+        failed_without = live_run_summary(
+            report,
+            "2026-09-19T12:00:00+00:00",
+            "live-run-failed",
+            status="failed",
+            has_report=False,
+            error={"code": "simulation_failed", "message": "boom"},
+        )
+        self.assertTrue(
+            all("just-executed" not in w for w in failed_without["warnings"])
+        )
+        self.assertEqual(
+            failed_without["warnings"],
+            live_warnings_for("failed", has_report=False),
+        )
+
+        failed_with = live_run_summary(
+            report,
+            "2026-09-19T12:00:00+00:00",
+            "live-run-failed-report",
+            status="failed",
+            has_report=True,
+            error={"code": "simulation_failed", "message": "validation"},
+        )
+        self.assertEqual(failed_with["warnings"], LIVE_RUN_WARNINGS)
+        self.assertTrue(any("just-executed" in w for w in failed_with["warnings"]))
+
+        complete = live_run_summary(
+            report, "2026-09-19T12:00:00+00:00", "live-run-ok", status="complete"
+        )
+        self.assertEqual(complete["warnings"], LIVE_RUN_WARNINGS)
 
     def test_live_health_capabilities(self):
         health = live_health("2026-09-19T12:00:00+00:00")

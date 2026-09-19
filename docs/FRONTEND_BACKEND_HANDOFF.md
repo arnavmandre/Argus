@@ -55,8 +55,9 @@ Accepted scenario ranges:
 | `rainfall` | 0 to 100 mm prototype scale | 80 |
 | `population` | 25,000 to 100,000 equivalent | 100,000 |
 
-These are synchronous prototype runs. There is no HTTP API, database, job queue
-or authentication yet.
+These are synchronous prototype runs. Phase 12 wraps them in a local stdlib
+HTTP API (`python -m api`; see `docs/PHASE12_LOCAL_API.md`). There is still no
+FastAPI service, durable database, authentication, or multi-worker job queue.
 
 ### Current simulation output
 
@@ -336,24 +337,36 @@ transitions contain no backward movement.
 ### Web frontend
 
 Source: `frontend/`. Next.js App Router, TypeScript, Tailwind. It implements the
-dashboard described below against recorded fixtures in `frontend/mocks/`,
+dashboard described below. **Default = recorded fixtures** in `frontend/mocks/`,
 exported from the real simulator report by `integration/export_api_mocks.py`.
 
-`/api/health` reports `mode: "mock"` with every capability false, and the UI is
-driven by that rather than by build flags, so a recorded run cannot be presented
-as a live backend. Setting `URBANTWIN_API_BASE` makes the same route handlers
-forward to the Python service instead; there is no fallback from live to mock.
+With `URBANTWIN_API_BASE` unset, `/api/health` reports `mode: "mock"` with every
+capability false, and the UI is driven by that rather than by build flags, so a
+recorded run cannot be presented as a live backend. Setting `URBANTWIN_API_BASE`
+(for example `http://127.0.0.1:8000` after `python -m api`) makes the same route
+handlers forward to the Phase 12 Python service instead; there is no fallback
+from live to mock. Operator steps: `docs/PHASE12_LOCAL_API.md`.
 
 The Omniverse viewport is isolated behind `frontend/lib/viewer/`. The placeholder
 adapter renders no picture and reports offline; `kit-webrtc-adapter.ts` is the
 NVIDIA Kit App Streaming replacement path.
 
+### Local HTTP API (Phase 12)
+
+Working code: `api/` — stdlib `python -m api` (not FastAPI). It accepts scenario
+POSTs, runs the Phase 11 pipeline in a **single in-memory worker**, and returns
+live `RunSummary` envelopes with `source: "live"`. Runs are asynchronous
+(`202` + poll). State does not survive process restart.
+
+Still out of scope for Phase 12: FastAPI, durable DB, auth, multi-worker queue,
+Kit WebRTC streaming, and LLM advisor. See `docs/PHASE12_LOCAL_API.md`.
+
 ## What has not been built
 
 Do not assume any of the following exists:
 
-- HTTP/FastAPI backend;
-- scenario job queue or run persistence;
+- FastAPI or production-hardened HTTP backend;
+- durable run persistence or multi-worker job queue;
 - database or authentication;
 - WebRTC-enabled `urbantwin.streaming.kit` app;
 - web streaming session manager;
@@ -390,10 +403,16 @@ machine. Production deployment would need an RTX GPU worker per active stream,
 session orchestration, TURN/network configuration, access control and durable
 run storage.
 
-## Proposed HTTP API — planned, not implemented
+## HTTP API contract (Phase 12 local + remaining gaps)
 
-The frontend should depend on a small stable API rather than importing large
-simulation JSON files directly. Suggested contract:
+The frontend depends on a small stable API rather than importing large
+simulation JSON files directly. Phase 12 implements these shapes in stdlib
+Python (`python -m api`). Next still defaults to fixtures until
+`URBANTWIN_API_BASE` points at that process. Full operator notes:
+`docs/PHASE12_LOCAL_API.md`.
+
+What Phase 12 does **not** add: FastAPI, durable DB, auth, streaming Kit, or
+LLM. Endpoint contract:
 
 ### `GET /api/health`
 
@@ -439,15 +458,17 @@ Returns presets and input constraints.
 }
 ```
 
-Response for a local synchronous MVP:
+Phase 12 accepts the POST with `202` and an in-memory queue entry:
 
 ```json
-{"run_id":"run_20260919_001","status":"complete"}
+{"run_id":"run_20260919_001","status":"queued"}
 ```
 
-If runs become asynchronous, return `202` and expose progress through polling or
-server-sent events. The UI must handle `queued`, `running`, `complete`, `failed`
-and `cancelled` states.
+Poll `GET /api/runs/:runId` until `complete`, `failed`, or `cancelled`. The UI
+must handle all five statuses. Only complete runs (or failed runs that actually
+produced a simulator report) carry the full “just-executed simulator run”
+warning list; queued / running / cancelled / failed-without-report summaries use
+shorter status notes.
 
 ### `GET /api/runs/:runId`
 
@@ -555,7 +576,8 @@ Required UI behavior:
 - show the deterministic advisor's source label;
 - show model verdicts per target rather than one misleading accuracy percentage;
 - keep prototype limitations visible but compact;
-- work with mocked API responses until the HTTP backend exists;
+- default to recorded fixtures; use `URBANTWIN_API_BASE` only when `python -m api`
+  is running (see `docs/PHASE12_LOCAL_API.md`);
 - do not import or parse the multi-megabyte full report in a React component.
 
 ## Product language and integrity
@@ -604,8 +626,12 @@ The frontend milestone is complete when:
 ## Immediate build sequence
 
 1. ~~Scaffold Next.js and implement typed mock dashboard.~~ Done: `frontend/`.
-2. Build the one-command local simulation/orchestration workflow.
-3. Implement the small Python HTTP API around that workflow.
+2. ~~Build the one-command local simulation/orchestration workflow.~~ Done: Phase 11
+   (`integration/run_pipeline.py`, `docs/PHASE11_LOCAL_PIPELINE.md`).
+3. ~~Implement the small Python HTTP API around that workflow.~~ Done: Phase 12
+   stdlib `python -m api` (`docs/PHASE12_LOCAL_API.md`). Next defaults to fixtures;
+   set `URBANTWIN_API_BASE` for live. Still no FastAPI, durable DB, auth, streaming
+   Kit, or LLM.
 4. Create `urbantwin.streaming.kit` and verify local WebRTC separately.
 5. Replace the mock viewer with the NVIDIA streaming client.
 6. Add allow-listed browser-to-Kit messages for state, camera and overlay.

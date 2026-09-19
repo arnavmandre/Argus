@@ -212,12 +212,14 @@ class RunManager:
         return True
 
     def _summary_unlocked(self, record: dict) -> dict:
+        has_report = record["report"] is not None
         report = record["report"] or _placeholder_report(record["scenario"])
         return live_run_summary(
             report,
             record["created_utc"],
             record["run_id"],
             status=record["status"],
+            has_report=has_report,
             error=record.get("error"),
         )
 
