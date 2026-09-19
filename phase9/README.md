@@ -65,6 +65,17 @@ python integration\export_snapshot.py --state before --frames 60 --duration 60
 python phase9\agents_instancer.py data\simulation_before_*.json --metric heat_exposure
 ```
 
+To display the simulator's explicit citizen behaviors, retain the canonical
+snapshots for movement and join the simulator report by stable citizen ID:
+
+```powershell
+python phase9\agents_instancer.py data\simulation_before_*.json `
+  --behavior-report Simulation\urbantwin_demo_output.json --behavior-state before
+```
+
+Colors: green `CONTINUE`, orange `STRESSED`, yellow `SEEK_SHADE`, cyan
+`SEEK_SHELTER`, purple `REROUTE`, and red `AVOID_AREA`.
+
 Then press **play** on the timeline in Kit.
 
 Each agent advances along its own route at that citizen's own pace — the

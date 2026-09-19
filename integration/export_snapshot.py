@@ -353,6 +353,13 @@ def main() -> None:
     written = []
 
     for state in states:
+        # A shorter rerun must not leave old numbered frames behind. Consumers
+        # intentionally use a glob, so stale files would splice two animations
+        # together and create impossible jumps. Only delete this exporter's
+        # own generated filenames inside the selected output directory.
+        if animate:
+            for stale in args.out_dir.glob(f"simulation_{state}_[0-9][0-9][0-9].json"):
+                stale.unlink()
         step = args.duration / args.frames if animate else 0.0
         frames = []
         for k in range(args.frames):

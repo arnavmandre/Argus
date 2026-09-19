@@ -77,8 +77,11 @@ Only claim what the code does when executed. Verified as of this writing:
   survey-calibrated speed. Positions between frames are interpolated for display
   and edge colours are one fixed equilibrium - do NOT call it a time-evolving
   simulation.
+- ✅ The Phase 9 agent renderer can join stable citizen IDs back to the simulator
+  report and display six explicit behavior colors without changing the frozen
+  canonical snapshot contract.
 - ✅ `integration/export_snapshot.py` closes the loop: simulator report ->
-  canonical v1 snapshot -> USD. 9/9 integration tests pass, agents land within
+  canonical v1 snapshot -> USD. 12/12 integration tests pass, agents land within
   1mm of their route geometry, snapshots are `data_kind: simulation`.
 
 ## Commands
@@ -93,7 +96,7 @@ python phase3\validate_mock_data.py <snapshot.json>
 
 # animated agents (60 frames of real walking, then press play in Kit)
 python integration\export_snapshot.py --state before --frames 60 --duration 60
-python phase9\agents_instancer.py data\simulation_before_*.json --metric heat_exposure
+python phase9\agents_instancer.py data\simulation_before_*.json --behavior-report Simulation\urbantwin_demo_output.json
 ```
 
 Open `phase9/scene/main.usda` in Kit for the demo stage.
