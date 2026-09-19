@@ -58,6 +58,36 @@ Roads use `surface` and `highway` class; green spaces use `leisure`.
 Result: **12 distinct wall materials across 623 buildings, 623 roof subsets.**
 Materials are ~30 shared `UsdPreviewSurface` prims, not one per building.
 
+### Making the citizens walk
+
+```powershell
+python integration\export_snapshot.py --state before --frames 60 --duration 60
+python phase9\agents_instancer.py data\simulation_before_*.json --metric heat_exposure
+```
+
+Then press **play** on the timeline in Kit.
+
+Each agent advances along its own route at that citizen's own pace — the
+simulator's `travel_minutes` for them, which comes from their survey-calibrated
+walking speed over the route they chose. Fast and slow walkers visibly differ,
+and that difference is real.
+
+Motion is a **sequence of ordinary v1 snapshots** using the contract's existing
+`sequence` and `timestamp` fields. The schema is unchanged and every frame still
+passes `phase3/validate_mock_data.py`.
+
+Two honest caveats:
+
+- Positions *between* frames are interpolated for display. The simulator decides
+  the route and the trip duration, not the coordinates.
+- Edge colours (crowding, heat) are one simulated equilibrium held constant
+  across the window. The animation shows people moving through a fixed
+  situation — **not** the city changing over time.
+
+Animating also stamps `startTimeCode`/`endTimeCode` onto `scene/main.usda`,
+because USD reads the timeline range from the root layer and ignores sublayers.
+Regenerating from a single snapshot clears it again.
+
 ### Heights — `recover_heights.py` → `scene/heights.usda`
 
 Phase 1 only imports ways tagged `building=*` (`build_city.py:80`). In this
