@@ -139,4 +139,7 @@ cd frontend; npm run dev
 
 Open `phase9/scene/main.usda` in Kit for the demo stage.
 Kit app lives outside the repo: `C:\Users\arnav\omniverse\kit-app-template`,
-launch with `.\repo.bat launch -n urbantwin.kit`.
+launch desktop with `.\repo.bat launch -n urbantwin.kit`.
+Streaming layer (branch `phase13-streaming-kit` in the kit-app-template):
+`.\launch_urbantwin_streaming.bat` — see `docs/PHASE13_STREAMING_KIT.md`.
+Dashboard WebRTC is still Phase 14; do not claim stream/config is online.
