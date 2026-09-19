@@ -33,6 +33,15 @@ def check(name, ok, detail=""):
     return ok
 
 
+def animation_frame_paths(snapshot: Path) -> list[Path]:
+    """Find numbered animation frames beside the selected snapshot."""
+    prefix = snapshot.stem
+    base, separator, frame = prefix.rpartition("_")
+    if separator and len(frame) == 3 and frame.isdigit():
+        prefix = base
+    return sorted(snapshot.parent.glob(f"{prefix}_*.json"))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--report", type=Path, default=REPORT)
@@ -169,7 +178,7 @@ def main() -> None:
                             f"{len(city['routes'])} routes")
 
     # --- animation sanity ---------------------------------------------------
-    seq = sorted(ROOT.joinpath("data").glob("simulation_before_*.json"))
+    seq = animation_frame_paths(args.snapshot)
     if len(seq) > 1:
         series = [json.loads(p.read_text(encoding="utf-8"))["agents"] for p in seq]
         times = [json.loads(p.read_text(encoding="utf-8"))["timestamp"] for p in seq]
@@ -221,7 +230,7 @@ def main() -> None:
               backwards == 0,
               f"{backwards} reversals in {sampled} sampled transitions")
     else:
-        print("  SKIP  10. animation checks (no frame sequence in data/)")
+        print("  SKIP  10. animation checks (no frame sequence beside snapshot)")
 
     # --- provenance --------------------------------------------------------
     real = snap["data_kind"] == "simulation"
