@@ -46,6 +46,16 @@ test("wide screens scan scenario fields in two compact columns", () => {
   assert.match(scenarioControls, /2xl:space-y-0/);
 });
 
+test("analysis cards flow in independent columns without stretched empty panels", () => {
+  const columns =
+    dashboard.match(/className="contents xl:flex xl:flex-col xl:gap-6"/g) ?? [];
+
+  assert.equal(columns.length, 2);
+  for (const order of [1, 2, 3, 4]) {
+    assert.match(dashboard, new RegExp(`className="order-${order}"`));
+  }
+});
+
 test("dark mode uses a lifted canvas rather than a pure black page gap", () => {
   const darkTheme = styles.match(
     /@media \(prefers-color-scheme: dark\) \{([\s\S]*?)\n\}/,
