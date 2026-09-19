@@ -94,11 +94,11 @@ def state_summary(state):
     }
 
 
-def run_summary(report, generated_at):
+def run_summary(report, generated_at, run_id):
     before, after = report["before"], report["after"]
     control = report["control"]
     return {
-        "run_id": RUN_ID,
+        "run_id": run_id,
         "status": "complete",
         "source": "recorded_fixture",
         "created_utc": generated_at,
@@ -139,7 +139,7 @@ def run_summary(report, generated_at):
     }
 
 
-def citizen_page_fixture(report, generated_at):
+def citizen_page_fixture(report, generated_at, run_id):
     """A bounded slice per state. The full 1000 records never reach the browser."""
     states = {}
     for name in ("before", "after"):
@@ -150,14 +150,14 @@ def citizen_page_fixture(report, generated_at):
             "included_in_fixture": min(CITIZEN_SAMPLE, len(citizens)),
         }
     return {
-        "run_id": RUN_ID,
+        "run_id": run_id,
         "source": "recorded_fixture",
         "created_utc": generated_at,
         "states": states,
     }
 
 
-def scenarios_fixture():
+def scenarios_fixture(run_id):
     """Ranges are the simulator's accepted inputs, per the handoff."""
     return {
         "source": "recorded_fixture",
@@ -194,7 +194,7 @@ def scenarios_fixture():
             },
         ],
         "recorded_scenario": {
-            "run_id": RUN_ID,
+            "run_id": run_id,
             "temperature": 40,
             "humidity": 80,
             "rainfall": 80,
@@ -304,6 +304,7 @@ def main():
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
     parser.add_argument("--model-card", type=Path, default=DEFAULT_MODEL_CARD)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    parser.add_argument("--run-id", default=RUN_ID)
     args = parser.parse_args()
 
     report = json.loads(args.report.read_text(encoding="utf-8"))
@@ -318,12 +319,13 @@ def main():
 
     out = args.out
     write(out / "health.json", health_fixture(generated_at))
-    write(out / "scenarios.json", scenarios_fixture())
+    write(out / "scenarios.json", scenarios_fixture(args.run_id))
     write(out / "stream-config.json", stream_config_fixture(generated_at))
     write(out / "model-card.json", model_card_fixture(card, generated_at))
-    write(out / "runs" / f"{RUN_ID}.json", run_summary(report, generated_at))
-    write(out / "runs" / f"{RUN_ID}.citizens.json",
-          citizen_page_fixture(report, generated_at))
+    write(out / "runs" / f"{args.run_id}.json",
+          run_summary(report, generated_at, args.run_id))
+    write(out / "runs" / f"{args.run_id}.citizens.json",
+          citizen_page_fixture(report, generated_at, args.run_id))
 
     before = behavior_counts(report["before"]["citizens"])
     after = behavior_counts(report["after"]["citizens"])

@@ -10,12 +10,11 @@ Run:  python integration/validate_integration.py
 """
 from __future__ import annotations
 
+import argparse
 import json
 import math
 import sys
 from pathlib import Path
-
-from pxr import Usd, UsdGeom
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
@@ -35,7 +34,17 @@ def check(name, ok, detail=""):
 
 
 def main() -> None:
-    for path in (REPORT, SNAPSHOT, STAGE):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--report", type=Path, default=REPORT)
+    parser.add_argument("--snapshot", type=Path, default=SNAPSHOT)
+    parser.add_argument("--after", type=Path, default=AFTER)
+    parser.add_argument("--stage", type=Path, default=STAGE)
+    parser.add_argument("--registry", type=Path, default=REGISTRY)
+    args = parser.parse_args()
+
+    from pxr import Usd, UsdGeom
+
+    for path in (args.report, args.snapshot, args.stage):
         if not path.exists():
             raise SystemExit(
                 f"missing {path}\n"
@@ -44,12 +53,12 @@ def main() -> None:
                 "  python integration/export_snapshot.py\n"
                 "  python integration/load_snapshot.py data/simulation_before.json")
 
-    report = json.loads(REPORT.read_text(encoding="utf-8"))
-    snap = json.loads(SNAPSHOT.read_text(encoding="utf-8"))
-    after = json.loads(AFTER.read_text(encoding="utf-8")) if AFTER.exists() else None
-    registry = json.loads(REGISTRY.read_text(encoding="utf-8"))
+    report = json.loads(args.report.read_text(encoding="utf-8"))
+    snap = json.loads(args.snapshot.read_text(encoding="utf-8"))
+    after = json.loads(args.after.read_text(encoding="utf-8")) if args.after.exists() else None
+    registry = json.loads(args.registry.read_text(encoding="utf-8"))
     edges = registry["edges"]
-    stage = Usd.Stage.Open(str(STAGE))
+    stage = Usd.Stage.Open(str(args.stage))
 
     before = report["before"]
     print("Simulator -> snapshot -> USD\n")
