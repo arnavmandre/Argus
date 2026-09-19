@@ -59,8 +59,10 @@ Routes define pedestrian pathways connecting pairs of buildings.
 * **`distance_km`** (`Float`, Range: $> 0.0$): Physical distance of the path in kilometers.
 * **`shade`** (`Float`, Range: `0.0`–`1.0`): Average solar cover along the length of the path.
 * **`drainage`** (`Float`, Range: `0.0`–`1.0`): Path-level surface water runoff performance.
-* **`base_crowding`** (`Float`, Range: `0.0`–`1.0`): Baseline pedestrian congestion density during normal operations.
+* **`base_crowding`** (`Float`, Range: `0.0`–`1.0`): *Ambient* congestion — how busy the corridor is from traffic the simulation does not model. It is a floor, not the reported crowding: actual congestion is computed from how many simulated pedestrians choose the route.
 * **`transit`** (`Float`, Range: `0.0`–`1.0`, Optional, Default: `0.0`): Level of public transport support or integration along the route corridor.
+* **`capacity_pph`** (`Float`, Range: $> 0.0$, Optional, Default: `1500`): Pedestrians per hour the corridor absorbs before it reads as fully congested. Denominator of the emergent crowding calculation.
+* **`greenery`** (`Float`, Range: `0.0`–`1.0`, Optional, Defaults to `shade`): Trees and planting. Distinct from `shade` — an arcade shades without being green — and it is `greenery`, not `shade`, that `green_preference` responds to.
 * **`via_zones`** (`Array[String]`, Optional): List of `zones.id` values through which the pathway travels.
 
 ---
@@ -91,7 +93,7 @@ Each object represents a single agent (or a weighted group of agents) navigating
 * **`destination`** (`String`, Required): Foreign key pointing to a `buildings.id` representing target trip destination. *(Note: At least one route in `city.json` must exist between `home` and `destination`)*.
 
 #### Physical Capabilities & Weights
-* **`walking_speed_kmh`** (`Float`, Range: $> 0.0$): Nominal walking speed in kilometers per hour (typically between `2.0` and `5.5`).
+* **`walking_speed_kmh`** (`Float`, Range: $> 0.0$): Walking speed in kilometers per hour (typically `2.0`–`5.5`). Sets travel time, and because heat/rain/crowd exposure accumulates per hour of travel, a slower walker on the same route absorbs more stress.
 * **`weight`** (`Float`, Range: $> 0.0$, Optional, Default: `1.0`): Representation factor indicating the relative share of total population this single sample agent represents.
 
 #### Behavioral Parameters (Tolerance & Preference)
@@ -109,3 +111,38 @@ All tolerances and preferences are normalized heuristic indicators bounded betwe
 * **`green_preference`** (`Float`, Range: `0.0`–`1.0`): Willingness to take longer or alternative paths to travel through shaded/green corridors.
 * **`transit_preference`** (`Float`, Range: `0.0`–`1.0`): Affinity for choosing paths with dedicated public transit infrastructure (`transit > 0`).
 * **`accessibility_need`** (`Float`, Range: `0.0`–`1.0`, Optional / Legacy): Historical demographic parameter representing mobility or physical accessibility requirements. *(Note: Ignored by current version logic)*.
+---
+
+## 3. `urbantwin_demo_output.json` — headline metrics
+
+Written by `python main.py`. Two full snapshots (`before`, `after`) plus the
+advisor, the applied intervention, the deltas, and a `control` run.
+
+All metrics are `0`–`100` heuristic prototypes, not measurements. The
+visualisation layer consumes **canonical v1 snapshots** (see
+`docs/INTEGRATION_CONTRACT.md`), not this file directly — the exporter owns
+normalising these to `0`–`1`.
+
+* **`heat_stress`**, **`rain_impact`** — city-level environmental readings after
+  any intervention is applied.
+* **`crowding`** — blend of corridor congestion (70%) and building-entrance
+  crowding (30%). Corridor congestion is **emergent**: it comes from how many
+  simulated pedestrians actually chose each route, against `capacity_pph`, not
+  from the population slider.
+* **`safety`**, **`mobility`**, **`comfort`** — city-average pillars derived
+  from the three readings above. Higher is better.
+* **`citizen_comfort`** — population-weighted mean of what the simulated
+  citizens actually experienced on the routes they each chose. This is the
+  human-centric metric: it moves when citizen tolerances or walking speeds
+  change, where the city-average pillars do not. Note it is a *different
+  quantity* from `comfort` above, and is usually higher, because citizens
+  choose protective routes.
+* **`mean_travel_minutes`** — population-weighted mean trip time. The only
+  metric not bounded to `0`–`100`.
+* **`human_experience_index`** — weighted average of four bounded pillars:
+  `citizen_comfort` 0.35, `comfort` 0.25, `safety` 0.20, `mobility` 0.20.
+  Weights sum to 1.0, so the index stays within `0`–`100` by construction.
+
+Per-citizen rows additionally carry `travel_minutes`, `route`, exposure values
+and `comfort`. Per-route rows carry `crowding`, `chosen_by_agents`,
+`peak_pedestrians`, `capacity_pph`, `utilisation`, `shade` and `greenery`.
