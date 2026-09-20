@@ -1,53 +1,256 @@
-# UrbanTwin AI — Omniverse digital twin
+# Argus AI
 
-This repository contains the visual digital-twin side of UrbanTwin AI. It imports
-a real OpenStreetMap study area into OpenUSD and visualizes external JSON snapshots
-as citizens, routes, heat, crowding, and proposed urban interventions. It does not
-contain the behavioral simulation engine.
+Human-centric urban digital twin: a **Python pedestrian simulator**, an **OpenUSD / Omniverse** city stage, and a **web dashboard** that can run live scenarios and (optionally) stream the RTX viewport in the browser.
 
-## Open the current demo
+Product name in the UI: **Argus AI**. Internal package/path names may still say `urbantwin` (Kit apps, env vars such as `URBANTWIN_API_BASE`).
 
-Open this stage in the UrbanTwin Kit app:
+Metrics, comfort indices, and advisor text are **heuristic prototypes** — not medical, meteorological, or engineering models. Citizen behavioural parameters are **survey-calibrated** (41 participants); scenario factors are confounded; home/destination placement is a heuristic.
 
-```text
-C:\Users\arnav\Argus\phase8\scene\main.usda
-```
+---
 
-Switch the packaged demo state from PowerShell:
+## What this repo contains
+
+| Area | Path | What it does |
+| --- | --- | --- |
+| Simulator | `Simulation/` | Deterministic city + citizen model; route choice; heat/rain/crowd stress; threshold advisor; before/after interventions. Run `python main.py` for asserts + demo. |
+| Local HTTP API | `api/` | `python -m api` — scenario POST, single-worker Phase 11 pipeline, health/stream probe, view allow-list, optional RAG advise. |
+| Dashboard | `frontend/` | Next.js UI. Default = recorded fixtures (`mode: "mock"`). With `URBANTWIN_API_BASE` → live API (`mode: "live"`). |
+| Integration | `integration/` | Snapshot export, route mapping proposals, pipeline orchestration, API mock export, validation gate. |
+| City / USD | `phase1/`–`phase9/` | OSM → semantics → bridges → packaged states → materials, trees, cameras, agents. **`phase1`–`phase8` scene layers are frozen**; add `over` layers in `phase9/`. |
+| Survey | `phase10/` | Survey → calibrated synthetic citizens. |
+| Docs | `docs/` | Contracts, phase notes, demo runbook, RAG notes. |
+
+### End-to-end product loop
+
+1. Operator sets temperature / humidity / rainfall / population in the dashboard.
+2. API runs `Simulation/main.py` on OSM city data (and optional interventions).
+3. Pipeline exports canonical snapshots → USD agents/routes for the Kit stage.
+4. Dashboard shows metrics, problem areas, and advisor recommendations.
+5. Optional: Kit App Streaming (WebRTC) shows the live RTX view; camera / overlay / playback commands are allow-listed then sent over the data channel.
+6. Optional: RAG layer ranks grounded intervention suggestions; the **threshold advisor in the simulator** remains the execution authority.
+
+---
+
+## Quick start (one click)
+
+**Prerequisites (once):** Python on PATH, Node.js (`cd frontend; npm ci`), RTX GPU + Kit App Template with `launch_urbantwin_streaming.bat` for streaming, **Chrome or Edge** for WebRTC.
+
+1. Double-click:
+
+   ```text
+   C:\Users\arnav\Argus\Start-Argus.bat
+   ```
+
+2. If ports 8000/3000 are stuck:
+
+   ```text
+   C:\Users\arnav\Argus\Start-Argus.bat -Force
+   ```
+
+3. Wait for the browser. Expect **Live backend** in the header. The Omniverse viewport should reach **Live** when Kit signaling is up (often 30–60s).
+
+4. To stop: close the API, Kit, and Dashboard service windows.
+
+Equivalent PowerShell:
 
 ```powershell
 cd C:\Users\arnav\Argus
+.\tools\demo_launch.ps1
+# or: .\tools\demo_launch.ps1 -Force
+```
+
+Logs: `tools/demo_logs/`. Full operator notes: [`docs/DEMO_RUNBOOK.md`](docs/DEMO_RUNBOOK.md).
+
+### Manual launch (if the bat fails)
+
+```powershell
+cd C:\Users\arnav\Argus
+
+# 1) API
+python -m api --host 127.0.0.1 --port 8000
+
+# 2) Kit (separate shell)
+C:\Users\arnav\omniverse\kit-app-template\launch_urbantwin_streaming.bat
+
+# 3) Frontend (separate shell)
+$env:URBANTWIN_API_BASE = "http://127.0.0.1:8000"
+cd frontend
+npm run dev
+```
+
+Checks:
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:8000/api/health
+# expect mode: "live"
+Invoke-RestMethod http://127.0.0.1:8000/api/stream/config
+# expect status: "available" when Kit signaling listens, else honest "offline"
+```
+
+Dashboard: `http://127.0.0.1:3000` (or `3001` if 3000 is busy).
+
+### Mock-only dashboard (no API / no Kit)
+
+```powershell
+cd C:\Users\arnav\Argus\frontend
+npm run dev
+```
+
+Without `URBANTWIN_API_BASE`, the UI replays fixtures and must not be presented as a live backend.
+
+---
+
+## Using the dashboard
+
+| Control | Behaviour |
+| --- | --- |
+| Scenario sliders | Accepted ranges (e.g. temperature **-10…45 °C**). Values outside the range are refused before a run starts. |
+| Run simulation | Queues one Phase 11 pipeline job (single worker). Limited animation frames are used for faster demos. |
+| Before / After | Metrics and viewport state for baseline vs intervention arm when interventions were applied. |
+| Overlay | **Behavior** (agents + routes), **Routes only**, **Shade canopy** (Phase 8 ADD_SHADE proposal), **City only**. |
+| Animation | Play / Pause / Restart on the Kit timeline (needs Live stream). |
+| Advisor | Threshold recommendations from the simulator; optional RAG ranking if configured. |
+
+Scenario sliders do **not** live-update the USD stage — they apply on the next **Run**.
+
+---
+
+## What we built (phases)
+
+| Phase | Deliverable |
+| --- | --- |
+| 1–8 | OSM city → USD semantics, contract, bridges, stressed vs intervention packaged states (frozen layers). |
+| 9 | Materials, heights, trees, lighting, cameras, agent instancing (`phase9/scene/main.usda` is the Kit demo stage). |
+| 10 | Survey-calibrated synthetic citizens. |
+| 11 | Local orchestration: sim → snapshots → USD (`integration/run_pipeline.py`). |
+| 12 | Local stdlib HTTP API (`python -m api`). |
+| 13 | Headless streaming Kit app + stage autoload. |
+| 14 | Browser WebRTC client (`@nvidia/ov-web-rtc`) + stream TCP probe. |
+| 15 | Allow-listed view commands → WebRTC → Kit `urbantwin.view_commands` (camera, overlay, before/after, playback). |
+| 16 | Constrained explain endpoint (deterministic by default). |
+| 17 | Demo launcher + runbook (`Start-Argus.bat`, `tools/demo_launch.ps1`, `docs/DEMO_RUNBOOK.md`). |
+| RAG | Optional grounded advisor over completed runs (`docs/RAG_URBAN_ADVISOR.md`). |
+
+### Simulator advisor (no LLM required)
+
+After the **before** arm, `urban_advisor()` in `Simulation/main.py` applies fixed thresholds:
+
+- heat stress ≥ 60 → `increase_shade`
+- rain impact ≥ 30 → `improve_drainage`
+- crowding ≥ 55 → `alternative_pedestrian_routes`
+- else → `no_major_intervention`
+
+Those IDs map to `shade_boost` / `drainage_boost` / `route_capacity_boost` for the **after** re-sim. Shade becomes a drawn cyan canopy in USD; drainage is metrics-only today (no separate USD type).
+
+---
+
+## How we verified it
+
+Run these from the repo root. Prefer claiming only what still passes on your machine.
+
+### Simulator unit / demo asserts
+
+```powershell
+cd Simulation
+python main.py
+```
+
+Self-contained deterministic tests plus a short demo write to `urbantwin_demo_output.json`.
+
+### Local API contract
+
+```powershell
+python -m unittest discover -s api -p "test_*.py"
+```
+
+Covers validation (scenario ranges, view allow-list including playback), run manager behaviour, shapes, optional RAG tests when deps are present.
+
+### Integration gate (sim → snapshot → USD)
+
+```powershell
+python integration\validate_integration.py
+```
+
+Traces simulator values into snapshots and authored stage geometry (agent placement, edge ids, heat normalisation, intervention proposals). Metrics-only interventions such as `drainage_boost` are allowed without a drawn USD proposal.
+
+### Pipeline / export interfaces
+
+```powershell
+python -m unittest integration.test_export_interfaces integration.test_run_pipeline
+```
+
+### Frontend typecheck
+
+```powershell
+cd frontend
+npx tsc --noEmit
+```
+
+### Demo smoke (API must be up)
+
+```powershell
+python tools\demo_smoke.py
+```
+
+Health, stream config, short live run, view allow-list, optional explain.
+
+### Manual streaming check
+
+1. Launch with `Start-Argus.bat`.
+2. Header: **Live backend**; `/api/stream/config` → `available` when Kit is up.
+3. Viewport chip: **Live** (not only “stream online” in the header).
+4. Change Camera / Overlay / Play–Pause; Kit should respond when WebRTC is connected.
+5. Extreme heat scenario → Run → metrics update; **Shade canopy** overlay shows the ADD_SHADE proposal when Intervention state is available.
+
+---
+
+## Integrity notes (do not over-claim)
+
+- Building heights: only a subset come from real OSM; the rest are inferred — do not call the skyline fully surveyed.
+- Default small `city.json` is abstract; use `city_osm.json` when geography matters.
+- Agent motion between frames is interpolated for display; edge colours are equilibrium — not a continuously evolving physics sim.
+- Omniverse stream stays offline until Kit signaling is actually listening; mocks must not be presented as live.
+- `integration/route_mapping.json` is reserved for a **team-agreed** mapping; tools emit `route_mapping.proposal.json` only.
+- Never edit `phase1/`–`phase8/` scene layers; extend with `over` layers in `phase9/`.
+
+---
+
+## Documentation map
+
+| Doc | Topic |
+| --- | --- |
+| [`docs/DEMO_RUNBOOK.md`](docs/DEMO_RUNBOOK.md) | Judge / local demo launch and recovery |
+| [`docs/PHASE12_LOCAL_API.md`](docs/PHASE12_LOCAL_API.md) | HTTP API |
+| [`docs/PHASE13_STREAMING_KIT.md`](docs/PHASE13_STREAMING_KIT.md) | Streaming Kit host |
+| [`docs/PHASE14_BROWSER_WEBRTC.md`](docs/PHASE14_BROWSER_WEBRTC.md) | Browser WebRTC |
+| [`docs/PHASE15_KIT_COMMAND_DELIVERY.md`](docs/PHASE15_KIT_COMMAND_DELIVERY.md) | View commands |
+| [`docs/PHASE16_CONSTRAINED_LLM.md`](docs/PHASE16_CONSTRAINED_LLM.md) | Explain |
+| [`docs/RAG_URBAN_ADVISOR.md`](docs/RAG_URBAN_ADVISOR.md) | Optional RAG advisor |
+| [`docs/INTEGRATION_CONTRACT.md`](docs/INTEGRATION_CONTRACT.md) | Snapshot / integration contract |
+| [`docs/FRONTEND_BACKEND_HANDOFF.md`](docs/FRONTEND_BACKEND_HANDOFF.md) | Frontend ↔ API product contract |
+| [`docs/PROJECT_BRIEF.md`](docs/PROJECT_BRIEF.md) | Project context |
+| [`frontend/README.md`](frontend/README.md) | Dashboard specifics |
+| [`phase9/README.md`](phase9/README.md) | Demo stage notes |
+
+---
+
+## Kit / Omniverse (without the web stream)
+
+Open the Phase 9 composed stage in the UrbanTwin Kit app:
+
+```text
+C:\Users\arnav\Argus\phase9\scene\main.usda
+```
+
+Kit app (outside this repo): `C:\Users\arnav\omniverse\kit-app-template`  
+Launch desktop editor: `.\repo.bat launch -n urbantwin.kit`  
+Launch streaming host: `.\launch_urbantwin_streaming.bat`
+
+Phase 8 stressed / intervention switch (packaged variants):
+
+```powershell
 python phase8\switch_state.py stressed
 python phase8\switch_state.py intervention
 ```
 
-Use **File > Reopen** in UrbanTwin after switching. The intervention state adds a
-proposed shade canopy; scenario metrics deliberately remain unchanged until a real
-post-intervention simulator snapshot is available.
-
-## Main documentation
-
-- [Setup and environment audit](docs/OMNIVERSE_SETUP.md)
-- [Simulator integration contract](docs/INTEGRATION_CONTRACT.md)
-- [Omniverse teammate handoff](docs/OMNIVERSE_HANDOFF.md)
-- [Project brief](docs/PROJECT_BRIEF.md)
-- [Current Phase 8 demo guide](phase8/README.md)
-- [Repository structure](docs/REPOSITORY_STRUCTURE.md)
-
-## Validation
-
-Run the current end-to-end state check:
-
-```powershell
-python phase8\validate_states.py
-```
-
-Validate a teammate snapshot before integration:
-
-```powershell
-python phase3\validate_mock_data.py path\to\simulation_output.json
-```
-
-Phase 9 begins when the teammate supplies an actual simulator output file.
-The workspace currently contains a simulator report with a different schema;
-the required adapter work is documented in the Omniverse handoff.
+Then **File > Reopen** in Kit if you are not using the streaming autoload path.
