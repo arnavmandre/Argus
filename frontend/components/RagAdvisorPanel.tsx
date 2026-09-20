@@ -107,16 +107,6 @@ export function RagAdvisorPanel({
               ) : recommendation.source ? (
                 <p className="mt-2 text-[11px] text-caution">Source pending verification</p>
               ) : null}
-              <button
-                type="button"
-                disabled={busy}
-                onClick={() => onApplySelected([recommendation.argus_recommendation_id])}
-                className="mt-3 rounded-[10px] border border-accent-line bg-accent-soft px-3 py-2 text-[12px] font-semibold text-accent transition-colors hover:bg-surface-3 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {recommendation.argus_recommendation_id === "no_major_intervention"
-                  ? "Re-run with no intervention"
-                  : "Test only this action"}
-              </button>
             </div>
           )})}
           <p className="text-[11px] leading-relaxed text-ink-3">
@@ -148,7 +138,7 @@ export function RagAdvisorPanel({
             Test selected actions together
           </button>
           <p className="text-[11px] leading-relaxed text-ink-3">
-            Use a row button to isolate one action, or select several checkboxes to measure their combined effect.
+            Select one action to isolate its effect, or select several actions to measure their combined effect.
           </p>
         </div>
       )}
