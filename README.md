@@ -219,6 +219,7 @@ Health, stream config, short live run, view allow-list, optional explain.
 
 | Doc | Topic |
 | --- | --- |
+| [`docs/PIPELINE_MERMAID.md`](docs/PIPELINE_MERMAID.md) | End-to-end pipeline Mermaid + slide wording |
 | [`docs/DEMO_RUNBOOK.md`](docs/DEMO_RUNBOOK.md) | Judge / local demo launch and recovery |
 | [`docs/PHASE12_LOCAL_API.md`](docs/PHASE12_LOCAL_API.md) | HTTP API |
 | [`docs/PHASE13_STREAMING_KIT.md`](docs/PHASE13_STREAMING_KIT.md) | Streaming Kit host |
