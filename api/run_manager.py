@@ -187,6 +187,17 @@ class RunManager:
                 return None
             return live_citizen_page(report, run_id, state, limit, offset)
 
+    def get_report(self, run_id: str) -> dict | None:
+        """Return the attached simulator report, or None if the run has not produced one."""
+        with self._lock:
+            record = self._runs.get(run_id)
+            if record is None:
+                return None
+            report = record.get("report")
+            if report is None:
+                return None
+            return report
+
     # --- internals ---------------------------------------------------------
 
     def _allocate_run_id(self) -> str:
@@ -214,7 +225,7 @@ class RunManager:
     def _summary_unlocked(self, record: dict) -> dict:
         has_report = record["report"] is not None
         report = record["report"] or _placeholder_report(record["scenario"])
-        return live_run_summary(
+        summary = live_run_summary(
             report,
             record["created_utc"],
             record["run_id"],
@@ -222,6 +233,29 @@ class RunManager:
             has_report=has_report,
             error=record.get("error"),
         )
+        summary["progress"] = self._progress_unlocked(record)
+        return summary
+
+    def _progress_unlocked(self, record: dict) -> float:
+        """0..1 progress for the dashboard bar (live API previously omitted this)."""
+        status = record["status"]
+        if status == "queued":
+            return 0.05
+        if status == "complete":
+            return 1.0
+        if status in {"failed", "cancelled"}:
+            return float(record.get("last_progress") or 0.0)
+        if status == "running":
+            started = record.get("running_since")
+            if started is None:
+                return 0.15
+            elapsed = max(0.0, time.time() - float(started))
+            # Soft estimate: full OSM + 60-frame export often lands ~1–3 min.
+            estimate_s = 120.0
+            value = 0.1 + 0.85 * min(1.0, elapsed / estimate_s)
+            record["last_progress"] = value
+            return value
+        return 0.0
 
     def _worker(self, run_id: str) -> None:
         try:
@@ -248,6 +282,7 @@ class RunManager:
             if record["status"] != "queued":
                 return
             record["status"] = "running"
+            record["running_since"] = time.time()
             request = dict(record["request"])
             cancel_flag = self._cancel_flags.get(run_id)
 

@@ -31,10 +31,22 @@ SHOTS = [
         "pavement - use this for the before/after shade intervention.",
     ),
     (
+        "Street",
+        Gf.Vec3d(30, -180, 16), Gf.Vec3d(-120, -70, 3), 35,
+        "Street-level hero corridor (same framing as Corridor). Used by the "
+        "dashboard allow-list as Street.",
+    ),
+    (
         "ProblemZone",
         Gf.Vec3d(90, -280, 190), CORRIDOR_CENTRE, 30,
         "Tight aerial on the corridor the advisor flags. Use when showing "
         "crowding or heat recolouring.",
+    ),
+    (
+        "Aerial",
+        Gf.Vec3d(620, -680, 430), Gf.Vec3d(0, 0, 0), 32,
+        "High tile overview (same framing as Overview). Used by the dashboard "
+        "allow-list as Aerial.",
     ),
 ]
 

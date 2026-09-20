@@ -38,7 +38,7 @@ export function RunStatus({
   attempt: RunAttempt;
 }) {
   const active = attempt.status === "queued" || attempt.status === "running";
-  const attemptIsNews = attempt.status !== "idle" && attempt.status !== "complete";
+  const attemptIsNews = attempt.status !== "idle";
   const headline = attemptIsNews ? attempt.status : (run?.status ?? "idle");
   const style = STATUS_STYLE[headline];
 
@@ -58,7 +58,11 @@ export function RunStatus({
       {attemptIsNews ? (
         <div className="mt-4 rounded-[12px] border border-hairline bg-surface-2 p-3">
           <p className="text-[12px] font-medium text-ink">
-            {active ? "Current run" : `Last attempt ${attempt.status}`}
+            {active
+              ? "Current run"
+              : attempt.status === "complete"
+                ? "Latest live run"
+                : `Last attempt ${attempt.status}`}
             {attempt.runId ? (
               <span className="ml-2 font-mono text-[11px] font-normal text-ink-3">
                 {attempt.runId}
@@ -71,15 +75,24 @@ export function RunStatus({
               <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-surface-3">
                 <div
                   className="h-full rounded-full bg-accent transition-[width] duration-500 [transition-timing-function:var(--ease)]"
-                  style={{ width: `${Math.round(attempt.progress * 100)}%` }}
+                  style={{
+                    width: `${Math.max(2, Math.round(attempt.progress * 100))}%`,
+                  }}
                 />
               </div>
               <p className="mt-2 text-[12px] text-ink-3">
                 {attempt.status === "queued"
                   ? "Waiting for the worker\u2026"
-                  : "Assigning routes and scoring exposure\u2026"}
+                  : `Running live simulator\u2026 ${Math.round(attempt.progress * 100)}%`}
               </p>
             </>
+          ) : null}
+
+          {attempt.status === "complete" ? (
+            <p className="mt-2 text-[12px] leading-relaxed text-ink-2">
+              Live simulation finished. Headline metrics below are from this run
+              (source: live simulator), not the recorded fixture.
+            </p>
           ) : null}
 
           {attempt.error ? (
@@ -91,7 +104,7 @@ export function RunStatus({
             </p>
           ) : null}
 
-          {run ? (
+          {run && active ? (
             <p className="mt-2 text-[11px] leading-relaxed text-ink-3">
               The results below are still from {run.run_id} and have not changed.
             </p>

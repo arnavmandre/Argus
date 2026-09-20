@@ -34,9 +34,14 @@ context loss.
 | `docs/` | contracts | `INTEGRATION_CONTRACT.md` is authoritative. |
 
 Frontend/backend product context is in `docs/FRONTEND_BACKEND_HANDOFF.md`. Local
-live HTTP is documented in `docs/PHASE12_LOCAL_API.md`. Do not present mocks as
-a live backend, and do not claim Omniverse streaming — stream config stays
-offline until Phase 15.
+live HTTP is documented in `docs/PHASE12_LOCAL_API.md`. Browser WebRTC on branch
+`phase13-streaming-kit`: `docs/PHASE14_BROWSER_WEBRTC.md` (no merge to `main`
+required to try locally). Do not present mocks as a live backend. Omniverse
+streaming appears live only when Kit signaling passes the API probe **and** the
+Chromium client connects; mock mode keeps stream offline. View commands:
+API allow-list on `phase13-streaming-kit`, then WebRTC `sendMessage` to Kit
+(`docs/PHASE15_KIT_COMMAND_DELIVERY.md`); `delivered: true` only from the
+adapter when messaging succeeds.
 
 ## Hard rules
 
@@ -90,11 +95,20 @@ Only claim what the code does when executed. Verified as of this writing:
 - ✅ The `frontend/` dashboard defaults to recorded fixtures shaped like the API
   contract. Mock "runs" replay a prior report and warn that they do not respond
   to the submitted scenario. With `URBANTWIN_API_BASE` set, the same routes proxy
-  to `python -m api` (`mode: "live"`). Still no durable job queue, cross-process
-  run persistence, or WebRTC streaming.
+  to `python -m api` (`mode: "live"`). Still no durable job queue or cross-process
+  run persistence.
 - ✅ Phase 12: `python -m api` accepts scenario POSTs, runs the Phase 11 pipeline
-  on a single worker, and returns `source: "live"` summaries. Omniverse stream
-  config remains offline.
+  on a single worker, and returns `source: "live"` summaries.
+- ✅ Phase 16: optional `POST /api/runs/{id}/explain` summarizes a bounded
+  simulator payload. Default is a deterministic template (no LLM key required);
+  `URBANTWIN_LLM_URL` enables an optional paraphrase with fallback. Not medical
+  advice; the threshold advisor remains authoritative for recommendations.
+- ✅ Phase 14 (branch `phase13-streaming-kit`): `@nvidia/ov-web-rtc@6.7.0`
+  DIRECT WebRTC when `GET /api/stream/config` is `available` (Kit signaling port
+  probe). Mock mode (`URBANTWIN_API_BASE` unset) never streams. Allow-listed view
+  commands are **not** delivered to Kit — Phase 15.
+- ⚠️ Do not claim streaming on `main` or in mock mode. Without Kit + live API +
+  browser connect, the viewport stays offline.
 - ✅ `integration/export_snapshot.py` closes the loop: simulator report ->
   canonical v1 snapshot -> USD. 12/12 integration tests pass, agents land within
   1mm of their route geometry, snapshots are `data_kind: simulation`.
@@ -135,8 +149,22 @@ python -m api --host 127.0.0.1 --port 8000
 $env:URBANTWIN_API_BASE = "http://127.0.0.1:8000"
 cd frontend; npm run dev
 # operator notes: docs/PHASE12_LOCAL_API.md
+
+# Phase 14 browser WebRTC (branch phase13-streaming-kit; Chromium required)
+# 1) Kit host: cd kit-app-template; .\launch_urbantwin_streaming.bat
+# 2) API + frontend as above; verify: Invoke-RestMethod http://127.0.0.1:8000/api/stream/config
+# full steps: docs/PHASE14_BROWSER_WEBRTC.md
+
+# Phase 17 judge demo (branch phase13-streaming-kit; phases 11–17 on this branch)
+cd C:\Users\arnav\Argus\.worktrees\phase13-streaming-kit
+.\tools\demo_launch.ps1          # API + Kit + frontend; logs in tools/demo_logs/
+python tools\demo_smoke.py       # health, stream config, short run, view allow-list
+# operator runbook: docs/DEMO_RUNBOOK.md
+# LLM explain is optional (URBANTWIN_LLM_URL); relaunch Kit if view_commands miss Kit
 ```
 
 Open `phase9/scene/main.usda` in Kit for the demo stage.
 Kit app lives outside the repo: `C:\Users\arnav\omniverse\kit-app-template`,
-launch with `.\repo.bat launch -n urbantwin.kit`.
+launch desktop with `.\repo.bat launch -n urbantwin.kit`.
+Streaming layer (branch `phase13-streaming-kit` in the kit-app-template):
+`.\launch_urbantwin_streaming.bat` — see `docs/PHASE13_STREAMING_KIT.md`.

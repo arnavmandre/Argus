@@ -16,12 +16,13 @@ from api.shapes import (
     live_scenarios,
     live_stream_config,
 )
+from api.explain import build_explanation_payload, explain_run
 from api.validation import validate_run_request, validate_view_command
 
 _RUN_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$")
 _VIEW_UNDELIVERED_REASON = (
-    "No streaming Kit session to deliver to. The command was validated against "
-    "the allow-list and discarded until Phase 15."
+    "Allow-list passed. Delivery is via the connected WebRTC client "
+    "(sendMessage urbantwin.view_command); the API does not push into Kit."
 )
 
 
@@ -116,6 +117,15 @@ def create_app(root, manager=None, *, host="127.0.0.1", port=0):
                     self._handle_view(run_id)
                     return
 
+                explain_match = re.fullmatch(r"/api/runs/([^/]+)/explain", path)
+                if method == "POST" and explain_match:
+                    run_id = explain_match.group(1)
+                    if not _safe_run_id(run_id):
+                        self._error(404, "not_found", f"Run {run_id!r} was not found.")
+                        return
+                    self._handle_explain(run_id)
+                    return
+
                 self._error(404, "not_found", f"No route for {method} {path}.")
             except Exception as exc:  # noqa: BLE001 — last-resort JSON 500
                 self._error(500, "internal_error", str(exc))
@@ -194,8 +204,28 @@ def create_app(root, manager=None, *, host="127.0.0.1", port=0):
                 return
             self._json(200, page)
 
+        def _handle_explain(self, run_id: str) -> None:
+            summary = manager.get_run(run_id)
+            if summary is None:
+                self._error(404, "not_found", f"Run {run_id!r} was not found.")
+                return
+            report = manager.get_report(run_id)
+            if report is None:
+                self._error(
+                    409,
+                    "conflict",
+                    "Run has no simulator report yet; explain is available after "
+                    "the run completes with a report.",
+                )
+                return
+            payload = build_explanation_payload(report)
+            envelope = explain_run(payload)
+            self._json(200, {"run_id": run_id, **envelope})
+
         def _handle_view(self, run_id: str) -> None:
-            if manager.get_run(run_id) is None:
+            # "viewport" is a reserved id for camera/overlay commands before any
+            # simulation run exists. Real run ids must still resolve.
+            if run_id != "viewport" and manager.get_run(run_id) is None:
                 self._error(404, "not_found", f"Run {run_id!r} was not found.")
                 return
             body, err = self._read_json_object()
@@ -212,6 +242,7 @@ def create_app(root, manager=None, *, host="127.0.0.1", port=0):
                 {
                     "accepted": True,
                     "delivered": False,
+                    "delivery": "webrtc_client",
                     "reason": _VIEW_UNDELIVERED_REASON,
                     "command": command,
                 },

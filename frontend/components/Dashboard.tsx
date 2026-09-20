@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useCallback, useState } from "react";
 
 import { AdvisorPanel } from "@/components/AdvisorPanel";
+import { RunExplainPanel } from "@/components/RunExplainPanel";
 import { BeforeAfterChart } from "@/components/BeforeAfterChart";
 import { BehaviorLegend } from "@/components/BehaviorLegend";
 import { CitizenInspector } from "@/components/CitizenInspector";
@@ -71,8 +72,8 @@ export function Dashboard({ bootstrap }: { bootstrap: Bootstrap }) {
       void runner.start({
         ...scenario,
         apply_recommended_interventions: apply,
-        animation_frames: 60,
-        animation_duration_seconds: 60,
+        animation_frames: 12,
+        animation_duration_seconds: 12,
         debug_force: options?.debugFail ? "failed" : undefined,
       });
     },
@@ -212,6 +213,9 @@ export function Dashboard({ bootstrap }: { bootstrap: Bootstrap }) {
                   canApply={!runner.active}
                   onApplyRecommended={() => submit({ forceApply: true })}
                 />
+              ) : null}
+              {health.mode === "live" && run.status === "complete" ? (
+                <RunExplainPanel runId={run.run_id} />
               ) : null}
             </div>
 

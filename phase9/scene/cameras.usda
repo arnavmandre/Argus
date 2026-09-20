@@ -45,6 +45,30 @@ def Xform "World"
             matrix4d xformOp:transform = ( (0.7089602625218324, 0.7052484286866396, 2.7755575615628914e-17, 0), (-0.4064610317769649, 0.4086003003652647, 0.8172118600388889, -0), (0.5763373801965126, -0.5793707348291257, 0.5763373801965126, 0), (90.00000000000001, -280, 190, 1) )
             uniform token[] xformOpOrder = ["xformOp:transform"]
         }
+
+        def Camera "Street" (
+            doc = "Street-level hero corridor (same framing as Corridor). Used by the dashboard allow-list as Street."
+        )
+        {
+            float2 clippingRange = (0.1, 6000)
+            float focalLength = 35
+            float horizontalAperture = 36
+            float verticalAperture = 24
+            matrix4d xformOp:transform = ( (0.5913636636275175, 0.8064049958557055, -6.938893903907227e-18, 0), (-0.05622124542494419, 0.041228913311625745, 0.9975667136938815, -0), (0.8044427816221043, -0.5899247065228765, 0.06971837440724905, 0), (29.99999999999998, -180, 16, 1) )
+            uniform token[] xformOpOrder = ["xformOp:transform"]
+        }
+
+        def Camera "Aerial" (
+            doc = "High tile overview (same framing as Overview). Used by the dashboard allow-list as Aerial."
+        )
+        {
+            float2 clippingRange = (0.1, 6000)
+            float focalLength = 32
+            float horizontalAperture = 36
+            float verticalAperture = 24
+            matrix4d xformOp:transform = ( (0.7389558439133295, 0.6737538576856826, 2.7755575615628914e-17, 0), (-0.28522855722310897, 0.3128313208253453, 0.9059697759059591, -0), (0.6104006314632734, -0.669471660314558, 0.4233423734342058, 0), (620.0000000000001, -680.0000000000001, 430.00000000000006, 1) )
+            uniform token[] xformOpOrder = ["xformOp:transform"]
+        }
     }
 }
 

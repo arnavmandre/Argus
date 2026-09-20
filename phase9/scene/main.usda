@@ -1,30 +1,30 @@
 #usda 1.0
 (
     defaultPrim = "World"
-    doc = """UrbanTwin Phase 9 stage - open THIS for demos.\r
-\r
-    Composes the PHASE 8 stage - the final city, which carries the Stressed /\r
-    Intervention demoState variants and chains down through Phase 2 semantics\r
-    to the Phase 1 geometry - and adds the Phase 9 layers on top: recovered\r
-    building heights, OSM-derived materials, real sun shadows, an extended\r
-    ground plane and saved demo cameras.\r
-\r
-    Everything here is an `over`. No Phase 1-8 layer is modified, so the\r
-    manifest hash and with it city_id stay valid.\r
-\r
-    Two variant sets on /World:\r
-      demoState  Stressed | Intervention   (Phase 8; phase8/switch_state.py)\r
-      cityLook   realistic | analytic      (Phase 9; materials.usda)\r
-\r
-    Generated overlays (path colours, agent instancer) are sublayered above\r
-    when present; both are produced by the scripts in phase9/ and are\r
-    optional - the stage opens fine without them.\r
-\r
-    Viewport checklist before recording:\r
-      - turn the viewport grid OFF and the HUD off, then deselect\r
-      - pick /World/Cameras/Overview, Corridor or ProblemZone\r
+    doc = """UrbanTwin Phase 9 stage - open THIS for demos.\r\r
+\r\r
+    Composes the PHASE 8 stage - the final city, which carries the Stressed /\r\r
+    Intervention demoState variants and chains down through Phase 2 semantics\r\r
+    to the Phase 1 geometry - and adds the Phase 9 layers on top: recovered\r\r
+    building heights, OSM-derived materials, real sun shadows, an extended\r\r
+    ground plane and saved demo cameras.\r\r
+\r\r
+    Everything here is an `over`. No Phase 1-8 layer is modified, so the\r\r
+    manifest hash and with it city_id stay valid.\r\r
+\r\r
+    Two variant sets on /World:\r\r
+      demoState  Stressed | Intervention   (Phase 8; phase8/switch_state.py)\r\r
+      cityLook   realistic | analytic      (Phase 9; materials.usda)\r\r
+\r\r
+    Generated overlays (path colours, agent instancer) are sublayered above\r\r
+    when present; both are produced by the scripts in phase9/ and are\r\r
+    optional - the stage opens fine without them.\r\r
+\r\r
+    Viewport checklist before recording:\r\r
+      - turn the viewport grid OFF and the HUD off, then deselect\r\r
+      - pick /World/Cameras/Overview, Corridor or ProblemZone\r\r
       - RTX - Real-Time is enough; Path Traced looks better if it holds up"""
-    endTimeCode = 1416
+    endTimeCode = 264
     framesPerSecond = 24
     metersPerUnit = 1
     startTimeCode = 0

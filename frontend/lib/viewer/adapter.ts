@@ -49,6 +49,13 @@ export const IDLE_VIEWER_STATE: ViewerState = {
 
 export interface ViewerConnectContext {
   config: StreamConfig;
+  /** Active run, when the dashboard has one — used for allow-listed view commands. */
+  runId?: string | null;
+  /**
+   * Latest run id for view commands. Prefer this over a connect-time snapshot so
+   * finishing a simulation does not force a WebRTC reconnect.
+   */
+  getRunId?: () => string;
   /** Called on every transition, including the first. */
   onState: (state: ViewerState) => void;
   signal: AbortSignal;

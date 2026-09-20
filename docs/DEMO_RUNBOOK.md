@@ -1,0 +1,125 @@
+# UrbanTwin — local judge demo runbook
+
+**Branch / worktree:** `phase13-streaming-kit` at  
+`C:\Users\arnav\Argus\.worktrees\phase13-streaming-kit`  
+Do **not** merge to `main` for this demo path; mocks on `main` stay offline.
+
+## What you are showing
+
+- **Live backend:** Python API runs `Simulation/main.py` on real OSM city data for each scenario submit.
+- **Optional stream:** NVIDIA Kit App Streaming (WebRTC) when the signaling port is up and Chromium connects.
+- **Dashboard:** Next.js proxies to the API when `URBANTWIN_API_BASE` is set (`mode: "live"`).
+
+Metrics, comfort indices, and advisor text are **heuristic prototypes** — not medical, meteorological, or engineering models. Citizen parameters are **survey-calibrated** (41 participants) but scenario factors are confounded; home/destination placement is a heuristic.
+
+**Mock vs live:** Without `URBANTWIN_API_BASE`, the frontend replays recorded fixtures and health reports `mode: "mock"`. The launcher sets live mode for you.
+
+**Phases on this branch:** 11 (pipeline) → 12 (HTTP API) → 13–14 (Kit host + browser WebRTC) → 15 (view commands via WebRTC client) → 16 (optional explain, deterministic by default) → **17 (this runbook + launcher).**
+
+View commands are allow-listed by the API; **Kit must be running and the browser WebRTC session connected** for camera/overlay changes to apply. If Kit was started before the API, relaunch Kit after the API is healthy so extensions and stage paths align.
+
+## Prerequisites
+
+| Requirement | Notes |
+| --- | --- |
+| **RTX GPU** | Kit App Streaming host; laptop iGPU-only will not stream. |
+| **Chromium** | Chrome or Edge for WebRTC. Firefox/Safari are not verified. |
+| **Python** | Same environment as Phase 11 (`pxr` for full pipeline). From worktree root. |
+| **Node.js** | `cd frontend; npm ci` once. |
+| **Kit App Template** | Branch `phase13-streaming-kit`; bat at `C:\Users\arnav\omniverse\kit-app-template\launch_urbantwin_streaming.bat`. |
+
+## Ports
+
+| Service | Port | Check |
+| --- | --- | --- |
+| UrbanTwin API | **8000** | `Invoke-RestMethod http://127.0.0.1:8000/api/health` |
+| Next.js dev | **3000** (or **3001** if busy) | Browser URL in terminal banner |
+| Kit WebRTC signaling | **49100** | `GET /api/stream/config` → `status: "available"` when host is up |
+| Kit media (DIRECT) | **47998** | Advertised in stream config; firewall must allow local TCP |
+
+## One-command launch (recommended)
+
+From the **worktree root**:
+
+```powershell
+cd C:\Users\arnav\Argus\.worktrees\phase13-streaming-kit
+.\tools\demo_launch.ps1
+```
+
+This opens three windows: API, Kit (if bat exists), frontend with `URBANTWIN_API_BASE=http://127.0.0.1:8000`. Logs: `tools/demo_logs/`.
+
+To free ports 8000/3000 first:
+
+```powershell
+.\tools\demo_launch.ps1 -Force
+```
+
+The launcher **does not** stop existing processes unless `-Force` is passed.
+
+## Manual sequence (if launcher fails)
+
+```powershell
+cd C:\Users\arnav\Argus\.worktrees\phase13-streaming-kit
+
+# 1) API
+python -m api --host 127.0.0.1 --port 8000
+
+# 2) Kit (separate shell, from kit-app-template root)
+C:\Users\arnav\omniverse\kit-app-template\launch_urbantwin_streaming.bat
+
+# 3) Frontend
+$env:URBANTWIN_API_BASE = "http://127.0.0.1:8000"
+cd frontend
+npm run dev
+```
+
+Wait until health responds:
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:8000/api/health
+# expect mode: "live"
+Invoke-RestMethod http://127.0.0.1:8000/api/stream/config
+# expect status: "available" when Kit signaling is open, else honest "offline"
+```
+
+Open **http://127.0.0.1:3000** in Chromium.
+
+## Expected UI states
+
+1. **Header / health:** Live backend (`mode: "live"`), not mock fixtures.
+2. **Stream panel:** `available` + video when Kit is up and WebRTC connected; otherwise offline placeholder (still honest).
+3. **After Run:** Metrics and before/after summaries populate from a real simulator run (may take 1–3 minutes for default animation; smoke uses 3 frames).
+4. **Viewport footer:** Camera / overlay / before-after controls; delivery to Kit only when stream is connected (Phase 15).
+5. **Explain results** (optional): Deterministic template unless `URBANTWIN_LLM_URL` is set (Phase 16).
+
+## Automated smoke test
+
+With API on port 8000:
+
+```powershell
+cd C:\Users\arnav\Argus\.worktrees\phase13-streaming-kit
+python tools\demo_smoke.py
+```
+
+Checks: health, stream config, short live run, view allow-list, optional explain.
+
+## Recovery
+
+| Symptom | Likely cause | Fix |
+| --- | --- | --- |
+| Health never returns | API not started or port 8000 taken | Read `tools/demo_logs/api-*.log`; `demo_launch.ps1 -Force` or pick another port manually |
+| `mode: "mock"` in UI | `URBANTWIN_API_BASE` unset | Restart frontend via launcher or set env var |
+| Stream stays offline | Kit not running or signaling closed | Launch `launch_urbantwin_streaming.bat`; wait 30–60s; recheck `/api/stream/config` |
+| Stream config `available` but no video | Non-Chromium browser or WebRTC blocked | Use Chrome/Edge; allow localhost media |
+| Run stuck `running` | Pipeline error | `GET /api/runs/{id}` for status; see API window log |
+| View changes not in Kit | No WebRTC session | Connect stream first; relaunch Kit if API started after Kit |
+| `npm run dev` EADDRINUSE | Port 3000 busy | Use URL shown (often 3001) or `-Force` |
+
+## Related docs
+
+- Design: `docs/superpowers/specs/2026-09-20-phase17-demo-hardening-design.md`
+- API: `docs/PHASE12_LOCAL_API.md`
+- WebRTC: `docs/PHASE14_BROWSER_WEBRTC.md`
+- View commands: `docs/PHASE15_KIT_COMMAND_DELIVERY.md`
+- Explain: `docs/PHASE16_CONSTRAINED_LLM.md`
+- Kit host: `docs/PHASE13_STREAMING_KIT.md`

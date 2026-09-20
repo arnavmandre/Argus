@@ -1,8 +1,9 @@
 import json
 import unittest
 from pathlib import Path
+from unittest import mock
 
-from api.shapes import live_run_summary, live_health, live_warnings_for
+from api.shapes import live_run_summary, live_health, live_stream_config, live_warnings_for
 from integration.export_api_mocks import LIVE_RUN_WARNINGS
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -79,12 +80,35 @@ class ShapeTests(unittest.TestCase):
         self.assertEqual(complete["warnings"], LIVE_RUN_WARNINGS)
 
     def test_live_health_capabilities(self):
-        health = live_health("2026-09-19T12:00:00+00:00")
+        unavailable = {
+            "available": False,
+            "host": "127.0.0.1",
+            "signal_port": 49100,
+            "media_port": 47998,
+            "reason": "Kit signaling port is not accepting connections.",
+        }
+        with mock.patch("api.shapes.probe_stream_endpoint", return_value=unavailable):
+            health = live_health("2026-09-19T12:00:00+00:00")
         self.assertEqual(health["mode"], "live")
         self.assertTrue(health["capabilities"]["http_api"])
         self.assertTrue(health["capabilities"]["live_simulation"])
         self.assertFalse(health["capabilities"]["omniverse_streaming"])
         self.assertEqual(health["omniverse_stream"], "offline")
+
+    def test_live_stream_config_offline_by_default(self):
+        with mock.patch(
+            "api.shapes.probe_stream_endpoint",
+            return_value={
+                "available": False,
+                "host": "127.0.0.1",
+                "signal_port": 49100,
+                "media_port": 47998,
+                "reason": "Kit signaling port is not accepting connections.",
+            },
+        ):
+            cfg = live_stream_config("2026-09-20T00:00:00+00:00")
+        self.assertEqual(cfg["status"], "offline")
+        self.assertIsNone(cfg["signaling_url"])
 
 
 if __name__ == "__main__":

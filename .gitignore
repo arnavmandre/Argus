@@ -12,3 +12,6 @@ integration/runtime/
 data/simulation_*.json
 data/runs/
 integration/runtime/
+
+# Launcher runtime output (tools/demo_launch.ps1 regenerates these every run)
+tools/demo_logs/

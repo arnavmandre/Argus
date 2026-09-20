@@ -8,6 +8,10 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from api.stream_probe import (  # noqa: E402
+    available_stream_config,
+    probe_stream_endpoint,
+)
 from integration.export_api_mocks import (  # noqa: E402
     LIVE_RUN_WARNINGS,
     health_fixture,
@@ -109,7 +113,16 @@ def live_citizen_page(report, run_id, state, limit, offset) -> dict:
 
 
 def live_health(checked_utc) -> dict:
-    return health_fixture(checked_utc, source="live")
+    health = health_fixture(checked_utc, source="live")
+    probe = probe_stream_endpoint()
+    if probe["available"]:
+        health["omniverse_stream"] = "online"
+        health["capabilities"]["omniverse_streaming"] = True
+        health["notes"] = list(health.get("notes") or []) + [
+            "Local Kit signaling port is accepting connections; browser WebRTC "
+            "still requires the Phase 14 client.",
+        ]
+    return health
 
 
 def live_scenarios() -> dict:
@@ -117,7 +130,16 @@ def live_scenarios() -> dict:
 
 
 def live_stream_config(checked_utc) -> dict:
-    return stream_config_fixture(checked_utc, source="live")
+    probe = probe_stream_endpoint()
+    if probe["available"]:
+        return available_stream_config(checked_utc, probe, source="live")
+    cfg = stream_config_fixture(checked_utc, source="live")
+    cfg["reason"] = probe["reason"] or cfg.get("reason")
+    cfg["signaling_host"] = None
+    cfg["signaling_port"] = None
+    cfg["media_host"] = None
+    cfg["media_port"] = None
+    return cfg
 
 
 def live_model_card(card, exported_utc) -> dict:

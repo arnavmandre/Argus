@@ -1,15 +1,15 @@
 {
   "scenario": {
-    "temperature": 40,
-    "humidity": 80,
-    "rainfall": 80,
+    "temperature": 40.0,
+    "humidity": 80.0,
+    "rainfall": 80.0,
     "population": 100000
   },
   "before": {
     "inputs": {
-      "temperature": 40,
-      "humidity": 80,
-      "rainfall": 80,
+      "temperature": 40.0,
+      "humidity": 80.0,
+      "rainfall": 80.0,
       "population": 100000
     },
     "metrics": {
@@ -24568,9 +24568,9 @@
   },
   "after": {
     "inputs": {
-      "temperature": 40,
-      "humidity": 80,
-      "rainfall": 80,
+      "temperature": 40.0,
+      "humidity": 80.0,
+      "rainfall": 80.0,
       "population": 100000
     },
     "metrics": {

@@ -227,6 +227,8 @@ export interface RunSummary {
   status: RunStatus;
   source: PayloadSource;
   created_utc: string;
+  /** 0..1 while queued/running; 1 when complete. Live API now includes this. */
+  progress?: number;
   scenario: ScenarioInput;
   before?: RunStateSummary;
   advisor?: AdvisorResult;
@@ -277,6 +279,11 @@ export interface StreamConfig {
   checked_utc: string;
   /** Null until a streaming-enabled Kit app and session manager exist. */
   signaling_url: string | null;
+  /** EXTENSION: DIRECT Kit host/ports for local AppStreamer. */
+  signaling_host?: string | null;
+  signaling_port?: number | null;
+  media_host?: string | null;
+  media_port?: number | null;
   ice_servers: RTCIceServerLike[];
   session_token: string | null;
   stage: string;
@@ -349,8 +356,25 @@ export interface ViewCommand {
 export interface ViewCommandResult {
   accepted: boolean;
   delivered: boolean;
+  /** Present when accepted; API authorizes, browser delivers over WebRTC. */
+  delivery?: "webrtc_client";
   reason?: string;
   command: ViewCommand;
+}
+
+// --------------------------------------------------------------------------
+// Constrained LLM explanation (Phase 16)
+// --------------------------------------------------------------------------
+
+export type ExplainSource = "deterministic" | "llm";
+
+export interface ExplainResponse {
+  run_id: string;
+  source: ExplainSource;
+  text: string;
+  claims: string[];
+  /** Present when an LLM was configured but fell back to the template. */
+  unavailable_reason?: string;
 }
 
 // --------------------------------------------------------------------------

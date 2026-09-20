@@ -100,7 +100,13 @@ export function useRunner(onComplete: (summary: RunSummary) => void) {
         setState((prev) => ({
           ...prev,
           status: summary.status,
-          progress: summary.progress ?? prev.progress,
+          progress:
+            summary.progress ??
+            (summary.status === "complete"
+              ? 1
+              : summary.status === "running"
+                ? Math.min(0.95, Math.max(prev.progress, 0.1))
+                : prev.progress),
           error:
             summary.status === "failed"
               ? (summary.error?.message ?? "The simulation failed.")
