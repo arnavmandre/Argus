@@ -1,6 +1,8 @@
 """Live-mode API response envelopes built from simulator reports."""
 from __future__ import annotations
 
+import importlib.util
+import os
 import sys
 from pathlib import Path
 
@@ -114,6 +116,19 @@ def live_citizen_page(report, run_id, state, limit, offset) -> dict:
 
 def live_health(checked_utc) -> dict:
     health = health_fixture(checked_utc, source="live")
+    groq_ready = bool(os.environ.get("GROQ_API_KEY", "").strip()) and (
+        importlib.util.find_spec("groq") is not None
+    )
+    health["capabilities"]["llm_advisor"] = groq_ready
+    health["notes"] = list(health.get("notes") or []) + [
+        (
+            "Groq RAG advisor is configured; the /advise response still reports "
+            "whether a specific request used the LLM or deterministic fallback."
+            if groq_ready
+            else "Groq RAG advisor is not configured in this API process; /advise "
+            "will use deterministic fallback."
+        )
+    ]
     probe = probe_stream_endpoint()
     if probe["available"]:
         health["omniverse_stream"] = "online"

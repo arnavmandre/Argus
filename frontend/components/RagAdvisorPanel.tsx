@@ -52,7 +52,7 @@ export function RagAdvisorPanel({
       <CardHeader
         eyebrow="Optional decision support"
         title="Grounded urban advisor"
-        description="Retrieves local planning records and ranks only actions Argus can test. The simulator remains authoritative for outcomes."
+        description="This is the Groq LLM section. It is separate from the Random Forest model-trust table. Retrieve advice to see whether this request used Groq or the fallback."
         actions={result ? (
           <Pill tone={result.fallback_used ? "caution" : "accent"}>
             {result.fallback_used ? "Deterministic fallback" : "RAG grounded"}
@@ -107,7 +107,9 @@ export function RagAdvisorPanel({
             </div>
           ))}
           <p className="text-[11px] leading-relaxed text-ink-3">
-            Retrieval: {result.retrieval_backend ?? "unavailable"}. {result.unavailable_reason ?? "The LLM ranked retrieved records; no outcome was predicted."}
+            {result.fallback_used
+              ? `No LLM output was used: ${result.unavailable_reason ?? "the deterministic fallback answered."}`
+              : `Confirmed LLM output from ${result.model ?? "the configured Groq model"}. Retrieval: ${result.retrieval_backend ?? "unknown"}.`}
           </p>
           <button
             type="button"

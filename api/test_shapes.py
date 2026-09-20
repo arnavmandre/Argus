@@ -87,13 +87,30 @@ class ShapeTests(unittest.TestCase):
             "media_port": 47998,
             "reason": "Kit signaling port is not accepting connections.",
         }
-        with mock.patch("api.shapes.probe_stream_endpoint", return_value=unavailable):
+        with mock.patch("api.shapes.probe_stream_endpoint", return_value=unavailable), mock.patch.dict(
+            "os.environ", {}, clear=True
+        ):
             health = live_health("2026-09-19T12:00:00+00:00")
         self.assertEqual(health["mode"], "live")
         self.assertTrue(health["capabilities"]["http_api"])
         self.assertTrue(health["capabilities"]["live_simulation"])
         self.assertFalse(health["capabilities"]["omniverse_streaming"])
+        self.assertFalse(health["capabilities"]["llm_advisor"])
         self.assertEqual(health["omniverse_stream"], "offline")
+
+    def test_live_health_reports_configured_groq(self):
+        unavailable = {
+            "available": False,
+            "host": "127.0.0.1",
+            "signal_port": 49100,
+            "media_port": 47998,
+            "reason": "offline",
+        }
+        with mock.patch("api.shapes.probe_stream_endpoint", return_value=unavailable), mock.patch.dict(
+            "os.environ", {"GROQ_API_KEY": "configured"}, clear=True
+        ), mock.patch("api.shapes.importlib.util.find_spec", return_value=object()):
+            health = live_health("2026-09-19T12:00:00+00:00")
+        self.assertTrue(health["capabilities"]["llm_advisor"])
 
     def test_live_stream_config_offline_by_default(self):
         with mock.patch(
