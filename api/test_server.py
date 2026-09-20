@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import http.client
 import json
+import os
 import tempfile
 import threading
 import time
@@ -221,6 +222,26 @@ class ServerContractTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertEqual(listing["source"], "live")
         self.assertIsNone(listing["active_run_id"])
+
+    def test_advise_endpoint_returns_safe_fallback_without_groq_key(self):
+        status, created, _, _ = self._request("POST", "/api/runs", _valid_body())
+        self.assertEqual(status, 202)
+        run_id = created["run_id"]
+
+        def poll_complete():
+            st, summary, _, _ = self._request("GET", f"/api/runs/{run_id}")
+            return st == 200 and summary["status"] == "complete"
+
+        self.assertTrue(_wait_until(poll_complete))
+        with mock.patch.dict(os.environ, {}, clear=True):
+            status, advice, _, _ = self._request(
+                "POST", f"/api/runs/{run_id}/advise"
+            )
+        self.assertEqual(status, 200)
+        self.assertEqual(advice["run_id"], run_id)
+        self.assertEqual(advice["advisor_mode"], "deterministic_fallback")
+        self.assertTrue(advice["fallback_used"])
+        self.assertIn("retrieved_knowledge", advice)
 
     def test_validation_failure_is_422(self):
         status, data, _, _ = self._request(

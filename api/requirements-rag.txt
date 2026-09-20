@@ -1,0 +1,5 @@
+# Optional RAG dependencies. The API retains deterministic fallback without them.
+faiss-cpu>=1.8,<2
+groq>=0.31,<1
+numpy>=1.26,<3
+sentence-transformers>=3,<6

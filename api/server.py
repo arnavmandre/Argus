@@ -17,6 +17,7 @@ from api.shapes import (
     live_stream_config,
 )
 from api.explain import build_explanation_payload, explain_run
+from api.rag import advise_run
 from api.validation import validate_run_request, validate_view_command
 
 _RUN_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$")
@@ -126,6 +127,15 @@ def create_app(root, manager=None, *, host="127.0.0.1", port=0):
                     self._handle_explain(run_id)
                     return
 
+                advise_match = re.fullmatch(r"/api/runs/([^/]+)/advise", path)
+                if method == "POST" and advise_match:
+                    run_id = advise_match.group(1)
+                    if not _safe_run_id(run_id):
+                        self._error(404, "not_found", f"Run {run_id!r} was not found.")
+                        return
+                    self._handle_advise(run_id)
+                    return
+
                 self._error(404, "not_found", f"No route for {method} {path}.")
             except Exception as exc:  # noqa: BLE001 — last-resort JSON 500
                 self._error(500, "internal_error", str(exc))
@@ -221,6 +231,21 @@ def create_app(root, manager=None, *, host="127.0.0.1", port=0):
             payload = build_explanation_payload(report)
             envelope = explain_run(payload)
             self._json(200, {"run_id": run_id, **envelope})
+
+        def _handle_advise(self, run_id: str) -> None:
+            if manager.get_run(run_id) is None:
+                self._error(404, "not_found", f"Run {run_id!r} was not found.")
+                return
+            report = manager.get_report(run_id)
+            if report is None:
+                self._error(
+                    409,
+                    "conflict",
+                    "Run has no simulator report yet; advice is available after "
+                    "the run completes with a report.",
+                )
+                return
+            self._json(200, {"run_id": run_id, **advise_run(report, root=root)})
 
         def _handle_view(self, run_id: str) -> None:
             # "viewport" is a reserved id for camera/overlay commands before any
