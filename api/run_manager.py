@@ -298,6 +298,9 @@ class RunManager:
             frames=int(request["animation_frames"]),
             duration=float(request["animation_duration_seconds"]),
             publish=True,
+            selected_recommendation_ids=tuple(
+                request.get("selected_recommendation_ids") or ()
+            ),
         )
 
         try:
@@ -383,6 +386,8 @@ class RunManager:
             "--duration",
             str(config.duration),
         ]
+        for recommendation_id in config.selected_recommendation_ids:
+            command.extend(["--intervention-id", recommendation_id])
         # publish=True is the CLI default (omit --no-publish).
         creationflags = 0
         if sys.platform == "win32":

@@ -102,6 +102,15 @@ export async function validateScenario(
     rainfall: raw.rainfall as number,
     population: raw.population as number,
     apply_recommended_interventions: raw.apply_recommended_interventions !== false,
+    selected_recommendation_ids: Array.isArray(raw.selected_recommendation_ids)
+      ? raw.selected_recommendation_ids.filter(
+          (value): value is import("../types").RecommendationId =>
+            value === "increase_shade" ||
+            value === "improve_drainage" ||
+            value === "alternative_pedestrian_routes" ||
+            value === "no_major_intervention",
+        )
+      : undefined,
     animation_frames: typeof raw.animation_frames === "number" ? raw.animation_frames : 60,
     animation_duration_seconds:
       typeof raw.animation_duration_seconds === "number"

@@ -14,6 +14,12 @@ VIEW_OVERLAYS = frozenset({"behavior", "congestion", "shade", "none"})
 
 DEFAULT_ANIMATION_FRAMES = 60
 DEFAULT_ANIMATION_DURATION_SECONDS = 60
+ALLOWED_RECOMMENDATION_IDS = frozenset({
+    "increase_shade",
+    "improve_drainage",
+    "alternative_pedestrian_routes",
+    "no_major_intervention",
+})
 
 
 def _validation_error(message: str, fields: dict | None = None) -> dict:
@@ -65,6 +71,31 @@ def validate_run_request(body: dict) -> tuple[dict | None, dict | None]:
             fields["apply_recommended_interventions"] = "must be a boolean"
         else:
             normalized["apply_recommended_interventions"] = flag
+
+    selected = body.get("selected_recommendation_ids")
+    if selected is not None:
+        if (
+            not isinstance(selected, list)
+            or not selected
+            or any(not isinstance(value, str) for value in selected)
+        ):
+            fields["selected_recommendation_ids"] = (
+                "must be a non-empty array of recommendation ids"
+            )
+        elif len(selected) != len(set(selected)):
+            fields["selected_recommendation_ids"] = "must not contain duplicates"
+        elif any(value not in ALLOWED_RECOMMENDATION_IDS for value in selected):
+            fields["selected_recommendation_ids"] = "contains an unsupported action"
+        elif "no_major_intervention" in selected and len(selected) > 1:
+            fields["selected_recommendation_ids"] = (
+                "no_major_intervention cannot be combined with another action"
+            )
+        else:
+            normalized["selected_recommendation_ids"] = selected
+        if body.get("apply_recommended_interventions") is not True:
+            fields["selected_recommendation_ids"] = (
+                "requires apply_recommended_interventions=true"
+            )
 
     if "animation_frames" in body and body["animation_frames"] is not None:
         frames = _as_number(body["animation_frames"], integer=True)

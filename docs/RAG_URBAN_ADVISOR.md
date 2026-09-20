@@ -56,11 +56,13 @@ record that was actually retrieved. It also checks any supplied route, building,
 or zone target against the bounded report. The existing simulator owns action
 strengths and all before/after computation.
 
-The current Phase 11 run path automatically executes its deterministic advisor's
-set of interventions. The RAG endpoint therefore ranks candidates for review;
-it does not yet claim that pressing Apply tests a different RAG-selected subset.
-Adding that control requires an explicit run-request contract change rather than
-silently bypassing `recommended_interventions(...)`.
+The frontend lets the operator select one or more returned actions. “Apply
+selected and re-simulate” starts a new run with the optional
+`selected_recommendation_ids` request field. The API accepts only the simulator's
+allow-list, the pipeline forwards those IDs to `Simulation/main.py`, and the
+simulator passes them through its existing `recommended_interventions(...)`
+function. The after-state is therefore a real simulator run using only the
+selected actions.
 
 ## Tests
 

@@ -76,6 +76,26 @@ def _wait_until(predicate, timeout=2.0, interval=0.02) -> bool:
 
 
 class RunManagerTests(unittest.TestCase):
+    def test_user_selection_reaches_pipeline_config(self):
+        captured = []
+
+        def pipeline(config):
+            captured.append(config.selected_recommendation_ids)
+            _write_report(config)
+            return {"status": "complete", "run_id": config.run_id}
+
+        with tempfile.TemporaryDirectory() as directory:
+            manager = RunManager(Path(directory), pipeline_fn=pipeline)
+            created = manager.create_run(
+                _valid_request(selected_recommendation_ids=["improve_drainage"])
+            )
+            self.assertTrue(
+                _wait_until(
+                    lambda: manager.get_run(created["run_id"])["status"] == "complete"
+                )
+            )
+            self.assertEqual(captured, [("improve_drainage",)])
+
     def test_second_create_conflicts_while_running(self):
         def slow_pipeline(config):
             time.sleep(0.2)

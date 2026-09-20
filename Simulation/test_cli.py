@@ -33,6 +33,33 @@ class SimulatorCliTests(unittest.TestCase):
         self.assertEqual(args.temperature, 31)
         self.assertEqual(args.population, 42000)
 
+    def test_user_selection_applies_only_selected_action(self):
+        report = main.run_demo(
+            scenario={
+                "temperature": 40,
+                "humidity": 80,
+                "rainfall": 80,
+                "population": 100000,
+            },
+            selected_recommendations=["improve_drainage"],
+        )
+        self.assertEqual(report["advisor_selection"]["mode"], "user_selected")
+        self.assertEqual(
+            report["advisor_selection"]["recommendation_ids"],
+            ["improve_drainage"],
+        )
+        self.assertEqual(report["intervention"], {"drainage_boost": 0.35})
+
+    def test_cli_accepts_repeated_intervention_ids(self):
+        args = main.parse_cli([
+            "--intervention-id", "increase_shade",
+            "--intervention-id", "improve_drainage",
+        ])
+        self.assertEqual(
+            args.intervention_id,
+            ["increase_shade", "improve_drainage"],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

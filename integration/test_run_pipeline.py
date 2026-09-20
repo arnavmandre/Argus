@@ -11,7 +11,15 @@ from integration.run_pipeline import PipelineConfig, PipelineError, run_pipeline
 
 
 class PipelineTests(unittest.TestCase):
-    def config(self, root, *, publish=False, frames=3, duration=6.0):
+    def config(
+        self,
+        root,
+        *,
+        publish=False,
+        frames=3,
+        duration=6.0,
+        selected_recommendation_ids=(),
+    ):
         return PipelineConfig(
             root=root,
             run_id="test-run",
@@ -24,6 +32,7 @@ class PipelineTests(unittest.TestCase):
             frames=frames,
             duration=duration,
             publish=publish,
+            selected_recommendation_ids=selected_recommendation_ids,
         )
 
     @staticmethod
@@ -127,6 +136,27 @@ class PipelineTests(unittest.TestCase):
                     for token in stage["command"]
                 )
             )
+
+    @patch("integration.run_pipeline.run_stage")
+    def test_selected_actions_are_forwarded_to_simulator(self, run_stage):
+        run_stage.side_effect = self.complete_stage
+        with tempfile.TemporaryDirectory() as directory:
+            manifest = run_pipeline(
+                self.config(
+                    Path(directory),
+                    selected_recommendation_ids=(
+                        "increase_shade",
+                        "improve_drainage",
+                    ),
+                )
+            )
+        command = manifest["stages"][0]["command"]
+        selected = [
+            command[index + 1]
+            for index, value in enumerate(command)
+            if value == "--intervention-id"
+        ]
+        self.assertEqual(selected, ["increase_shade", "improve_drainage"])
 
     @patch("integration.run_pipeline.run_stage")
     def test_failed_run_keeps_previous_complete_run(self, run_stage):

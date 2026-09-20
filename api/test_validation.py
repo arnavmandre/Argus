@@ -31,6 +31,32 @@ class ValidationTests(unittest.TestCase):
         self.assertIsNone(request)
         self.assertEqual(error["error"]["code"], "validation_failed")
 
+    def test_accepts_allow_listed_user_selection(self):
+        body = {
+            "temperature": 40,
+            "humidity": 80,
+            "rainfall": 80,
+            "population": 100000,
+            "apply_recommended_interventions": True,
+            "selected_recommendation_ids": ["increase_shade", "improve_drainage"],
+        }
+        request, error = validate_run_request(body)
+        self.assertIsNone(error)
+        self.assertEqual(request["selected_recommendation_ids"], body["selected_recommendation_ids"])
+
+    def test_rejects_unknown_user_selected_action(self):
+        body = {
+            "temperature": 40,
+            "humidity": 80,
+            "rainfall": 80,
+            "population": 100000,
+            "apply_recommended_interventions": True,
+            "selected_recommendation_ids": ["build_metro_station"],
+        }
+        request, error = validate_run_request(body)
+        self.assertIsNone(request)
+        self.assertIn("selected_recommendation_ids", error["error"]["fields"])
+
     def test_view_command_allow_list(self):
         ok, err = validate_view_command(
             {"state": "before", "camera": "ProblemZone", "overlay": "behavior"}

@@ -38,6 +38,7 @@ class PipelineConfig:
     frames: int = 60
     duration: float = 60.0
     publish: bool = True
+    selected_recommendation_ids: tuple[str, ...] = ()
 
 
 class StageResult(TypedDict):
@@ -495,25 +496,23 @@ def run_pipeline(config: PipelineConfig) -> dict:
     stages: list[StageResult] = []
 
     try:
+        simulation_command = [
+            python,
+            root / "Simulation" / "main.py",
+            root / config.citizens,
+            root / config.city,
+            "--temperature", config.temperature,
+            "--humidity", config.humidity,
+            "--rainfall", config.rainfall,
+            "--population", config.population,
+            "--output", report,
+        ]
+        for recommendation_id in config.selected_recommendation_ids:
+            simulation_command.extend(["--intervention-id", recommendation_id])
         stages.append(
             _record_stage(
                 "simulation",
-                [
-                    python,
-                    root / "Simulation" / "main.py",
-                    root / config.citizens,
-                    root / config.city,
-                    "--temperature",
-                    config.temperature,
-                    "--humidity",
-                    config.humidity,
-                    "--rainfall",
-                    config.rainfall,
-                    "--population",
-                    config.population,
-                    "--output",
-                    report,
-                ],
+                simulation_command,
                 root,
             )
         )
@@ -741,6 +740,16 @@ def parse_cli(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--frames", type=int, default=60)
     parser.add_argument("--duration", type=float, default=60.0)
     parser.add_argument("--no-publish", action="store_true")
+    parser.add_argument(
+        "--intervention-id",
+        action="append",
+        dest="selected_recommendation_ids",
+        default=[],
+        choices=(
+            "increase_shade", "improve_drainage",
+            "alternative_pedestrian_routes", "no_major_intervention",
+        ),
+    )
     return parser.parse_args(argv)
 
 
@@ -758,6 +767,7 @@ def main(argv: list[str] | None = None) -> int:
         frames=args.frames,
         duration=args.duration,
         publish=not args.no_publish,
+        selected_recommendation_ids=tuple(args.selected_recommendation_ids),
     )
     try:
         run_pipeline(config)

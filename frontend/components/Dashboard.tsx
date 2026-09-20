@@ -67,12 +67,17 @@ export function Dashboard({ bootstrap }: { bootstrap: Bootstrap }) {
   const other = shown === "after" ? run?.before : run?.after;
 
   const submit = useCallback(
-    (options?: { forceApply?: boolean; debugFail?: boolean }) => {
+    (options?: {
+      forceApply?: boolean;
+      debugFail?: boolean;
+      selectedRecommendationIds?: import("@/lib/types").RecommendationId[];
+    }) => {
       const apply = options?.forceApply ?? applyInterventions;
       if (options?.forceApply) setApplyInterventions(true);
       void runner.start({
         ...scenario,
         apply_recommended_interventions: apply,
+        selected_recommendation_ids: options?.selectedRecommendationIds,
         animation_frames: 12,
         animation_duration_seconds: 12,
         debug_force: options?.debugFail ? "failed" : undefined,
@@ -217,7 +222,14 @@ export function Dashboard({ bootstrap }: { bootstrap: Bootstrap }) {
               ) : null}
               {health.mode === "live" && run.status === "complete" ? (
                 <>
-                  <RagAdvisorPanel key={`rag-${run.run_id}`} runId={run.run_id} />
+                  <RagAdvisorPanel
+                    key={`rag-${run.run_id}`}
+                    runId={run.run_id}
+                    busy={runner.active}
+                    onApplySelected={(selectedRecommendationIds) =>
+                      submit({ forceApply: true, selectedRecommendationIds })
+                    }
+                  />
                   <RunExplainPanel runId={run.run_id} />
                 </>
               ) : null}

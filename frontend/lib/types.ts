@@ -46,6 +46,7 @@ export interface ScenarioCatalog {
 
 export interface RunRequest extends ScenarioInput {
   apply_recommended_interventions: boolean;
+  selected_recommendation_ids?: RecommendationId[];
   animation_frames?: number;
   animation_duration_seconds?: number;
   /** EXTENSION, mock mode only: force a terminal state to exercise the UI. */

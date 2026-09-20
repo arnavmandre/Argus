@@ -1218,6 +1218,17 @@ def parse_cli(argv=None):
     parser.add_argument("--rainfall", type=float, default=DEFAULT_SCENARIO["rainfall"])
     parser.add_argument("--population", type=int, default=DEFAULT_SCENARIO["population"])
     parser.add_argument("--output", type=Path, default=Path("urbantwin_demo_output.json"))
+    parser.add_argument(
+        "--intervention-id",
+        action="append",
+        choices=(
+            "increase_shade",
+            "improve_drainage",
+            "alternative_pedestrian_routes",
+            "no_major_intervention",
+        ),
+        help="Apply only this validated advisor action; repeat for multiple actions.",
+    )
     return parser.parse_args(argv)
 
 
@@ -1225,12 +1236,25 @@ def run_demo(
     citizens: Union[None, str, Path, List[Citizen]] = None,
     city_state: Union[None, str, Path, Dict] = None,
     scenario=None,
+    selected_recommendations: Union[None, List[str]] = None,
 ) -> Dict:
     scenario = dict(DEFAULT_SCENARIO if scenario is None else scenario)
 
     before = simulate(**scenario, city_state=city_state, citizens=citizens)
     advisor = urban_advisor(before)
-    intervention = recommended_interventions(advisor)
+    applied_recommendations = (
+        list(advisor["recommendations"])
+        if selected_recommendations is None
+        else list(selected_recommendations)
+    )
+    allowed = {
+        "increase_shade", "improve_drainage",
+        "alternative_pedestrian_routes", "no_major_intervention",
+    }
+    invalid = [value for value in applied_recommendations if value not in allowed]
+    if invalid:
+        raise ValueError(f"Unsupported selected recommendation ids: {invalid}")
+    intervention = recommended_interventions({"recommendations": applied_recommendations})
     after = simulate(**scenario, city_state=city_state, citizens=citizens, interventions=intervention)
 
     # Control scenario: a mild day on the same city with the same citizens.
@@ -1253,6 +1277,10 @@ def run_demo(
         "scenario": scenario,
         "before": before,
         "advisor": advisor,
+        "advisor_selection": {
+            "mode": "deterministic" if selected_recommendations is None else "user_selected",
+            "recommendation_ids": applied_recommendations,
+        },
         "intervention": intervention,
         "after": after,
         "delta": delta,
@@ -1592,7 +1620,12 @@ if __name__ == "__main__":
         "population": args.population,
     }
     run_tests()
-    demo = run_demo(citizens=args.citizens, city_state=args.city, scenario=scenario)
+    demo = run_demo(
+        citizens=args.citizens,
+        city_state=args.city,
+        scenario=scenario,
+        selected_recommendations=args.intervention_id,
+    )
     print_demo_summary(demo)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(demo, indent=2) + "\n", encoding="utf-8")
