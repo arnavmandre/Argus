@@ -1,5 +1,5 @@
 """
-UrbanTwin AI â€” Person 1 Simulation Engine
+ARGUS AI â€” Person 1 Simulation Engine
 24-hour hackathon MVP
 
 Pure Python, deterministic, transparent heuristics.
