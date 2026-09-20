@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useCallback, useState } from "react";
 
 import { AdvisorPanel } from "@/components/AdvisorPanel";
+import { AdvisorImpactSummary } from "@/components/AdvisorImpactSummary";
 import { RunExplainPanel } from "@/components/RunExplainPanel";
 import { RagAdvisorPanel } from "@/components/RagAdvisorPanel";
 import { BeforeAfterChart } from "@/components/BeforeAfterChart";
@@ -205,6 +206,13 @@ export function Dashboard({ bootstrap }: { bootstrap: Bootstrap }) {
                 after={run.after?.metrics}
                 interventionLabel={interventionLabel(run)}
               />
+              {run.after && Object.keys(run.intervention ?? {}).length > 0 ? (
+                <AdvisorImpactSummary
+                  before={run.before.metrics}
+                  after={run.after.metrics}
+                  intervention={run.intervention ?? {}}
+                />
+              ) : null}
               <BehaviorLegend
                 before={run.before.behavior_counts}
                 after={run.after?.behavior_counts}

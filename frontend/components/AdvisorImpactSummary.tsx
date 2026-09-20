@@ -1,0 +1,88 @@
+"use client";
+
+import { Card, CardHeader } from "@/components/ui/Card";
+import { Pill } from "@/components/ui/Pill";
+import { formatDelta, formatMetric } from "@/lib/metric-format";
+import type { InterventionParameters, MetricKey, SimulationMetrics } from "@/lib/types";
+
+const ACTION_LABEL: Record<string, string> = {
+  shade_boost: "shade",
+  drainage_boost: "drainage",
+  route_capacity_boost: "pedestrian routes",
+};
+
+const SUPPORTING_METRICS: MetricKey[] = [
+  "comfort",
+  "mobility",
+  "safety",
+  "heat_stress",
+  "rain_impact",
+  "crowding",
+];
+
+export function AdvisorImpactSummary({
+  before,
+  after,
+  intervention,
+}: {
+  before: SimulationMetrics;
+  after: SimulationMetrics;
+  intervention: InterventionParameters;
+}) {
+  const actions = Object.keys(intervention)
+    .filter((key) => typeof intervention[key as keyof InterventionParameters] === "number")
+    .map((key) => ACTION_LABEL[key] ?? key);
+  const indexDelta = after.human_experience_index - before.human_experience_index;
+
+  if (actions.length === 0) {
+    return null;
+  }
+
+  return (
+    <Card className="border-accent-line bg-accent-soft">
+      <CardHeader
+        eyebrow="Measured intervention result"
+        title="What the selected AI advice changed"
+        description={`The simulator re-ran the city with ${actions.join(" and ")} implemented. These are calculated results, not claims from the LLM.`}
+        actions={
+          <Pill tone={indexDelta > 0 ? "positive" : indexDelta < 0 ? "negative" : "neutral"}>
+            {indexDelta > 0 ? "Improved" : indexDelta < 0 ? "Worsened" : "No change"}
+          </Pill>
+        }
+      />
+
+      <div className="mt-5 rounded-[14px] border border-accent-line bg-surface-1 p-4">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-3">
+          Human Experience Index
+        </p>
+        <div className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+          <span className="tabular text-2xl font-semibold text-ink">
+            {formatMetric("human_experience_index", before.human_experience_index)}
+          </span>
+          <span className="text-ink-4">→</span>
+          <span className="tabular text-2xl font-semibold text-accent">
+            {formatMetric("human_experience_index", after.human_experience_index)}
+          </span>
+          <span className="tabular text-[13px] font-semibold text-accent">
+            {formatDelta("human_experience_index", indexDelta)}
+          </span>
+        </div>
+      </div>
+
+      <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        {SUPPORTING_METRICS.map((metric) => {
+          const delta = after[metric] - before[metric];
+          return (
+            <div key={metric} className="rounded-[12px] border border-hairline bg-surface-1 px-3 py-2.5">
+              <p className="text-[11px] text-ink-3">{metric.replaceAll("_", " ")}</p>
+              <p className="mt-1 tabular text-[13px] font-semibold text-ink">
+                {formatMetric(metric, before[metric])} → {formatMetric(metric, after[metric])}
+              </p>
+              <p className="mt-0.5 tabular text-[11px] text-accent">{formatDelta(metric, delta)}</p>
+            </div>
+          );
+        })}
+      </div>
+    </Card>
+  );
+}
