@@ -57,6 +57,8 @@ export function OmniverseViewer({
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const connectionRef = useRef<ViewerConnection | null>(null);
+  const cleanupPromiseRef = useRef<Promise<void>>(Promise.resolve());
+  const automaticRetriesRef = useRef(0);
   const runIdRef = useRef<string | null>(runId);
   runIdRef.current = runId;
 
@@ -65,8 +67,8 @@ export function OmniverseViewer({
     const controller = new AbortController();
     let closed = false;
 
-    adapter
-      .connect({
+    const previousCleanup = cleanupPromiseRef.current;
+    const connectionPromise = previousCleanup.then(() => adapter.connect({
         config,
         // Stable id for allow-list before the first simulation completes.
         runId: runIdRef.current ?? "viewport",
@@ -75,7 +77,9 @@ export function OmniverseViewer({
           if (!closed) setViewer(next);
         },
         getRunId: () => runIdRef.current ?? "viewport",
-      })
+      }));
+
+    connectionPromise
       .then((connection) => {
         if (closed) {
           void connection.close();
@@ -100,10 +104,25 @@ export function OmniverseViewer({
     return () => {
       closed = true;
       controller.abort();
-      void connectionRef.current?.close();
       connectionRef.current = null;
+      cleanupPromiseRef.current = connectionPromise
+        .then((connection) => connection.close())
+        .catch(() => undefined);
     };
   }, [adapter, config, attempt]);
+
+  useEffect(() => {
+    if (viewer.status === "connected") {
+      automaticRetriesRef.current = 0;
+      return;
+    }
+    if (viewer.status !== "failed" || config.status !== "available") return;
+    if (automaticRetriesRef.current >= 3) return;
+
+    automaticRetriesRef.current += 1;
+    const timer = window.setTimeout(() => setAttempt((value) => value + 1), 1500);
+    return () => window.clearTimeout(timer);
+  }, [config.status, viewer.status]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -214,7 +233,10 @@ export function OmniverseViewer({
             <ViewerStatePanel
               viewer={viewer}
               adapterName={adapter.displayName}
-              onRetry={() => setAttempt((n) => n + 1)}
+              onRetry={() => {
+                automaticRetriesRef.current = 0;
+                setAttempt((n) => n + 1);
+              }}
             />
           </div>
         )}

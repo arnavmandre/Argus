@@ -158,6 +158,11 @@ export const kitWebRtcViewerAdapter: ViewerAdapter = {
             signal,
             config,
             onState,
+            () => {
+              if (signal.aborted || tornDown) return;
+              onState(streamLostState(config));
+              void teardown();
+            },
           );
           return;
         }
@@ -246,6 +251,11 @@ export const kitWebRtcViewerAdapter: ViewerAdapter = {
         signal,
         config,
         onState,
+        () => {
+          if (signal.aborted || tornDown) return;
+          onState(streamLostState(config));
+          void teardown();
+        },
       );
     }
 
@@ -391,6 +401,7 @@ async function publishStreamWhenReady(
   signal: AbortSignal,
   config: StreamConfig,
   onState: (state: ViewerState) => void,
+  onStreamLost: () => void,
 ): Promise<void> {
   try {
     const stream = await waitForVideoMediaStream(
@@ -407,6 +418,7 @@ async function publishStreamWhenReady(
       capabilities: { video: true, input: true, messaging: true },
       detail: [`Stage: ${config.stage}`, `Signaling: ${config.signaling_url}`],
     });
+    watchForStreamLoss(stream, signal, onStreamLost);
   } catch (error) {
     if (signal.aborted) return;
     onState({
@@ -440,7 +452,10 @@ async function waitForVideoMediaStream(
     }
 
     const srcObject = video.srcObject;
-    if (srcObject instanceof MediaStream) {
+    if (
+      srcObject instanceof MediaStream &&
+      srcObject.getVideoTracks().some((track) => track.readyState === "live")
+    ) {
       return srcObject;
     }
 
@@ -450,6 +465,34 @@ async function waitForVideoMediaStream(
   throw new Error(
     `Timed out after ${timeoutMs}ms waiting for a MediaStream on #${VIDEO_ELEMENT_ID} (srcObject was ${describeSrcObject(video.srcObject)}).`,
   );
+}
+
+function watchForStreamLoss(
+  stream: MediaStream,
+  signal: AbortSignal,
+  onStreamLost: () => void,
+): void {
+  let reported = false;
+  const reportOnce = () => {
+    if (reported || signal.aborted) return;
+    reported = true;
+    onStreamLost();
+  };
+
+  stream.addEventListener("inactive", reportOnce, { once: true });
+  for (const track of stream.getVideoTracks()) {
+    track.addEventListener("ended", reportOnce, { once: true });
+  }
+}
+
+function streamLostState(config: StreamConfig): ViewerState {
+  return {
+    status: "failed",
+    message: "The Omniverse video stream ended. Reconnecting automatically…",
+    stream: null,
+    capabilities: { video: false, input: false, messaging: false },
+    detail: [`Stage: ${config.stage}`, `Signaling: ${config.signaling_url}`],
+  };
 }
 
 function describeSrcObject(value: MediaProvider | null): string {
