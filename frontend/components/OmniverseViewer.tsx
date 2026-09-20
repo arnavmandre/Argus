@@ -23,6 +23,12 @@ import {
   type ViewPlayback,
 } from "@/lib/types";
 
+const OVERLAY_LABELS: Record<ViewOverlay, string> = {
+  behavior: "Behavior",
+  congestion: "Routes only",
+  shade: "Shade canopy",
+  none: "City only",
+};
 /**
  * The Omniverse viewport.
  *
@@ -287,10 +293,11 @@ export function OmniverseViewer({
               void sendCommand({ state, camera, overlay: next, playback });
             }}
             className="rounded-[8px] border border-hairline bg-surface-2 px-2 py-1 text-[12px] text-ink"
+            title="Shade canopy shows the proposed ADD_SHADE intervention. Pick Camera separately (Street is a good angle)."
           >
             {VIEW_OVERLAYS.map((option) => (
               <option key={option} value={option}>
-                {option}
+                {OVERLAY_LABELS[option]}
               </option>
             ))}
           </select>

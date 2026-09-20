@@ -1,20 +1,19 @@
-# UrbanTwin judge demo launcher - API + Kit streaming + Next.js frontend.
-# Usage: .\tools\demo_launch.ps1 [-Force]
+# Argus AI local demo launcher - API + Kit streaming + Next.js dashboard.
+# Usage:
+#   .\tools\demo_launch.ps1
+#   .\tools\demo_launch.ps1 -Force          # free ports 8000/3000 first
+#   .\Start-Argus.bat                       # double-click from Explorer
 param(
-    [switch]$Force
+    [switch]$Force,
+    [switch]$NoBrowser
 )
 
 $ErrorActionPreference = "Stop"
 
 function Get-ArgusRoot {
     param([string]$ScriptRoot)
-    $parent = (Resolve-Path (Join-Path $ScriptRoot "..")).Path
-    $worktree = Join-Path $parent ".worktrees\phase13-streaming-kit"
-    $worktreeApi = Join-Path $worktree "api\server.py"
-    if ((Test-Path -LiteralPath $worktreeApi) -and ($parent -notmatch "\\\.worktrees\\phase13-streaming-kit$")) {
-        return (Resolve-Path $worktree).Path
-    }
-    return $parent
+    # Always use the repo that owns this script (main or a worktree checkout).
+    return (Resolve-Path (Join-Path $ScriptRoot "..")).Path
 }
 
 function Stop-ListenersOnPort {
@@ -55,6 +54,17 @@ function Start-DemoWindow {
     Write-Host ("Started: {0}" -f $Title)
 }
 
+function Resolve-DashboardUrl {
+    param([int]$PreferPort = 3000)
+    foreach ($port in @($PreferPort, 3001, 3002)) {
+        $conns = Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue
+        if ($conns) {
+            return "http://127.0.0.1:$port"
+        }
+    }
+    return "http://127.0.0.1:$PreferPort"
+}
+
 $ScriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ArgusRoot = Get-ArgusRoot -ScriptRoot $ScriptRoot
 $LogDir = Join-Path $ScriptRoot "demo_logs"
@@ -67,10 +77,19 @@ $KitBat = "C:\Users\arnav\omniverse\kit-app-template\launch_urbantwin_streaming.
 $ApiScript = Join-Path $LogDir ("start-api-{0}.ps1" -f $Stamp)
 $FrontendScript = Join-Path $LogDir ("start-frontend-{0}.ps1" -f $Stamp)
 
-Write-Host "UrbanTwin demo launch"
+Write-Host "Argus AI - demo launch"
 Write-Host ("  Argus root: {0}" -f $ArgusRoot)
 Write-Host ("  Logs:       {0}" -f $LogDir)
 Write-Host ""
+
+if (-not (Test-Path -LiteralPath (Join-Path $ArgusRoot "api\server.py"))) {
+    throw "api\server.py not found under $ArgusRoot - run this from the Argus repo."
+}
+
+$FrontendDir = Join-Path $ArgusRoot "frontend"
+if (-not (Test-Path -LiteralPath (Join-Path $FrontendDir "package.json"))) {
+    throw "frontend\package.json not found under $ArgusRoot."
+}
 
 if ($Force) {
     Write-Host "Force: stopping listeners on ports 8000 and 3000 (if any)..."
@@ -81,7 +100,7 @@ if ($Force) {
 
 $apiLines = @(
     ("Set-Location -LiteralPath '{0}'" -f $ArgusRoot)
-    '$Host.UI.RawUI.WindowTitle = ''UrbanTwin API (:8000)'''
+    '$Host.UI.RawUI.WindowTitle = ''Argus AI API (:8000)'''
     ("python -m api --host 127.0.0.1 --port 8000 2>&1 | Tee-Object -FilePath '{0}'" -f $ApiLog)
 )
 $apiLines | Set-Content -LiteralPath $ApiScript -Encoding ASCII
@@ -95,11 +114,10 @@ if (Test-Path -LiteralPath $KitBat) {
     Write-Warning ("Kit launcher not found at {0} - start Kit manually for stream online." -f $KitBat)
 }
 
-$FrontendDir = Join-Path $ArgusRoot "frontend"
 $feLines = @(
     ("Set-Location -LiteralPath '{0}'" -f $FrontendDir)
     '$env:URBANTWIN_API_BASE = ''http://127.0.0.1:8000'''
-    '$Host.UI.RawUI.WindowTitle = ''UrbanTwin Frontend'''
+    '$Host.UI.RawUI.WindowTitle = ''Argus AI Dashboard'''
     ("npm run dev 2>&1 | Tee-Object -FilePath '{0}'" -f $FrontendLog)
 )
 $feLines | Set-Content -LiteralPath $FrontendScript -Encoding ASCII
@@ -123,9 +141,27 @@ if ($stream) {
     Write-Warning "Stream config not reachable yet."
 }
 
+Write-Host "Waiting for dashboard (up to 60s)..."
+$dashboard = $null
+$deadline = (Get-Date).AddSeconds(60)
+while ((Get-Date) -lt $deadline) {
+    $dashboard = Resolve-DashboardUrl
+    try {
+        $null = Invoke-WebRequest -Uri $dashboard -UseBasicParsing -TimeoutSec 3
+        break
+    } catch {
+        Start-Sleep -Seconds 2
+        $dashboard = $null
+    }
+}
+if (-not $dashboard) {
+    $dashboard = "http://127.0.0.1:3000"
+    Write-Warning ("Dashboard not responding yet - open {0} when npm finishes." -f $dashboard)
+}
+
 Write-Host ""
 Write-Host "Ready URLs:"
-Write-Host "  Dashboard:  http://127.0.0.1:3000  (or http://127.0.0.1:3001 if 3000 was busy)"
+Write-Host ("  Dashboard:  {0}" -f $dashboard)
 Write-Host "  API health: http://127.0.0.1:8000/api/health"
 Write-Host "  Stream cfg: http://127.0.0.1:8000/api/stream/config"
 Write-Host "  Kit signal: tcp://127.0.0.1:49100 (when streaming host is up)"
@@ -134,3 +170,14 @@ Write-Host "Smoke test:  python tools\demo_smoke.py"
 Write-Host "Runbook:     docs\DEMO_RUNBOOK.md"
 Write-Host ("API log:     {0}" -f $ApiLog)
 Write-Host ("Frontend log: {0}" -f $FrontendLog)
+
+if (-not $NoBrowser) {
+    try {
+        Start-Process $dashboard | Out-Null
+        Write-Host ""
+        Write-Host ("Opened browser: {0}" -f $dashboard)
+        Write-Host "Use Chrome or Edge for the Omniverse stream."
+    } catch {
+        Write-Warning "Could not open a browser automatically."
+    }
+}

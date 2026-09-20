@@ -1,56 +1,62 @@
-# UrbanTwin — local judge demo runbook
+# Argus AI — local demo runbook
 
-**Branch / worktree:** `phase13-streaming-kit` at  
-`C:\Users\arnav\Argus\.worktrees\phase13-streaming-kit`  
-Do **not** merge to `main` for this demo path; mocks on `main` stay offline.
+**Repo:** `C:\Users\arnav\Argus` on **`main`** (Phases 11–17 streaming path are merged).
 
 ## What you are showing
 
 - **Live backend:** Python API runs `Simulation/main.py` on real OSM city data for each scenario submit.
 - **Optional stream:** NVIDIA Kit App Streaming (WebRTC) when the signaling port is up and Chromium connects.
-- **Dashboard:** Next.js proxies to the API when `URBANTWIN_API_BASE` is set (`mode: "live"`).
+- **Dashboard:** Next.js proxies to the API when `URBANTWIN_API_BASE` is set (`mode: "live"`). UI brand: **Argus AI**.
 
 Metrics, comfort indices, and advisor text are **heuristic prototypes** — not medical, meteorological, or engineering models. Citizen parameters are **survey-calibrated** (41 participants) but scenario factors are confounded; home/destination placement is a heuristic.
 
 **Mock vs live:** Without `URBANTWIN_API_BASE`, the frontend replays recorded fixtures and health reports `mode: "mock"`. The launcher sets live mode for you.
 
-**Phases on this branch:** 11 (pipeline) → 12 (HTTP API) → 13–14 (Kit host + browser WebRTC) → 15 (view commands via WebRTC client) → 16 (optional explain, deterministic by default) → **17 (this runbook + launcher).**
+View commands are allow-listed by the API; **Kit must be running and the browser WebRTC session connected** for camera/overlay changes to apply.
 
-View commands are allow-listed by the API; **Kit must be running and the browser WebRTC session connected** for camera/overlay changes to apply. If Kit was started before the API, relaunch Kit after the API is healthy so extensions and stage paths align.
-
-## Prerequisites
+## Prerequisites (once)
 
 | Requirement | Notes |
 | --- | --- |
 | **RTX GPU** | Kit App Streaming host; laptop iGPU-only will not stream. |
-| **Chromium** | Chrome or Edge for WebRTC. Firefox/Safari are not verified. |
-| **Python** | Same environment as Phase 11 (`pxr` for full pipeline). From worktree root. |
-| **Node.js** | `cd frontend; npm ci` once. |
+| **Chrome or Edge** | Required for WebRTC. Firefox/Safari are not verified. |
+| **Python** | On PATH; same env as Phase 11 (`pxr` for full pipeline). |
+| **Node.js** | Once: `cd frontend; npm ci` |
 | **Kit App Template** | Branch `phase13-streaming-kit`; bat at `C:\Users\arnav\omniverse\kit-app-template\launch_urbantwin_streaming.bat`. |
 
 ## Ports
 
 | Service | Port | Check |
 | --- | --- | --- |
-| UrbanTwin API | **8000** | `Invoke-RestMethod http://127.0.0.1:8000/api/health` |
-| Next.js dev | **3000** (or **3001** if busy) | Browser URL in terminal banner |
+| Argus API | **8000** | `Invoke-RestMethod http://127.0.0.1:8000/api/health` |
+| Next.js dashboard | **3000** (or **3001** if busy) | Browser URL in terminal banner |
 | Kit WebRTC signaling | **49100** | `GET /api/stream/config` → `status: "available"` when host is up |
 | Kit media (DIRECT) | **47998** | Advertised in stream config; firewall must allow local TCP |
 
-## One-command launch (recommended)
+## One-click launch (recommended)
 
-From the **worktree root**:
+Double-click in Explorer:
+
+```text
+C:\Users\arnav\Argus\Start-Argus.bat
+```
+
+Or from PowerShell:
 
 ```powershell
-cd C:\Users\arnav\Argus\.worktrees\phase13-streaming-kit
+cd C:\Users\arnav\Argus
+.\Start-Argus.bat
+# or:
 .\tools\demo_launch.ps1
 ```
 
-This opens three windows: API, Kit (if bat exists), frontend with `URBANTWIN_API_BASE=http://127.0.0.1:8000`. Logs: `tools/demo_logs/`.
+This opens three windows (API, Kit if the bat exists, frontend with `URBANTWIN_API_BASE`), waits for health, and opens the dashboard in your browser. Logs: `tools/demo_logs/`.
 
-To free ports 8000/3000 first:
+If ports 8000/3000 are stuck:
 
 ```powershell
+.\Start-Argus.bat -Force
+# or:
 .\tools\demo_launch.ps1 -Force
 ```
 
@@ -59,7 +65,7 @@ The launcher **does not** stop existing processes unless `-Force` is passed.
 ## Manual sequence (if launcher fails)
 
 ```powershell
-cd C:\Users\arnav\Argus\.worktrees\phase13-streaming-kit
+cd C:\Users\arnav\Argus
 
 # 1) API
 python -m api --host 127.0.0.1 --port 8000
@@ -97,7 +103,7 @@ Open **http://127.0.0.1:3000** in Chromium.
 With API on port 8000:
 
 ```powershell
-cd C:\Users\arnav\Argus\.worktrees\phase13-streaming-kit
+cd C:\Users\arnav\Argus
 python tools\demo_smoke.py
 ```
 
