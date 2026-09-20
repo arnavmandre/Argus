@@ -24,6 +24,13 @@ AFTER = ROOT / "data" / "simulation_after.json"
 STAGE = HERE / "runtime" / "scene" / "main.usda"
 REGISTRY = ROOT / "phase2" / "scene" / "edge_registry.json"
 
+# Keep in sync with integration/export_snapshot.py INTERVENTION_TYPES:
+# only mapped kinds become drawn snapshot proposals.
+DRAWABLE_INTERVENTION_KEYS = {
+    "shade_boost",
+    "route_capacity_boost",
+}
+
 results = []
 
 
@@ -130,21 +137,32 @@ def main() -> None:
           f"range {min(heats):.2f}-{max(heats):.2f}")
 
     # --- TEST 6: interventions -------------------------------------------
+    # shade_boost -> ADD_SHADE (drawn). drainage_boost has no snapshot type yet
+    # (metrics only). Cold+rain scenarios can apply drainage alone; that must
+    # not fail the gate just because nothing is drawn in USD.
     if after:
-        applied = report.get("intervention", {})
+        applied = report.get("intervention", {}) or {}
         recommendations = report.get("advisor", {}).get("recommendations", [])
+        drawable = {
+            key: amount
+            for key, amount in applied.items()
+            if key in DRAWABLE_INTERVENTION_KEYS
+        }
         calm_control = (
             "no_major_intervention" in recommendations
             and not applied
             and not after["interventions"]
         )
-        ok6 = calm_control or (
+        metrics_only = bool(applied) and not drawable and not after["interventions"]
+        ok6 = calm_control or metrics_only or (
             bool(after["interventions"])
             and all(i["target"] in known for i in after["interventions"])
         )
         check("6. advisor intervention becomes a targeted snapshot proposal",
               ok6,
               "calm control: no intervention required" if calm_control else
+              "metrics-only intervention (e.g. drainage_boost); nothing drawn"
+              if metrics_only else
               f"{list(applied)} -> "
               f"{[(i['type'], i['target']) for i in after['interventions']]}")
     else:
