@@ -10,7 +10,7 @@
 
 Metrics, comfort indices, and advisor text are **heuristic prototypes** — not medical, meteorological, or engineering models. Citizen parameters are **survey-calibrated** (41 participants) but scenario factors are confounded; home/destination placement is a heuristic.
 
-**Mock vs live:** Without `URBANTWIN_API_BASE`, the frontend replays recorded fixtures and health reports `mode: "mock"`. The launcher sets live mode for you.
+**Mock vs live:** Without `URBANTWIN_API_BASE`, the frontend replays recorded fixtures and health reports `mode: "mock"`. Set the env var when starting `npm run dev` for live mode.
 
 View commands are allow-listed by the API; **Kit must be running and the browser WebRTC session connected** for camera/overlay changes to apply.
 
@@ -29,55 +29,36 @@ View commands are allow-listed by the API; **Kit must be running and the browser
 | Service | Port | Check |
 | --- | --- | --- |
 | Argus API | **8000** | `Invoke-RestMethod http://127.0.0.1:8000/api/health` |
-| Next.js dashboard | **3000** (or **3001** if busy) | Browser URL in terminal banner |
+| Next.js dashboard | **3000** (or **3001** if busy) | Open **http://localhost:3000/** |
 | Kit WebRTC signaling | **49100** | `GET /api/stream/config` → `status: "available"` when host is up |
 | Kit media (DIRECT) | **47998** | Advertised in stream config; firewall must allow local TCP |
 
-## One-click launch (recommended)
+## Launch (recommended)
 
-Double-click in Explorer:
-
-```text
-C:\Users\arnav\Argus\Start-Argus.bat
-```
-
-Or from PowerShell:
+Open three terminals. Do **not** rely on `Start-Argus.bat` for demos.
 
 ```powershell
-cd C:\Users\arnav\Argus
-.\Start-Argus.bat
-# or:
-.\tools\demo_launch.ps1
-```
-
-This opens three windows (API, Kit if the bat exists, frontend with `URBANTWIN_API_BASE`), waits for health, and opens the dashboard in your browser. Logs: `tools/demo_logs/`.
-
-If ports 8000/3000 are stuck:
-
-```powershell
-.\Start-Argus.bat -Force
-# or:
-.\tools\demo_launch.ps1 -Force
-```
-
-The launcher **does not** stop existing processes unless `-Force` is passed.
-
-## Manual sequence (if launcher fails)
-
-```powershell
-cd C:\Users\arnav\Argus
-
 # 1) API
+cd C:\Users\arnav\Argus
 python -m api --host 127.0.0.1 --port 8000
 
-# 2) Kit (separate shell, from kit-app-template root)
-C:\Users\arnav\omniverse\kit-app-template\launch_urbantwin_streaming.bat
+# 2) Kit (separate shell — headless, no Omniverse editor window)
+cd C:\Users\arnav\omniverse\kit-app-template
+.\launch_urbantwin_streaming.bat
 
-# 3) Frontend
+# 3) Frontend (separate shell)
+cd C:\Users\arnav\Argus\frontend
 $env:URBANTWIN_API_BASE = "http://127.0.0.1:8000"
-cd frontend
 npm run dev
 ```
+
+Then open:
+
+```text
+http://localhost:3000/
+```
+
+**Important:** streaming Kit uses `--no-window`. Success = Kit log shows `app ready` / `RTX ready` (no stream-server errors), `/api/stream/config` → `available`, viewport chip **Live** in Chrome/Edge.
 
 Wait until health responds:
 
@@ -88,7 +69,7 @@ Invoke-RestMethod http://127.0.0.1:8000/api/stream/config
 # expect status: "available" when Kit signaling is open, else honest "offline"
 ```
 
-Open **http://127.0.0.1:3000** in Chromium.
+Open **http://localhost:3000/** in Chrome or Edge.
 
 ## Expected UI states
 
@@ -113,13 +94,14 @@ Checks: health, stream config, short live run, view allow-list, optional explain
 
 | Symptom | Likely cause | Fix |
 | --- | --- | --- |
-| Health never returns | API not started or port 8000 taken | Read `tools/demo_logs/api-*.log`; `demo_launch.ps1 -Force` or pick another port manually |
-| `mode: "mock"` in UI | `URBANTWIN_API_BASE` unset | Restart frontend via launcher or set env var |
+| Health never returns | API not started or port 8000 taken | Check the API terminal; free port 8000 or restart `python -m api` |
+| `mode: "mock"` in UI | `URBANTWIN_API_BASE` unset | Restart frontend with `$env:URBANTWIN_API_BASE = "http://127.0.0.1:8000"` |
 | Stream stays offline | Kit not running or signaling closed | Launch `launch_urbantwin_streaming.bat`; wait 30–60s; recheck `/api/stream/config` |
 | Stream config `available` but no video | Non-Chromium browser or WebRTC blocked | Use Chrome/Edge; allow localhost media |
 | Run stuck `running` | Pipeline error | `GET /api/runs/{id}` for status; see API window log |
 | View changes not in Kit | No WebRTC session | Connect stream first; relaunch Kit if API started after Kit |
-| `npm run dev` EADDRINUSE | Port 3000 busy | Use URL shown (often 3001) or `-Force` |
+| `Failed to start the primary stream server` | Another Kit still holds port 49100 | Close all Kit consoles / `taskkill /F /IM kit.exe`; reopen browser tabs; restart Kit only once |
+| `npm run dev` EADDRINUSE | Port 3000 busy | Use URL shown (often `http://localhost:3001/`) |
 
 ## Related docs
 

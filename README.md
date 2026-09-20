@@ -31,63 +31,68 @@ Metrics, comfort indices, and advisor text are **heuristic prototypes** — not 
 
 ---
 
-## Quick start (one click)
+## Quick start (manual — recommended)
 
 **Prerequisites (once):** Python on PATH, Node.js (`cd frontend; npm ci`), RTX GPU + Kit App Template with `launch_urbantwin_streaming.bat` for streaming, **Chrome or Edge** for WebRTC.
 
-1. Double-click:
+Open **three** terminals.
 
-   ```text
-   C:\Users\arnav\Argus\Start-Argus.bat
-   ```
-
-2. If ports 8000/3000 are stuck:
-
-   ```text
-   C:\Users\arnav\Argus\Start-Argus.bat -Force
-   ```
-
-3. Wait for the browser. Expect **Live backend** in the header. The Omniverse viewport should reach **Live** when Kit signaling is up (often 30–60s).
-
-4. To stop: close the API, Kit, and Dashboard service windows.
-
-Equivalent PowerShell:
+### 1) API
 
 ```powershell
 cd C:\Users\arnav\Argus
-.\tools\demo_launch.ps1
-# or: .\tools\demo_launch.ps1 -Force
+python -m api --host 127.0.0.1 --port 8000
 ```
 
-Logs: `tools/demo_logs/`. Full operator notes: [`docs/DEMO_RUNBOOK.md`](docs/DEMO_RUNBOOK.md).
-
-### Manual launch (if the bat fails)
+### 2) Omniverse Kit stream (headless — no editor window)
 
 ```powershell
-cd C:\Users\arnav\Argus
+cd C:\Users\arnav\omniverse\kit-app-template
+.\launch_urbantwin_streaming.bat
+```
 
-# 1) API
-python -m api --host 127.0.0.1 --port 8000
+Leave this console open. Wait until you see `app ready` / `RTX ready` and **no** `Failed to start the primary stream server`.
 
-# 2) Kit (separate shell)
-C:\Users\arnav\omniverse\kit-app-template\launch_urbantwin_streaming.bat
+### 3) Dashboard
 
-# 3) Frontend (separate shell)
+```powershell
+cd C:\Users\arnav\Argus\frontend
 $env:URBANTWIN_API_BASE = "http://127.0.0.1:8000"
-cd frontend
 npm run dev
 ```
 
-Checks:
+### 4) Open Argus
+
+In Chrome or Edge:
+
+```text
+http://localhost:3000/
+```
+
+(If npm says port 3000 is busy, use the URL it prints, often `http://localhost:3001/`.)
+
+Expect **Live backend** in the header. The Omniverse viewport should reach **Live** when Kit signaling is up (often 30–90s).
+
+### Checks
 
 ```powershell
 Invoke-RestMethod http://127.0.0.1:8000/api/health
 # expect mode: "live"
 Invoke-RestMethod http://127.0.0.1:8000/api/stream/config
-# expect status: "available" when Kit signaling listens, else honest "offline"
+# expect status: "available" when Kit is up, else honest "offline"
 ```
 
-Dashboard: `http://127.0.0.1:3000` (or `3001` if 3000 is busy).
+### Stop
+
+Close the three service windows (API, Kit, frontend).
+
+Full operator notes: [`docs/DEMO_RUNBOOK.md`](docs/DEMO_RUNBOOK.md).
+
+---
+
+## Optional: one-click launcher
+
+`Start-Argus.bat` / `tools/demo_launch.ps1` exist but are **not** the preferred path (Kit port conflicts are common). Prefer the manual steps above and open **http://localhost:3000/**.
 
 ### Mock-only dashboard (no API / no Kit)
 
