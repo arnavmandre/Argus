@@ -1,6 +1,6 @@
 import { fixtures } from "@/lib/server/fixtures";
 import { isMockMode, json, proxy } from "@/lib/server/upstream";
-import { VIEW_CAMERAS, VIEW_OVERLAYS } from "@/lib/types";
+import { VIEW_CAMERAS, VIEW_OVERLAYS, VIEW_PLAYBACK } from "@/lib/types";
 import type { ViewCommand, ViewCommandResult } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -27,11 +27,13 @@ export async function POST(request: Request, ctx: Ctx) {
   const state = raw?.state;
   const camera = raw?.camera;
   const overlay = raw?.overlay;
+  const playback = raw?.playback ?? "play";
 
   const invalid =
     !STATES.includes(state as (typeof STATES)[number]) ||
     !VIEW_CAMERAS.includes(camera as (typeof VIEW_CAMERAS)[number]) ||
-    !VIEW_OVERLAYS.includes(overlay as (typeof VIEW_OVERLAYS)[number]);
+    !VIEW_OVERLAYS.includes(overlay as (typeof VIEW_OVERLAYS)[number]) ||
+    !VIEW_PLAYBACK.includes(playback as (typeof VIEW_PLAYBACK)[number]);
 
   if (invalid) {
     return json(
@@ -40,14 +42,14 @@ export async function POST(request: Request, ctx: Ctx) {
           code: "validation_failed",
           message: `Command rejected. state must be one of ${STATES.join("|")}, camera one of ${VIEW_CAMERAS.join(
             "|",
-          )}, overlay one of ${VIEW_OVERLAYS.join("|")}.`,
+          )}, overlay one of ${VIEW_OVERLAYS.join("|")}, playback one of ${VIEW_PLAYBACK.join("|")}.`,
         },
       },
       422,
     );
   }
 
-  const command = { state, camera, overlay } as ViewCommand;
+  const command = { state, camera, overlay, playback } as ViewCommand;
 
   if (!isMockMode()) {
     return proxy(`/api/runs/${encodeURIComponent(runId)}/view`, {

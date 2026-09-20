@@ -357,7 +357,12 @@ class ServerContractTests(unittest.TestCase):
         self.assertIn("reason", result)
         self.assertEqual(
             result["command"],
-            {"state": "before", "camera": "Overview", "overlay": "behavior"},
+            {
+                "state": "before",
+                "camera": "Overview",
+                "overlay": "behavior",
+                "playback": "play",
+            },
         )
 
         status, rejected, _, _ = self._request(

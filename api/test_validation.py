@@ -62,6 +62,17 @@ class ValidationTests(unittest.TestCase):
             {"state": "before", "camera": "ProblemZone", "overlay": "behavior"}
         )
         self.assertIsNone(err)
+        self.assertEqual(ok["playback"], "play")
+        paused, pause_err = validate_view_command(
+            {
+                "state": "after",
+                "camera": "Overview",
+                "overlay": "behavior",
+                "playback": "pause",
+            }
+        )
+        self.assertIsNone(pause_err)
+        self.assertEqual(paused["playback"], "pause")
         bad, err2 = validate_view_command(
             {"state": "before", "camera": "/World/Hack", "overlay": "behavior"}
         )

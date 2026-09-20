@@ -11,6 +11,7 @@ CONSTRAINTS = {
 VIEW_STATES = frozenset({"before", "after"})
 VIEW_CAMERAS = frozenset({"Overview", "Street", "ProblemZone", "Aerial"})
 VIEW_OVERLAYS = frozenset({"behavior", "congestion", "shade", "none"})
+VIEW_PLAYBACK = frozenset({"play", "pause", "restart"})
 
 DEFAULT_ANIMATION_FRAMES = 60
 DEFAULT_ANIMATION_DURATION_SECONDS = 60
@@ -136,6 +137,7 @@ def validate_view_command(body: dict) -> tuple[dict | None, dict | None]:
     state = body.get("state")
     camera = body.get("camera")
     overlay = body.get("overlay")
+    playback = body.get("playback", "play")
 
     if state not in VIEW_STATES:
         fields["state"] = f"must be one of {sorted(VIEW_STATES)}"
@@ -143,7 +145,14 @@ def validate_view_command(body: dict) -> tuple[dict | None, dict | None]:
         fields["camera"] = f"must be one of {sorted(VIEW_CAMERAS)}"
     if overlay not in VIEW_OVERLAYS:
         fields["overlay"] = f"must be one of {sorted(VIEW_OVERLAYS)}"
+    if playback not in VIEW_PLAYBACK:
+        fields["playback"] = f"must be one of {sorted(VIEW_PLAYBACK)}"
 
     if fields:
         return None, _validation_error("One or more fields failed validation.", fields)
-    return {"state": state, "camera": camera, "overlay": overlay}, None
+    return {
+        "state": state,
+        "camera": camera,
+        "overlay": overlay,
+        "playback": playback,
+    }, None

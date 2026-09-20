@@ -344,14 +344,17 @@ export interface ModelCard {
 
 export const VIEW_CAMERAS = ["Overview", "Street", "ProblemZone", "Aerial"] as const;
 export const VIEW_OVERLAYS = ["behavior", "congestion", "shade", "none"] as const;
+export const VIEW_PLAYBACK = ["play", "pause", "restart"] as const;
 
 export type ViewCamera = (typeof VIEW_CAMERAS)[number];
 export type ViewOverlay = (typeof VIEW_OVERLAYS)[number];
+export type ViewPlayback = (typeof VIEW_PLAYBACK)[number];
 
 export interface ViewCommand {
   state: RunState;
   camera: ViewCamera;
   overlay: ViewOverlay;
+  playback: ViewPlayback;
 }
 
 export interface ViewCommandResult {

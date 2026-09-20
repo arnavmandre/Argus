@@ -297,6 +297,7 @@ export async function sendAllowListedViewCommand(
         state: command.state,
         camera: command.camera,
         overlay: command.overlay,
+        playback: command.playback,
       },
     });
     return { accepted: true, delivered: true, command };

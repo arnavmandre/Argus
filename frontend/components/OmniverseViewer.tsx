@@ -20,6 +20,7 @@ import {
   type ViewCamera,
   type ViewCommandResult,
   type ViewOverlay,
+  type ViewPlayback,
 } from "@/lib/types";
 
 /**
@@ -53,6 +54,7 @@ export function OmniverseViewer({
   const [attempt, setAttempt] = useState(0);
   const [camera, setCamera] = useState<ViewCamera>("Overview");
   const [overlay, setOverlay] = useState<ViewOverlay>("behavior");
+  const [playback, setPlayback] = useState<ViewPlayback>("play");
   const [commandResult, setCommandResult] = useState<ViewCommandResult | null>(null);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -60,6 +62,7 @@ export function OmniverseViewer({
   const cleanupPromiseRef = useRef<Promise<void>>(Promise.resolve());
   const automaticRetriesRef = useRef(0);
   const runIdRef = useRef<string | null>(runId);
+  const commandedRunIdRef = useRef<string | null>(runId);
   runIdRef.current = runId;
 
   // Do NOT depend on runId: a finished simulation must not tear down WebRTC.
@@ -136,7 +139,12 @@ export function OmniverseViewer({
   }, [viewer.stream]);
 
   const sendCommand = useCallback(
-    async (next: { state: RunState; camera: ViewCamera; overlay: ViewOverlay }) => {
+    async (next: {
+      state: RunState;
+      camera: ViewCamera;
+      overlay: ViewOverlay;
+      playback: ViewPlayback;
+    }) => {
       try {
         const result = await connectionRef.current?.send(next);
         if (result) {
@@ -164,6 +172,13 @@ export function OmniverseViewer({
 
   const connected = viewer.status === "connected" && viewer.stream !== null;
 
+  useEffect(() => {
+    if (!connected || !runId || commandedRunIdRef.current === runId) return;
+    commandedRunIdRef.current = runId;
+    setPlayback("play");
+    void sendCommand({ state, camera, overlay, playback: "restart" });
+  }, [camera, connected, overlay, runId, sendCommand, state]);
+
   return (
     <div
       className={cx(
@@ -183,7 +198,7 @@ export function OmniverseViewer({
             value={state}
             onChange={(next) => {
               onStateChange(next);
-              void sendCommand({ state: next, camera, overlay });
+              void sendCommand({ state: next, camera, overlay, playback });
             }}
             segments={[
               { value: "before", label: "Before" },
@@ -250,7 +265,7 @@ export function OmniverseViewer({
             onChange={(event) => {
               const next = event.target.value as ViewCamera;
               setCamera(next);
-              void sendCommand({ state, camera: next, overlay });
+              void sendCommand({ state, camera: next, overlay, playback });
             }}
             className="rounded-[8px] border border-hairline bg-surface-2 px-2 py-1 text-[12px] text-ink"
           >
@@ -269,7 +284,7 @@ export function OmniverseViewer({
             onChange={(event) => {
               const next = event.target.value as ViewOverlay;
               setOverlay(next);
-              void sendCommand({ state, camera, overlay: next });
+              void sendCommand({ state, camera, overlay: next, playback });
             }}
             className="rounded-[8px] border border-hairline bg-surface-2 px-2 py-1 text-[12px] text-ink"
           >
@@ -281,6 +296,34 @@ export function OmniverseViewer({
           </select>
         </label>
 
+        <div className="flex items-center gap-1.5" aria-label="Animation playback">
+          <span className="mr-1 text-[12px] text-ink-3">Animation</span>
+          {(["play", "pause", "restart"] as const).map((action) => (
+            <button
+              key={action}
+              type="button"
+              disabled={!connected}
+              onClick={() => {
+                setPlayback(action === "pause" ? "pause" : "play");
+                void sendCommand({
+                  state,
+                  camera,
+                  overlay,
+                  playback: action,
+                });
+              }}
+              className={cx(
+                "rounded-[8px] border px-2 py-1 text-[11px] font-semibold capitalize transition-colors disabled:cursor-not-allowed disabled:opacity-40",
+                (action === "pause" ? playback === "pause" : action === "play" ? playback === "play" : false)
+                  ? "border-accent-line bg-accent-soft text-accent"
+                  : "border-hairline bg-surface-2 text-ink-2 hover:bg-surface-3",
+              )}
+            >
+              {action}
+            </button>
+          ))}
+        </div>
+
         <p className="ml-auto text-[11px] text-ink-3">{adapter.transportLabel}</p>
       </div>
 
@@ -290,6 +333,7 @@ export function OmniverseViewer({
           <span className="font-mono text-ink-2">
             {commandResult.command.state}/{commandResult.command.camera}/
             {commandResult.command.overlay}
+            /{commandResult.command.playback}
           </span>{" "}
           {commandResult.accepted ? "passed the server allow-list" : "was rejected"}
           {commandResult.delivered ? " and was delivered." : "; not delivered. "}
