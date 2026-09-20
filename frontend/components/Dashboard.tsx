@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { AdvisorPanel } from "@/components/AdvisorPanel";
 import { AdvisorImpactSummary } from "@/components/AdvisorImpactSummary";
@@ -54,8 +54,18 @@ export function Dashboard({ bootstrap }: { bootstrap: Bootstrap }) {
       },
   );
   const [applyInterventions, setApplyInterventions] = useState(true);
+  const impactRef = useRef<HTMLDivElement>(null);
+  const revealImpactAfterRun = useRef(false);
+  const [scrollToImpact, setScrollToImpact] = useState(false);
 
-  const onComplete = useCallback((summary: RunSummary) => setRun(summary), []);
+  const onComplete = useCallback((summary: RunSummary) => {
+    setRun(summary);
+    if (revealImpactAfterRun.current) {
+      revealImpactAfterRun.current = false;
+      setState("after");
+      setScrollToImpact(true);
+    }
+  }, []);
   const runner = useRunner(onComplete);
 
   const hasAfter = Boolean(run?.after);
@@ -66,6 +76,12 @@ export function Dashboard({ bootstrap }: { bootstrap: Bootstrap }) {
   const arm = shown === "after" && run?.after ? run.after : run?.before;
   const other = shown === "after" ? run?.before : run?.after;
 
+  useEffect(() => {
+    if (!scrollToImpact || !run?.after || !impactRef.current) return;
+    impactRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    setScrollToImpact(false);
+  }, [run, scrollToImpact]);
+
   const submit = useCallback(
     (options?: {
       forceApply?: boolean;
@@ -74,6 +90,9 @@ export function Dashboard({ bootstrap }: { bootstrap: Bootstrap }) {
     }) => {
       const apply = options?.forceApply ?? applyInterventions;
       if (options?.forceApply) setApplyInterventions(true);
+      if (options?.selectedRecommendationIds?.length) {
+        revealImpactAfterRun.current = true;
+      }
       void runner.start({
         ...scenario,
         apply_recommended_interventions: apply,
@@ -201,18 +220,20 @@ export function Dashboard({ bootstrap }: { bootstrap: Bootstrap }) {
         {run && run.before ? (
           <>
             <div className="mt-5 grid gap-5 xl:mt-6 xl:gap-6">
+              {run.after && Object.keys(run.intervention ?? {}).length > 0 ? (
+                <div ref={impactRef} className="scroll-mt-6">
+                  <AdvisorImpactSummary
+                    before={run.before.metrics}
+                    after={run.after.metrics}
+                    intervention={run.intervention ?? {}}
+                  />
+                </div>
+              ) : null}
               <BeforeAfterChart
                 before={run.before.metrics}
                 after={run.after?.metrics}
                 interventionLabel={interventionLabel(run)}
               />
-              {run.after && Object.keys(run.intervention ?? {}).length > 0 ? (
-                <AdvisorImpactSummary
-                  before={run.before.metrics}
-                  after={run.after.metrics}
-                  intervention={run.intervention ?? {}}
-                />
-              ) : null}
               <BehaviorLegend
                 before={run.before.behavior_counts}
                 after={run.after?.behavior_counts}
