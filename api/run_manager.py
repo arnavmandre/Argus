@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import math
 import secrets
 import subprocess
 import sys
@@ -250,9 +251,10 @@ class RunManager:
             if started is None:
                 return 0.15
             elapsed = max(0.0, time.time() - float(started))
-            # Soft estimate: full OSM + 60-frame export often lands ~1–3 min.
-            estimate_s = 120.0
-            value = 0.1 + 0.85 * min(1.0, elapsed / estimate_s)
+            # The subprocess has no stage-level telemetry. This curve follows
+            # typical local runtimes and reserves the final 6% for publishing.
+            value = 0.1 + 0.84 * (1.0 - math.exp(-elapsed / 6.0))
+            value = min(0.94, value)
             record["last_progress"] = value
             return value
         return 0.0

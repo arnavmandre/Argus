@@ -76,6 +76,15 @@ def _wait_until(predicate, timeout=2.0, interval=0.02) -> bool:
 
 
 class RunManagerTests(unittest.TestCase):
+    def test_running_progress_matches_short_local_runtime(self):
+        manager = RunManager(Path("."), pipeline_fn=lambda config: None)
+        record = {"status": "running", "running_since": time.time() - 5.0}
+
+        progress = manager._progress_unlocked(record)
+
+        self.assertGreater(progress, 0.5)
+        self.assertLessEqual(progress, 0.94)
+
     def test_user_selection_reaches_pipeline_config(self):
         captured = []
 

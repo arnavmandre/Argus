@@ -83,7 +83,7 @@ export function RunStatus({
               <p className="mt-2 text-[12px] text-ink-3">
                 {attempt.status === "queued"
                   ? "Waiting for the worker\u2026"
-                  : `Running live simulator\u2026 ${Math.round(attempt.progress * 100)}%`}
+                  : `Running live simulator\u2026 about ${Math.round(attempt.progress * 100)}%`}
               </p>
             </>
           ) : null}

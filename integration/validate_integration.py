@@ -132,10 +132,19 @@ def main() -> None:
     # --- TEST 6: interventions -------------------------------------------
     if after:
         applied = report.get("intervention", {})
-        ok6 = bool(after["interventions"]) and all(
-            i["target"] in known for i in after["interventions"])
+        recommendations = report.get("advisor", {}).get("recommendations", [])
+        calm_control = (
+            "no_major_intervention" in recommendations
+            and not applied
+            and not after["interventions"]
+        )
+        ok6 = calm_control or (
+            bool(after["interventions"])
+            and all(i["target"] in known for i in after["interventions"])
+        )
         check("6. advisor intervention becomes a targeted snapshot proposal",
               ok6,
+              "calm control: no intervention required" if calm_control else
               f"{list(applied)} -> "
               f"{[(i['type'], i['target']) for i in after['interventions']]}")
     else:

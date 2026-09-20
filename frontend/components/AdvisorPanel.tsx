@@ -44,6 +44,9 @@ export function AdvisorPanel({
   const appliedEntries = Object.entries(applied ?? {}).filter(
     ([, value]) => typeof value === "number",
   );
+  const noMajorIntervention = advisor.recommendations.includes(
+    "no_major_intervention",
+  );
 
   return (
     <Card>
@@ -127,6 +130,14 @@ export function AdvisorPanel({
           <p className="mt-2 text-[11px] leading-relaxed text-ink-2">
             The &ldquo;after&rdquo; arm is a full re-simulation with these parameters,
             not an adjustment applied to the before numbers.
+          </p>
+        </div>
+      ) : noMajorIntervention ? (
+        <div className="mt-4 rounded-[14px] border border-hairline bg-surface-2 p-4">
+          <p className="text-[12px] font-semibold text-ink">Control scenario complete</p>
+          <p className="mt-2 text-[11px] leading-relaxed text-ink-2">
+            The calm scenario is the baseline. No intervention is applied, so the
+            before and after values are expected to remain the same.
           </p>
         </div>
       ) : (

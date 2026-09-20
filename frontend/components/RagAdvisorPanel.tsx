@@ -27,7 +27,6 @@ export function RagAdvisorPanel({
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<RagAdvisorResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [selected, setSelected] = useState<RecommendationId[]>([]);
 
   const retrieve = useCallback(async () => {
     setLoading(true);
@@ -35,11 +34,6 @@ export function RagAdvisorPanel({
     try {
       const response = await api.advise(runId);
       setResult(response);
-      setSelected(
-        response.recommendations
-          .map((item) => item.argus_recommendation_id)
-          .filter((id, index, all) => all.indexOf(id) === index),
-      );
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Grounded advice failed.");
     } finally {
@@ -74,23 +68,9 @@ export function RagAdvisorPanel({
           {result.recommendations.map((recommendation) => (
             <div key={`${recommendation.rank}-${recommendation.argus_recommendation_id}`} className="rounded-[14px] border border-hairline bg-surface-2 p-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <label className="flex cursor-pointer items-center gap-2 text-[14px] font-semibold text-ink">
-                  <input
-                    type="checkbox"
-                    checked={selected.includes(recommendation.argus_recommendation_id)}
-                    disabled={busy}
-                    onChange={(event) => {
-                      const id = recommendation.argus_recommendation_id;
-                      setSelected((current) =>
-                        event.target.checked
-                          ? [...current.filter((value) => value !== "no_major_intervention"), id]
-                          : current.filter((value) => value !== id),
-                      );
-                    }}
-                    className="size-4 accent-[var(--accent)]"
-                  />
+                <div className="flex items-center gap-2 text-[14px] font-semibold text-ink">
                   <span>{recommendation.rank}. {recommendation.intervention ?? LABELS[recommendation.argus_recommendation_id]}</span>
-                </label>
+                </div>
                 {recommendation.knowledge_id ? <Pill tone="neutral">{recommendation.knowledge_id}</Pill> : null}
               </div>
               {recommendation.reason ? <p className="mt-2 text-[12.5px] leading-relaxed text-ink-2">{recommendation.reason}</p> : null}
@@ -104,6 +84,16 @@ export function RagAdvisorPanel({
               ) : recommendation.source ? (
                 <p className="mt-2 text-[11px] text-caution">Source pending verification</p>
               ) : null}
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => onApplySelected([recommendation.argus_recommendation_id])}
+                className="mt-3 rounded-[10px] border border-accent-line bg-accent-soft px-3 py-2 text-[12px] font-semibold text-accent transition-colors hover:bg-surface-3 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {recommendation.argus_recommendation_id === "no_major_intervention"
+                  ? "Re-run with no intervention"
+                  : "Test only this action"}
+              </button>
             </div>
           ))}
           <p className="text-[11px] leading-relaxed text-ink-3">
@@ -111,16 +101,8 @@ export function RagAdvisorPanel({
               ? `No LLM output was used: ${result.unavailable_reason ?? "the deterministic fallback answered."}`
               : `Confirmed LLM output from ${result.model ?? "the configured Groq model"}. Retrieval: ${result.retrieval_backend ?? "unknown"}.`}
           </p>
-          <button
-            type="button"
-            disabled={busy || selected.length === 0}
-            onClick={() => onApplySelected(selected)}
-            className="w-full rounded-[12px] bg-accent px-4 py-2.5 text-[13px] font-semibold text-accent-ink transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:bg-surface-3 disabled:text-ink-3"
-          >
-            Apply selected and re-simulate
-          </button>
           <p className="text-[11px] leading-relaxed text-ink-3">
-            Starts a new run using only the selected executable actions. The resulting before/after values come from the simulator.
+            Each button starts a separate run with only that action, so its effect can be measured independently.
           </p>
         </div>
       )}
