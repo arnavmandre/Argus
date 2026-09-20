@@ -1,6 +1,6 @@
 """
 ARGUS AI â€” Person 1 Simulation Engine
-24-hour hackathon MVP
+24-hour hackathon MVP 
 
 Pure Python, deterministic, transparent heuristics.
 No Omniverse dependency.
