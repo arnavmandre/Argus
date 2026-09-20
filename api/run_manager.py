@@ -251,9 +251,10 @@ class RunManager:
             if started is None:
                 return 0.15
             elapsed = max(0.0, time.time() - float(started))
-            # The subprocess has no stage-level telemetry. This curve follows
-            # typical local runtimes and reserves the final 6% for publishing.
-            value = 0.1 + 0.84 * (1.0 - math.exp(-elapsed / 6.0))
+            # The subprocess has no stage-level telemetry. Local runs normally
+            # complete in a few seconds, so approach the publishing reserve
+            # quickly instead of appearing stuck around 58%.
+            value = 0.1 + 0.84 * (1.0 - math.exp(-elapsed / 1.5))
             value = min(0.94, value)
             record["last_progress"] = value
             return value

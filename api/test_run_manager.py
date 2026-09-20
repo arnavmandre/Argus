@@ -82,7 +82,7 @@ class RunManagerTests(unittest.TestCase):
 
         progress = manager._progress_unlocked(record)
 
-        self.assertGreater(progress, 0.5)
+        self.assertGreater(progress, 0.9)
         self.assertLessEqual(progress, 0.94)
 
     def test_user_selection_reaches_pipeline_config(self):
