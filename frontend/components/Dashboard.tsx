@@ -211,15 +211,6 @@ export function Dashboard({ bootstrap }: { bootstrap: Bootstrap }) {
                 after={run.after?.behavior_counts}
               />
               {arm ? <ProblemAreas summary={arm} state={shown} /> : null}
-              {run.advisor ? (
-                <AdvisorPanel
-                  advisor={run.advisor}
-                  source={run.advisor_source}
-                  applied={run.intervention}
-                  canApply={!runner.active}
-                  onApplyRecommended={() => submit({ forceApply: true })}
-                />
-              ) : null}
               {health.mode === "live" && run.status === "complete" ? (
                 <>
                   <RagAdvisorPanel
@@ -232,6 +223,25 @@ export function Dashboard({ bootstrap }: { bootstrap: Bootstrap }) {
                   />
                   <RunExplainPanel runId={run.run_id} />
                 </>
+              ) : null}
+              {run.advisor ? (
+                <details className="rounded-[18px] border border-hairline bg-surface-1 p-4">
+                  <summary className="cursor-pointer text-[13px] font-semibold text-ink-2">
+                    Simulator calculation details
+                  </summary>
+                  <p className="mt-2 text-[11px] leading-relaxed text-ink-3">
+                    These deterministic rules convert selected AI actions into executable simulator parameters and identify affected locations.
+                  </p>
+                  <div className="mt-4">
+                    <AdvisorPanel
+                      advisor={run.advisor}
+                      source={run.advisor_source}
+                      applied={run.intervention}
+                      canApply={!runner.active}
+                      onApplyRecommended={() => submit({ forceApply: true })}
+                    />
+                  </div>
+                </details>
               ) : null}
             </div>
 

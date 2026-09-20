@@ -27,6 +27,7 @@ export function RagAdvisorPanel({
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<RagAdvisorResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [selected, setSelected] = useState<Record<string, boolean>>({});
 
   const retrieve = useCallback(async () => {
     setLoading(true);
@@ -34,6 +35,14 @@ export function RagAdvisorPanel({
     try {
       const response = await api.advise(runId);
       setResult(response);
+      setSelected(
+        Object.fromEntries(
+          response.recommendations.map((recommendation) => [
+            `${recommendation.rank}:${recommendation.argus_recommendation_id}`,
+            recommendation.argus_recommendation_id !== "no_major_intervention",
+          ]),
+        ),
+      );
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Grounded advice failed.");
     } finally {
@@ -44,9 +53,9 @@ export function RagAdvisorPanel({
   return (
     <Card>
       <CardHeader
-        eyebrow="Optional decision support"
-        title="Grounded urban advisor"
-        description="This is the Groq LLM section. It is separate from the Random Forest model-trust table. Retrieve advice to see whether this request used Groq or the fallback."
+        eyebrow="AI decision support"
+        title="Urban advisor"
+        description="Groq uses retrieved planning evidence to explain the risks and propose actions. Select one or several actions to test in a new simulation."
         actions={result ? (
           <Pill tone={result.fallback_used ? "caution" : "accent"}>
             {result.fallback_used ? "Deterministic fallback" : "RAG grounded"}
@@ -65,12 +74,26 @@ export function RagAdvisorPanel({
         </button>
       ) : (
         <div className="mt-4 space-y-3">
-          {result.recommendations.map((recommendation) => (
-            <div key={`${recommendation.rank}-${recommendation.argus_recommendation_id}`} className="rounded-[14px] border border-hairline bg-surface-2 p-4">
+          {result.recommendations.map((recommendation) => {
+            const selectionKey = `${recommendation.rank}:${recommendation.argus_recommendation_id}`;
+            return (
+            <div key={selectionKey} className="rounded-[14px] border border-hairline bg-surface-2 p-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="flex items-center gap-2 text-[14px] font-semibold text-ink">
+                <label className="flex cursor-pointer items-center gap-2 text-[14px] font-semibold text-ink">
+                  <input
+                    type="checkbox"
+                    checked={Boolean(selected[selectionKey])}
+                    disabled={busy}
+                    onChange={(event) =>
+                      setSelected((current) => ({
+                        ...current,
+                        [selectionKey]: event.target.checked,
+                      }))
+                    }
+                    className="size-4 accent-[var(--accent)]"
+                  />
                   <span>{recommendation.rank}. {recommendation.intervention ?? LABELS[recommendation.argus_recommendation_id]}</span>
-                </div>
+                </label>
                 {recommendation.knowledge_id ? <Pill tone="neutral">{recommendation.knowledge_id}</Pill> : null}
               </div>
               {recommendation.reason ? <p className="mt-2 text-[12.5px] leading-relaxed text-ink-2">{recommendation.reason}</p> : null}
@@ -95,14 +118,37 @@ export function RagAdvisorPanel({
                   : "Test only this action"}
               </button>
             </div>
-          ))}
+          )})}
           <p className="text-[11px] leading-relaxed text-ink-3">
             {result.fallback_used
               ? `No LLM output was used: ${result.unavailable_reason ?? "the deterministic fallback answered."}`
               : `Confirmed LLM output from ${result.model ?? "the configured Groq model"}. Retrieval: ${result.retrieval_backend ?? "unknown"}.`}
           </p>
+          <button
+            type="button"
+            disabled={
+              busy ||
+              !result.recommendations.some(
+                (recommendation) =>
+                  selected[`${recommendation.rank}:${recommendation.argus_recommendation_id}`],
+              )
+            }
+            onClick={() =>
+              onApplySelected(
+                result.recommendations
+                  .filter(
+                    (recommendation) =>
+                      selected[`${recommendation.rank}:${recommendation.argus_recommendation_id}`],
+                  )
+                  .map((recommendation) => recommendation.argus_recommendation_id),
+              )
+            }
+            className="w-full rounded-[12px] bg-accent px-4 py-2.5 text-[13px] font-semibold text-accent-ink transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:bg-surface-3 disabled:text-ink-3"
+          >
+            Test selected actions together
+          </button>
           <p className="text-[11px] leading-relaxed text-ink-3">
-            Each button starts a separate run with only that action, so its effect can be measured independently.
+            Use a row button to isolate one action, or select several checkboxes to measure their combined effect.
           </p>
         </div>
       )}
