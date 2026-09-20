@@ -167,22 +167,6 @@ export function Dashboard({ bootstrap }: { bootstrap: Bootstrap }) {
                   comparison={other?.metrics}
                   state={shown}
                 />
-                {run.control_reference ? (
-                  <p className="mt-4 text-[11px] leading-relaxed text-ink-3">
-                    Calm-day control from the same report (
-                    {run.control_reference.scenario.temperature} &deg;C,{" "}
-                    {run.control_reference.scenario.rainfall} mm): Human Experience
-                    Index{" "}
-                    <span className="tabular font-semibold text-ink-2">
-                      {run.control_reference.metrics.human_experience_index.toFixed(1)}
-                    </span>
-                    , advisor said{" "}
-                    {run.control_reference.recommendations
-                      .join(", ")
-                      .replaceAll("_", " ")}
-                    .
-                  </p>
-                ) : null}
               </Card>
             ) : null}
           </div>
