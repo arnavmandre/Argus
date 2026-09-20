@@ -4,8 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { Dot, Pill } from "@/components/ui/Pill";
-import { api } from "@/lib/api";
 import { cx } from "@/lib/cx";
+import { VIDEO_ELEMENT_ID } from "@/lib/viewer/kit-webrtc-adapter";
 import {
   IDLE_VIEWER_STATE,
   selectViewerAdapter,
@@ -57,7 +57,10 @@ export function OmniverseViewer({
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const connectionRef = useRef<ViewerConnection | null>(null);
+  const runIdRef = useRef<string | null>(runId);
+  runIdRef.current = runId;
 
+  // Do NOT depend on runId: a finished simulation must not tear down WebRTC.
   useEffect(() => {
     const controller = new AbortController();
     let closed = false;
@@ -65,10 +68,13 @@ export function OmniverseViewer({
     adapter
       .connect({
         config,
+        // Stable id for allow-list before the first simulation completes.
+        runId: runIdRef.current ?? "viewport",
         signal: controller.signal,
         onState: (next) => {
           if (!closed) setViewer(next);
         },
+        getRunId: () => runIdRef.current ?? "viewport",
       })
       .then((connection) => {
         if (closed) {
@@ -102,27 +108,39 @@ export function OmniverseViewer({
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    video.srcObject = viewer.stream;
+    // The streaming client owns srcObject on this element now, so only ever
+    // set it — never clear it back to null, or we would tear down the live
+    // stream the library just attached.
+    if (viewer.stream && video.srcObject !== viewer.stream) {
+      video.srcObject = viewer.stream;
+    }
   }, [viewer.stream]);
 
   const sendCommand = useCallback(
     async (next: { state: RunState; camera: ViewCamera; overlay: ViewOverlay }) => {
-      if (!runId) return;
       try {
-        // Always validated server-side against the allow-list, even when a
-        // session exists, so the browser can never name a prim or a file path.
-        const result = await api.view(runId, next);
-        setCommandResult(result);
+        const result = await connectionRef.current?.send(next);
+        if (result) {
+          setCommandResult(result);
+        } else {
+          setCommandResult({
+            accepted: false,
+            delivered: false,
+            reason:
+              "No WebRTC viewport connection is available yet. Wait until the stream shows Live, then retry.",
+            command: next,
+          });
+        }
       } catch {
         setCommandResult({
           accepted: false,
           delivered: false,
-          reason: "The view command could not be sent to the server.",
+          reason: "The view command could not be sent.",
           command: next,
         });
       }
     },
-    [runId],
+    [],
   );
 
   const connected = viewer.status === "connected" && viewer.stream !== null;
@@ -163,17 +181,35 @@ export function OmniverseViewer({
         </div>
       </div>
 
-      <div className="relative min-h-[260px] sm:min-h-[300px] lg:min-h-[340px] flex-1">
+      {/*
+        Fixed 16:9 to match the 1280x720 stream. It used to stretch to whatever
+        height the layout gave it and `object-cover` then cropped the picture to
+        fill (the top of the frame, including overlays, was cut off).
+      */}
+      <div className="relative aspect-video w-full bg-black">
         <Backdrop />
-        {connected ? (
-          <video
-            ref={videoRef}
-            autoPlay
-            playsInline
-            muted
-            className="absolute inset-0 size-full bg-black object-cover"
-          />
-        ) : (
+        {/*
+          Always mounted, and carrying the id the Kit streaming client binds to.
+          AppStreamer attaches its mouse / wheel / keyboard forwarding to this
+          exact element, so it must (a) exist before connect() runs and (b) be
+          the element the user actually clicks. Drag to orbit, scroll to zoom.
+        */}
+        <video
+          id={VIDEO_ELEMENT_ID}
+          ref={videoRef}
+          autoPlay
+          playsInline
+          muted
+          tabIndex={0}
+          aria-label="Omniverse RTX viewport. Drag to orbit, scroll to zoom."
+          className={cx(
+            "absolute inset-0 size-full bg-black object-contain outline-none",
+            connected
+              ? "cursor-grab active:cursor-grabbing"
+              : "pointer-events-none opacity-0",
+          )}
+        />
+        {!connected && (
           <div className="absolute inset-0 grid place-items-center p-6">
             <ViewerStatePanel
               viewer={viewer}

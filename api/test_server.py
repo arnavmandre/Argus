@@ -8,12 +8,21 @@ import threading
 import time
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from api.run_manager import RunManager
 from api.server import create_app
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
+_PROBE_UNAVAILABLE = {
+    "available": False,
+    "host": "127.0.0.1",
+    "signal_port": 49100,
+    "media_port": 47998,
+    "reason": "Kit signaling port is not accepting connections.",
+}
 
 
 def _valid_body(**overrides):
@@ -108,6 +117,11 @@ def _wait_until(predicate, timeout=2.0, interval=0.02) -> bool:
 
 class ServerContractTests(unittest.TestCase):
     def setUp(self):
+        self._probe_patcher = mock.patch(
+            "api.shapes.probe_stream_endpoint",
+            return_value=_PROBE_UNAVAILABLE,
+        )
+        self._probe_patcher.start()
         self._tmpdir = tempfile.TemporaryDirectory()
         self.run_root = Path(self._tmpdir.name)
 
@@ -128,6 +142,7 @@ class ServerContractTests(unittest.TestCase):
         self.server.shutdown()
         self.server.server_close()
         self._tmpdir.cleanup()
+        self._probe_patcher.stop()
 
     def _request(self, method, path, body=None, headers=None):
         conn = http.client.HTTPConnection(self.host, self.port, timeout=5)
@@ -317,6 +332,7 @@ class ServerContractTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertTrue(result["accepted"])
         self.assertFalse(result["delivered"])
+        self.assertEqual(result.get("delivery"), "webrtc_client")
         self.assertIn("reason", result)
         self.assertEqual(
             result["command"],
@@ -330,6 +346,23 @@ class ServerContractTests(unittest.TestCase):
         )
         self.assertEqual(status, 422)
         self.assertEqual(rejected["error"]["code"], "validation_failed")
+
+        status, viewport, _, _ = self._request(
+            "POST",
+            "/api/runs/viewport/view",
+            {"state": "before", "camera": "Overview", "overlay": "behavior"},
+        )
+        self.assertEqual(status, 200)
+        self.assertTrue(viewport["accepted"])
+        self.assertFalse(viewport["delivered"])
+        self.assertEqual(viewport.get("delivery"), "webrtc_client")
+
+        status, missing, _, _ = self._request(
+            "POST",
+            "/api/runs/run_does_not_exist/view",
+            {"state": "before", "camera": "Overview", "overlay": "behavior"},
+        )
+        self.assertEqual(status, 404)
 
     def test_citizens_pagination(self):
         status, created, _, _ = self._request("POST", "/api/runs", _valid_body())
@@ -357,6 +390,29 @@ class ServerContractTests(unittest.TestCase):
         )
         self.assertEqual(status, 200)
         self.assertEqual(page2["items"][0]["id"], "c2")
+
+    def test_explain_deterministic_for_complete_run(self):
+        status, created, _, _ = self._request("POST", "/api/runs", _valid_body())
+        self.assertEqual(status, 202)
+        run_id = created["run_id"]
+        self.assertTrue(
+            _wait_until(lambda: self.manager.get_run(run_id)["status"] == "complete")
+        )
+
+        status, explain, _, _ = self._request("POST", f"/api/runs/{run_id}/explain")
+        self.assertEqual(status, 200)
+        self.assertEqual(explain["run_id"], run_id)
+        self.assertIn(explain["source"], ("deterministic", "llm"))
+        self.assertTrue(explain["text"])
+        self.assertIsInstance(explain["claims"], list)
+
+    def test_explain_unknown_run_is_404(self):
+        status, data, _, _ = self._request(
+            "POST",
+            "/api/runs/run_missing_000000/explain",
+        )
+        self.assertEqual(status, 404)
+        self.assertEqual(data["error"]["code"], "not_found")
 
 
 if __name__ == "__main__":

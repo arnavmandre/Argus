@@ -3,25 +3,29 @@ import type {
   ViewerAdapter,
   ViewerConnectContext,
   ViewerConnection,
+  ViewerState,
 } from "./adapter";
+import type { AppStreamer } from "@nvidia/ov-web-rtc";
+import type { StreamConfig, ViewCommand } from "../types";
+
+export const VIDEO_ELEMENT_ID = "urbantwin-kit-stream";
+const AUDIO_ELEMENT_ID = "urbantwin-kit-audio";
+
+// 720p30. Must match renderer.resolution in urbantwin_streaming.kit, or Kit
+// renders at one size and the encoder rescales, paying for both. 1080p60 kept
+// a laptop RTX 5060 pinned at 100% / 78 C.
+const STREAM_WIDTH = 1280;
+const STREAM_HEIGHT = 720;
+const STREAM_FPS = 30;
+const MEDIA_STREAM_WAIT_MS = 15000;
+/** Local Kit signaling should answer well before this; fail instead of spinning forever. */
+const CONNECT_TIMEOUT_MS = 45_000;
 
 /**
- * NVIDIA Kit App Streaming adapter — the replacement path, not yet enabled.
+ * NVIDIA Kit App Streaming adapter (`@nvidia/ov-web-rtc`).
  *
- * This is where the Omniverse Web SDK / WebRTC client goes. It is written as a
- * real implementation sketch so that turning streaming on is an isolated change
- * in this one file: the dashboard, the viewer component and the view-command
- * allow-list all stay as they are.
- *
- * Steps to finish it:
- *   1. build `urbantwin.streaming.kit` with the streaming extensions enabled;
- *   2. stand up a session manager and return its signaling URL, ICE servers and
- *      a short-lived token from `GET /api/stream/config` (server-side only);
- *   3. install the NVIDIA web client package and replace the marked block below
- *      with its connect call, handing the resulting MediaStream to `onState`;
- *   4. register this adapter in `lib/viewer/index.ts`.
- *
- * Until step 3 exists this adapter refuses to connect rather than pretending.
+ * Connects with {@link StreamType.DIRECT}, renders into off-DOM media elements,
+ * then hands the video element's `srcObject` MediaStream to the viewer surface.
  */
 export const kitWebRtcViewerAdapter: ViewerAdapter = {
   id: "nvidia-kit-webrtc",
@@ -29,77 +33,510 @@ export const kitWebRtcViewerAdapter: ViewerAdapter = {
   transportLabel: "WebRTC \u00b7 Kit App Streaming",
 
   async connect(ctx: ViewerConnectContext): Promise<ViewerConnection> {
-    const { config, onState } = ctx;
+    const { config, onState, signal, runId, getRunId } = ctx;
+    const resolveRunId = () => getRunId?.() ?? runId ?? "viewport";
 
     onState({
       status: "connecting",
-      message: "Requesting a streaming session\u2026",
+      message: "Connecting to local Kit App Streaming\u2026",
       stream: null,
       capabilities: { video: false, input: false, messaging: false },
       detail: [],
     });
 
     if (config.status !== "available" || !config.signaling_url) {
+      onState(offlineState(config));
+      return inertConnection(
+        "No signaling URL was returned by /api/stream/config.",
+        resolveRunId,
+      );
+    }
+
+    const endpoints = resolveDirectEndpoints(config);
+    if (!endpoints) {
       onState({
         status: "offline",
         message:
           config.reason ??
-          "The server has no streaming session to offer, so no WebRTC connection was attempted.",
+          "A session was advertised but host and port details for Kit App Streaming are missing.",
         stream: null,
         capabilities: { video: false, input: false, messaging: false },
-        detail: [`Stage: ${config.stage}`],
+        detail: [
+          `Stage: ${config.stage}`,
+          "Expected signaling_host, signaling_port, media_host, and media_port from /api/stream/config.",
+        ],
       });
       return inertConnection(
-        "No signaling URL was returned by /api/stream/config.",
+        "Stream config is missing signaling or media host/port fields.",
+        resolveRunId,
       );
     }
 
-    // ---- NVIDIA client goes here -------------------------------------------
-    // const stream = await AppStreamer.connect({
-    //   server: config.signaling_url,
-    //   iceServers: config.ice_servers,
-    //   token: config.session_token,
-    // });
-    // onState({ status: "connected", message: "Streaming from the RTX host.",
-    //   stream, capabilities: { video: true, input: true, messaging: true },
-    //   detail: [`Stage: ${config.stage}`] });
-    // ------------------------------------------------------------------------
+    if (signal.aborted) {
+      throw new DOMException("aborted", "AbortError");
+    }
 
-    onState({
-      status: "failed",
-      message:
-        "A session was offered but the NVIDIA streaming client is not installed in this build.",
-      stream: null,
-      capabilities: { video: false, input: false, messaging: false },
-      detail: [
-        "See docs/FRONTEND_BACKEND_HANDOFF.md, \u201cOmniverse/OpenUSD\u201d.",
-        "https://docs.omniverse.nvidia.com/ov-web-sdk/latest/index.html",
-      ],
-    });
-    return inertConnection("The streaming client is not installed.");
+    const { AppStreamer, StreamType, EventStatus } = await import(
+      "@nvidia/ov-web-rtc"
+    );
+
+    const mediaElements = createHiddenMediaElements();
+    const streamer = new AppStreamer();
+    let tornDown = false;
+    let sawStartSuccess = false;
+
+    const teardown = async () => {
+      if (tornDown) return;
+      tornDown = true;
+      try {
+        await streamer.terminate();
+      } catch {
+        /* best-effort */
+      }
+      removeHiddenMediaElements(mediaElements);
+    };
+
+    const onAbort = () => {
+      void teardown();
+    };
+    signal.addEventListener("abort", onAbort, { once: true });
+
+    const iceServerConfiguration =
+      config.ice_servers.length > 0
+        ? {
+            iceServers: config.ice_servers.map((entry) => ({
+              urls: entry.urls,
+              username: entry.username,
+              credential: entry.credential,
+            })),
+          }
+        : undefined;
+
+    let connectFailed = false;
+
+    // Local Kit (Phase 13) has no session manager. Do not pass our API nonce as
+    // sessionId — NVIDIA's local sample omits it so the client talks straight to
+    // the signaling port. A fabricated sessionId makes connect hang forever.
+    const streamConfig = {
+      signalingServer: endpoints.signalingHost,
+      signalingPort: endpoints.signalingPort,
+      mediaServer: endpoints.mediaHost,
+      // Match NVIDIA local sample: omit mediaPort so the client discovers it.
+      ...(endpoints.mediaPort != null ? { mediaPort: endpoints.mediaPort } : {}),
+      videoElementId: VIDEO_ELEMENT_ID,
+      audioElementId: AUDIO_ELEMENT_ID,
+      authenticate: false as const,
+      autoLaunch: true,
+      width: STREAM_WIDTH,
+      height: STREAM_HEIGHT,
+      fps: STREAM_FPS,
+      maxReconnects: 5,
+      iceServerConfiguration,
+      onStart: (message: { status: string; info?: string | Error }) => {
+        if (signal.aborted || tornDown) return;
+
+        if (message.status === EventStatus.IN_PROGRESS) {
+          onState({
+            status: "connecting",
+            message: "Negotiating WebRTC with the RTX host\u2026",
+            stream: null,
+            capabilities: { video: false, input: false, messaging: false },
+            detail: [
+              `Signaling ${endpoints.signalingHost}:${endpoints.signalingPort}`,
+              endpoints.mediaPort != null
+                ? `Media ${endpoints.mediaHost}:${endpoints.mediaPort}`
+                : `Media ${endpoints.mediaHost} (port auto)`,
+            ],
+          });
+          return;
+        }
+
+        if (message.status === EventStatus.SUCCESS) {
+          sawStartSuccess = true;
+          void publishStreamWhenReady(
+            mediaElements.video,
+            signal,
+            config,
+            onState,
+          );
+          return;
+        }
+
+        if (message.status === EventStatus.ERROR) {
+          connectFailed = true;
+          onState({
+            status: "failed",
+            message: streamEventMessage(
+              message.info,
+              "Kit App Streaming failed to start.",
+            ),
+            stream: null,
+            capabilities: { video: false, input: false, messaging: false },
+            detail: [`Stage: ${config.stage}`],
+          });
+        }
+      },
+      onStop: (message: { status: string; info?: string | Error }) => {
+        if (signal.aborted || tornDown) return;
+        if (message.status === EventStatus.ERROR) {
+          onState({
+            status: "failed",
+            message: streamEventMessage(
+              message.info,
+              "The Kit stream stopped unexpectedly.",
+            ),
+            stream: null,
+            capabilities: { video: false, input: false, messaging: false },
+            detail: [],
+          });
+        }
+      },
+      onTerminate: () => {
+        if (signal.aborted || tornDown) return;
+        onState({
+          status: "offline",
+          message: "The Kit App Streaming session ended.",
+          stream: null,
+          capabilities: { video: false, input: false, messaging: false },
+          detail: [],
+        });
+      },
+    };
+
+    try {
+      await Promise.race([
+        streamer.connect({
+          streamSource: StreamType.DIRECT,
+          streamConfig,
+        }),
+        rejectAfter(CONNECT_TIMEOUT_MS, signal, "Kit WebRTC connect timed out."),
+      ]);
+    } catch (error) {
+      await teardown();
+      signal.removeEventListener("abort", onAbort);
+      onState({
+        status: "failed",
+        message:
+          error instanceof Error
+            ? `Could not connect to Kit App Streaming: ${error.message}`
+            : "Could not connect to Kit App Streaming.",
+        stream: null,
+        capabilities: { video: false, input: false, messaging: false },
+        detail: [
+          `Signaling: ${config.signaling_url}`,
+          "Confirm urbantwin_streaming.kit is running with --no-window and retry in Chromium.",
+        ],
+      });
+      return inertConnection(
+        "WebRTC connect threw before a session started.",
+        resolveRunId,
+      );
+    }
+
+    if (connectFailed) {
+      await teardown();
+      signal.removeEventListener("abort", onAbort);
+      return inertConnection("Kit reported a stream start error.", resolveRunId);
+    }
+
+    if (!sawStartSuccess && !signal.aborted && !tornDown) {
+      // connect() resolved without onStart SUCCESS — still wait briefly for media.
+      void publishStreamWhenReady(
+        mediaElements.video,
+        signal,
+        config,
+        onState,
+      );
+    }
+
+    return {
+      async send(command) {
+        return sendAllowListedViewCommand(resolveRunId(), command, streamer);
+      },
+      async close() {
+        signal.removeEventListener("abort", onAbort);
+        await teardown();
+      },
+    };
   },
 };
 
+/** Allow-list via API, then deliver over the WebRTC data channel when connected. */
+export async function sendAllowListedViewCommand(
+  runId: string,
+  command: ViewCommand,
+  streamer?: AppStreamer | null,
+) {
+  const apiResult = await api.view(runId, command);
+  if (!apiResult.accepted) {
+    return apiResult;
+  }
+  if (!streamer) {
+    return {
+      ...apiResult,
+      delivered: false,
+      reason:
+        apiResult.reason ??
+        "No active WebRTC session; the command passed the allow-list but was not sent to Kit.",
+    };
+  }
+  try {
+    await streamer.sendMessage({
+      event_type: "urbantwin.view_command",
+      payload: {
+        state: command.state,
+        camera: command.camera,
+        overlay: command.overlay,
+      },
+    });
+    return { accepted: true, delivered: true, command };
+  } catch (error) {
+    return {
+      accepted: true,
+      delivered: false,
+      reason:
+        error instanceof Error
+          ? `Kit messaging failed: ${error.message}`
+          : "Kit messaging failed.",
+      command,
+    };
+  }
+}
+
+function offlineState(config: StreamConfig): ViewerState {
+  return {
+    status: "offline",
+    message:
+      config.reason ??
+      "The server has no streaming session to offer, so no WebRTC connection was attempted.",
+    stream: null,
+    capabilities: { video: false, input: false, messaging: false },
+    detail: [`Stage: ${config.stage}`],
+  };
+}
+
+function resolveDirectEndpoints(config: StreamConfig): {
+  signalingHost: string;
+  signalingPort: number;
+  mediaHost: string;
+  mediaPort: number | null;
+} | null {
+  const signalingHost = config.signaling_host?.trim();
+  const mediaHost = (config.media_host ?? config.signaling_host)?.trim();
+  const signalingPort = config.signaling_port;
+  const mediaPort =
+    config.media_port == null ? null : Number(config.media_port);
+
+  if (!signalingHost || !mediaHost || signalingPort == null) {
+    return null;
+  }
+
+  if (mediaPort != null && !Number.isFinite(mediaPort)) {
+    return null;
+  }
+
+  return { signalingHost, signalingPort, mediaHost, mediaPort };
+}
+
+function createHiddenMediaElements(): {
+  video: HTMLVideoElement;
+  audio: HTMLAudioElement;
+  ownsVideo: boolean;
+} {
+  // NVIDIA's AppStreamer attaches its mouse / wheel / keyboard forwarding to the
+  // element named by `videoElementId`. If that element is hidden, every click the
+  // user makes lands on some *other* element and Kit receives no input at all.
+  // So bind to the on-screen <video> the viewer renders whenever it is present,
+  // and only fall back to a detached element (audio-only / tests) when it is not.
+  const existing = document.getElementById(
+    VIDEO_ELEMENT_ID,
+  ) as HTMLVideoElement | null;
+
+  const video = existing ?? document.createElement("video");
+  const ownsVideo = existing === null;
+  if (ownsVideo) {
+    video.id = VIDEO_ELEMENT_ID;
+    video.style.display = "none";
+    document.body.appendChild(video);
+  }
+  video.playsInline = true;
+  video.muted = true;
+  video.autoplay = true;
+
+  const audio = document.createElement("audio");
+  audio.id = AUDIO_ELEMENT_ID;
+  audio.autoplay = true;
+  audio.style.display = "none";
+  document.body.appendChild(audio);
+
+  return { video, audio, ownsVideo };
+}
+
+function removeHiddenMediaElements(elements: {
+  video: HTMLVideoElement;
+  audio: HTMLAudioElement;
+  ownsVideo: boolean;
+}): void {
+  elements.audio.srcObject = null;
+  elements.audio.remove();
+  // Only tear down a video element we created. The viewer's own element is
+  // owned by React and must survive a reconnect.
+  if (elements.ownsVideo) {
+    elements.video.srcObject = null;
+    elements.video.remove();
+  }
+}
+async function publishStreamWhenReady(
+  video: HTMLVideoElement,
+  signal: AbortSignal,
+  config: StreamConfig,
+  onState: (state: ViewerState) => void,
+): Promise<void> {
+  try {
+    const stream = await waitForVideoMediaStream(
+      video,
+      signal,
+      MEDIA_STREAM_WAIT_MS,
+    );
+    if (signal.aborted) return;
+
+    onState({
+      status: "connected",
+      message: "Streaming from the RTX host.",
+      stream,
+      capabilities: { video: true, input: true, messaging: true },
+      detail: [`Stage: ${config.stage}`, `Signaling: ${config.signaling_url}`],
+    });
+  } catch (error) {
+    if (signal.aborted) return;
+    onState({
+      status: "failed",
+      message:
+        error instanceof Error
+          ? error.message
+          : "Kit connected but no WebRTC MediaStream appeared on the video element.",
+      stream: null,
+      capabilities: { video: false, input: false, messaging: false },
+      detail: [
+        `Video element #${VIDEO_ELEMENT_ID} had no MediaStream in srcObject after ${MEDIA_STREAM_WAIT_MS}ms.`,
+      ],
+    });
+  }
+}
+
 /**
- * View commands travel over HTTP to the allow-listed endpoint, never straight
- * from the browser into Kit, so the server stays the only thing that can decide
- * what the viewport is asked to do.
+ * Reads the MediaStream NVIDIA assigns to the off-DOM video element after SUCCESS.
  */
-function inertConnection(reason: string): ViewerConnection {
+async function waitForVideoMediaStream(
+  video: HTMLVideoElement,
+  signal: AbortSignal,
+  timeoutMs: number,
+): Promise<MediaStream> {
+  const deadline = Date.now() + timeoutMs;
+
+  while (Date.now() < deadline) {
+    if (signal.aborted) {
+      throw new DOMException("aborted", "AbortError");
+    }
+
+    const srcObject = video.srcObject;
+    if (srcObject instanceof MediaStream) {
+      return srcObject;
+    }
+
+    await waitNextFrameOrDelay(50, signal);
+  }
+
+  throw new Error(
+    `Timed out after ${timeoutMs}ms waiting for a MediaStream on #${VIDEO_ELEMENT_ID} (srcObject was ${describeSrcObject(video.srcObject)}).`,
+  );
+}
+
+function describeSrcObject(value: MediaProvider | null): string {
+  if (value == null) return "null";
+  if (value instanceof MediaStream) return "MediaStream";
+  return value.constructor?.name ?? typeof value;
+}
+
+function waitNextFrameOrDelay(ms: number, signal: AbortSignal): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (signal.aborted) {
+      reject(new DOMException("aborted", "AbortError"));
+      return;
+    }
+
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      resolve();
+    };
+
+    const timer = setTimeout(finish, ms);
+    requestAnimationFrame(finish);
+
+    signal.addEventListener(
+      "abort",
+      () => {
+        settled = true;
+        clearTimeout(timer);
+        reject(new DOMException("aborted", "AbortError"));
+      },
+      { once: true },
+    );
+  });
+}
+
+function streamEventMessage(
+  info: string | Error | undefined,
+  fallback: string,
+): string {
+  if (info instanceof Error) return info.message || fallback;
+  if (typeof info === "string" && info.trim().length > 0) return info;
+  return fallback;
+}
+
+function rejectAfter(
+  ms: number,
+  signal: AbortSignal,
+  message: string,
+): Promise<never> {
+  return new Promise((_, reject) => {
+    if (signal.aborted) {
+      reject(new DOMException("aborted", "AbortError"));
+      return;
+    }
+    const timer = setTimeout(() => reject(new Error(message)), ms);
+    signal.addEventListener(
+      "abort",
+      () => {
+        clearTimeout(timer);
+        reject(new DOMException("aborted", "AbortError"));
+      },
+      { once: true },
+    );
+  });
+}
+
+function inertConnection(
+  reason: string,
+  resolveRunId?: () => string,
+): ViewerConnection {
   return {
     async send(command) {
-      return { accepted: false, delivered: false, reason, command };
+      if (!resolveRunId) {
+        return {
+          accepted: false,
+          delivered: false,
+          reason,
+          command,
+        };
+      }
+      return sendAllowListedViewCommand(resolveRunId(), command);
     },
     async close() {
       /* nothing to tear down */
     },
   };
-}
-
-/** Used once a session exists: validate server-side, then deliver over the channel. */
-export async function sendAllowListedViewCommand(
-  runId: string,
-  command: Parameters<ViewerConnection["send"]>[0],
-) {
-  return api.view(runId, command);
 }

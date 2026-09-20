@@ -314,8 +314,12 @@ sends input. NVIDIA references:
 - https://docs.omniverse.nvidia.com/kit/docs/kit-app-template/108.0/docs/streaming.html
 - https://docs.omniverse.nvidia.com/embedded-web-viewer/latest/workflow/streaming-and-messaging.html
 
-Streaming is not configured yet. A streaming `.kit` application, WebRTC client
-configuration and optional Kit messaging extension still need to be built.
+On branch **`phase13-streaming-kit`**, local **DIRECT WebRTC** exists when the
+streaming Kit host is up and the dashboard proxies a live API that probes
+signaling (`docs/PHASE14_BROWSER_WEBRTC.md`). On `main` or in mock mode, streaming
+is still offline. On `phase13-streaming-kit`, allow-listed view commands are
+validated by the API then sent with `AppStreamer.sendMessage` when WebRTC is
+connected (`docs/PHASE15_KIT_COMMAND_DELIVERY.md`).
 
 ### Canonical visualization boundary
 
@@ -347,9 +351,10 @@ recorded run cannot be presented as a live backend. Setting `URBANTWIN_API_BASE`
 handlers forward to the Phase 12 Python service instead; there is no fallback
 from live to mock. Operator steps: `docs/PHASE12_LOCAL_API.md`.
 
-The Omniverse viewport is isolated behind `frontend/lib/viewer/`. The placeholder
-adapter renders no picture and reports offline; `kit-webrtc-adapter.ts` is the
-NVIDIA Kit App Streaming replacement path.
+The Omniverse viewport is isolated behind `frontend/lib/viewer/`. Mock mode uses
+the placeholder adapter (no picture). On `phase13-streaming-kit` with live API +
+Kit up, `kit-webrtc-adapter.ts` (`@nvidia/ov-web-rtc@6.7.0`) connects when
+`/api/stream/config` reports `available`.
 
 ### Local HTTP API (Phase 12)
 
@@ -358,8 +363,9 @@ POSTs, runs the Phase 11 pipeline in a **single in-memory worker**, and returns
 live `RunSummary` envelopes with `source: "live"`. Runs are asynchronous
 (`202` + poll). State does not survive process restart.
 
-Still out of scope for Phase 12: FastAPI, durable DB, auth, multi-worker queue,
-Kit WebRTC streaming, and LLM advisor. See `docs/PHASE12_LOCAL_API.md`.
+Still out of scope for Phase 12 alone: FastAPI, durable DB, auth, multi-worker
+queue, and LLM advisor. Local Kit WebRTC on branch `phase13-streaming-kit` is
+documented in `docs/PHASE14_BROWSER_WEBRTC.md`. See `docs/PHASE12_LOCAL_API.md`.
 
 ## What has not been built
 
@@ -368,9 +374,9 @@ Do not assume any of the following exists:
 - FastAPI or production-hardened HTTP backend;
 - durable run persistence or multi-worker job queue;
 - database or authentication;
-- WebRTC-enabled `urbantwin.streaming.kit` app;
-- web streaming session manager;
-- browser-to-Kit message handler;
+- production web streaming session manager (local DIRECT WebRTC exists on
+  `phase13-streaming-kit` when Kit + API are up);
+- browser-to-Kit messaging on `main` (Phase 15 lives on `phase13-streaming-kit`);
 - LLM advisor integration;
 - Random Forest inference inside the simulator;
 - uncertainty intervals in simulation output;
@@ -630,10 +636,10 @@ The frontend milestone is complete when:
    (`integration/run_pipeline.py`, `docs/PHASE11_LOCAL_PIPELINE.md`).
 3. ~~Implement the small Python HTTP API around that workflow.~~ Done: Phase 12
    stdlib `python -m api` (`docs/PHASE12_LOCAL_API.md`). Next defaults to fixtures;
-   set `URBANTWIN_API_BASE` for live. Still no FastAPI, durable DB, auth, streaming
-   Kit, or LLM.
-4. Create `urbantwin.streaming.kit` and verify local WebRTC separately.
-5. Replace the mock viewer with the NVIDIA streaming client.
-6. Add allow-listed browser-to-Kit messages for state, camera and overlay.
-7. Add the LLM explanation layer only after the deterministic data path is stable.
+   set `URBANTWIN_API_BASE` for live. Still no FastAPI, durable DB, auth, or LLM.
+4. ~~Streaming Kit + local browser WebRTC on branch `phase13-streaming-kit`.~~
+   See `docs/PHASE13_STREAMING_KIT.md` and `docs/PHASE14_BROWSER_WEBRTC.md`.
+5. ~~Allow-listed browser-to-Kit messages for state, camera and overlay.~~ Done on
+   `phase13-streaming-kit`: `docs/PHASE15_KIT_COMMAND_DELIVERY.md`.
+6. Add the LLM explanation layer only after the deterministic data path is stable.
 

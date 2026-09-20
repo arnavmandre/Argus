@@ -1,8 +1,12 @@
 {
   "status": "offline",
   "source": "recorded_fixture",
-  "checked_utc": "2026-09-19T14:52:02+00:00",
+  "checked_utc": "2026-09-20T02:56:14+00:00",
   "signaling_url": null,
+  "signaling_host": null,
+  "signaling_port": null,
+  "media_host": null,
+  "media_port": null,
   "ice_servers": [],
   "session_token": null,
   "stage": "phase9/scene/main.usda",

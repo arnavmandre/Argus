@@ -67,15 +67,16 @@ git clone https://github.com/NVIDIA-Omniverse/web-viewer-sample.git
 
 You should see the Russell Square / Phase 9 stage stream from the RTX host.
 
-## What is still offline in Argus
+## What Phase 13 alone does not add
 
-Until Phase 14:
+Phase 13 is the **Kit streaming host** only. On branch `phase13-streaming-kit`,
+**Phase 14** (same branch in Argus) adds browser WebRTC and API probing — see
+`docs/PHASE14_BROWSER_WEBRTC.md`. Without Phase 14, or with Kit down:
 
-- `GET /api/stream/config` remains `status: "offline"`
-- the dashboard viewport keeps the placeholder / mock adapter
-- view commands stay allow-listed but undelivered
+- `GET /api/stream/config` stays `status: "offline"`
+- the dashboard uses the mock / placeholder adapter
 
-Do not flip health/stream capabilities to “online” from this phase alone.
+View commands remain allow-listed but **undelivered** until Phase 15.
 
 ## Smoke evidence (2026-09-20)
 
@@ -106,6 +107,9 @@ Use forward slashes in `--/app/auto_load_usd` (see the launch bat).
 
 ## Next
 
-**Phase 14** — wire `frontend/lib/viewer/kit-webrtc-adapter.ts` and return a real
-signaling URL from the Python API’s stream config (still allow-listed, no secrets
-in `NEXT_PUBLIC_*`).
+**Phase 14 (implemented on `phase13-streaming-kit`)** — browser DIRECT WebRTC via
+`@nvidia/ov-web-rtc@6.7.0`, TCP probe, and `GET /api/stream/config` when Kit
+signaling is up. Operator steps: **`docs/PHASE14_BROWSER_WEBRTC.md`**.
+
+**Phase 15** — deliver allow-listed view commands into the running Kit session
+(messaging channel); still out of scope on this branch.
