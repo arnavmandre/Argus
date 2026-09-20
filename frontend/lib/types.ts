@@ -378,6 +378,53 @@ export interface ExplainResponse {
 }
 
 // --------------------------------------------------------------------------
+// Retrieval-grounded advisor (live API only)
+// --------------------------------------------------------------------------
+
+export interface RetrievedKnowledge {
+  knowledge_id: string;
+  similarity_score: number;
+  problem_category: string;
+  intervention: string;
+  description: string;
+  argus_recommendation_id: RecommendationId;
+  target_metrics: string[];
+  tradeoffs: string[];
+  source: { title: string; url: string; status: "VERIFIED" | "NEEDS_SOURCE" };
+}
+
+export interface RagRecommendation {
+  rank: number;
+  argus_recommendation_id: RecommendationId;
+  testable: true;
+  knowledge_id?: string;
+  intervention?: string;
+  reason?: string;
+  target_metrics?: string[];
+  tradeoffs?: string[];
+  source?: RetrievedKnowledge["source"];
+}
+
+export interface RagAdvisorResponse {
+  run_id: string;
+  source: "rag_llm" | "deterministic";
+  advisor_mode: "rag_llm" | "deterministic_fallback";
+  fallback_used: boolean;
+  model?: string;
+  retrieval_backend?: "faiss_minilm" | "lexical_fallback" | string;
+  knowledge_hash?: string;
+  unavailable_reason?: string;
+  primary_problem?: {
+    category: string;
+    severity: "low" | "moderate" | "high" | "unknown";
+    target_id: string | null;
+    evidence: string[];
+  };
+  recommendations: RagRecommendation[];
+  retrieved_knowledge: RetrievedKnowledge[];
+}
+
+// --------------------------------------------------------------------------
 // Errors
 // --------------------------------------------------------------------------
 

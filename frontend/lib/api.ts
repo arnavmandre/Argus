@@ -24,6 +24,7 @@ import type {
   ViewCommand,
   ViewCommandResult,
   ExplainResponse,
+  RagAdvisorResponse,
 } from "./types";
 
 export class ApiError extends Error {
@@ -110,6 +111,12 @@ export const api = {
 
   explain: (runId: string) =>
     request<ExplainResponse>(`/runs/${encodeURIComponent(runId)}/explain`, {
+      method: "POST",
+      body: "{}",
+    }),
+
+  advise: (runId: string) =>
+    request<RagAdvisorResponse>(`/runs/${encodeURIComponent(runId)}/advise`, {
       method: "POST",
       body: "{}",
     }),

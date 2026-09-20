@@ -5,6 +5,7 @@ import { useCallback, useState } from "react";
 
 import { AdvisorPanel } from "@/components/AdvisorPanel";
 import { RunExplainPanel } from "@/components/RunExplainPanel";
+import { RagAdvisorPanel } from "@/components/RagAdvisorPanel";
 import { BeforeAfterChart } from "@/components/BeforeAfterChart";
 import { BehaviorLegend } from "@/components/BehaviorLegend";
 import { CitizenInspector } from "@/components/CitizenInspector";
@@ -215,7 +216,10 @@ export function Dashboard({ bootstrap }: { bootstrap: Bootstrap }) {
                 />
               ) : null}
               {health.mode === "live" && run.status === "complete" ? (
-                <RunExplainPanel runId={run.run_id} />
+                <>
+                  <RagAdvisorPanel key={`rag-${run.run_id}`} runId={run.run_id} />
+                  <RunExplainPanel runId={run.run_id} />
+                </>
               ) : null}
             </div>
 
