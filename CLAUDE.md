@@ -34,14 +34,20 @@ context loss.
 | `docs/` | contracts | `INTEGRATION_CONTRACT.md` is authoritative. |
 
 Frontend/backend product context is in `docs/FRONTEND_BACKEND_HANDOFF.md`. Local
-live HTTP is documented in `docs/PHASE12_LOCAL_API.md`. Browser WebRTC on branch
-`phase13-streaming-kit`: `docs/PHASE14_BROWSER_WEBRTC.md` (no merge to `main`
-required to try locally). Do not present mocks as a live backend. Omniverse
-streaming appears live only when Kit signaling passes the API probe **and** the
-Chromium client connects; mock mode keeps stream offline. View commands:
-API allow-list on `phase13-streaming-kit`, then WebRTC `sendMessage` to Kit
-(`docs/PHASE15_KIT_COMMAND_DELIVERY.md`); `delivered: true` only from the
-adapter when messaging succeeds.
+live HTTP is documented in `docs/PHASE12_LOCAL_API.md`. Browser WebRTC is on
+`main` (`docs/PHASE14_BROWSER_WEBRTC.md`). Do not present mocks as a live
+backend. Omniverse streaming appears live only when Kit signaling passes the API
+probe **and** the Chromium client connects; mock mode keeps stream offline. The
+probe is only a TCP connect, so a stale "ghost" listener still reads as online:
+trust the viewport chip, not the header. View commands: API allow-list, then
+WebRTC `sendMessage` to Kit (`docs/PHASE15_KIT_COMMAND_DELIVERY.md`). **`delivered:
+true` only means the browser's send resolved, not that Kit applied it.**
+
+**The Kit half is NOT in this repo.** It lives in
+`C:\Users\arnav\omniverse\kit-app-template` (branch `phase13-streaming-kit`): the
+`omni.kit.livestream.messaging` dependency, the `urbantwin.view_commands` handler,
+the `urbantwin.stage_autoload` clean-view extension, and the GPU settings. Without
+it, commands are dropped. Read `docs/CLAUDE_HANDOFF_STREAMING.md` "Resolution".
 
 ## Hard rules
 
@@ -103,12 +109,18 @@ Only claim what the code does when executed. Verified as of this writing:
   simulator payload. Default is a deterministic template (no LLM key required);
   `URBANTWIN_LLM_URL` enables an optional paraphrase with fallback. Not medical
   advice; the threshold advisor remains authoritative for recommendations.
-- ✅ Phase 14 (branch `phase13-streaming-kit`): `@nvidia/ov-web-rtc@6.7.0`
-  DIRECT WebRTC when `GET /api/stream/config` is `available` (Kit signaling port
-  probe). Mock mode (`URBANTWIN_API_BASE` unset) never streams. Allow-listed view
-  commands are **not** delivered to Kit — Phase 15.
-- ⚠️ Do not claim streaming on `main` or in mock mode. Without Kit + live API +
-  browser connect, the viewport stays offline.
+- ✅ Phase 14: `@nvidia/ov-web-rtc@6.7.0` DIRECT WebRTC when `GET
+  /api/stream/config` is `available` (Kit signaling port probe). Mock mode
+  (`URBANTWIN_API_BASE` unset) never streams.
+- ✅ Phase 15, verified in Kit's own log (not just the UI): real browser clicks
+  arrive over the data channel, and with the Kit-repo handler a command applies
+  (`viewport camera -> /World/Cameras/Street`, `demoState -> Intervention`).
+  Before/After switches the Phase 8 `demoState` variant: a stress-versus-proposal
+  comparison, **not** a measured improvement.
+- ⚠️ Streaming needs Kit (with the Kit-repo changes) + live API + a Chromium
+  browser. Without them the viewport stays offline; never claim it in mock mode.
+  While streaming the GPU sits around 60% (720p30, RTX Real-Time 2.0), so do not
+  describe it as lightweight.
 - ✅ `integration/export_snapshot.py` closes the loop: simulator report ->
   canonical v1 snapshot -> USD. 12/12 integration tests pass, agents land within
   1mm of their route geometry, snapshots are `data_kind: simulation`.
