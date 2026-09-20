@@ -11,7 +11,6 @@ import { BehaviorLegend } from "@/components/BehaviorLegend";
 import { CitizenInspector } from "@/components/CitizenInspector";
 import { Disclosures } from "@/components/Disclosures";
 import { MetricGrid } from "@/components/MetricGrid";
-import { ModelTrustPanel } from "@/components/ModelTrustPanel";
 import { ProblemAreas } from "@/components/ProblemAreas";
 import { RunStatus } from "@/components/RunStatus";
 import { ScenarioControls } from "@/components/ScenarioControls";
@@ -40,7 +39,7 @@ const OmniverseViewer = dynamic(
 );
 
 export function Dashboard({ bootstrap }: { bootstrap: Bootstrap }) {
-  const { health, scenarios, modelCard, streamConfig } = bootstrap;
+  const { health, scenarios, streamConfig } = bootstrap;
 
   const [run, setRun] = useState<RunSummary | null>(bootstrap.run);
   const [state, setState] = useState<RunState>("before");
@@ -246,7 +245,6 @@ export function Dashboard({ bootstrap }: { bootstrap: Bootstrap }) {
             </div>
 
             <div className="mt-5 grid gap-5 xl:mt-6 xl:gap-6">
-              <ModelTrustPanel card={modelCard} />
               <CitizenInspector
                 key={`${run.run_id}-${shown}`}
                 runId={run.run_id}
