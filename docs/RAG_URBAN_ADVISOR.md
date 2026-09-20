@@ -19,8 +19,9 @@ $env:GROQ_API_KEY = "your-key"
 python -m api --host 127.0.0.1 --port 8000
 ```
 
-Keep the key in the environment or a local ignored `.env`; the stdlib API does
-not automatically load `.env` files. The index is written to the ignored
+Copy `.env.example` to `.env` and replace the placeholder, or set the key in
+PowerShell. The API automatically loads the root `.env` without overriding a
+value already present in the shell. The index is written to the ignored
 `data/.rag_index/` directory. Rebuild it whenever
 `data/urban_interventions.json` changes. Without the built semantic index, the
 advisor uses a dependency-free lexical retriever and reports that backend
