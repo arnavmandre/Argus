@@ -6,7 +6,11 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-from api.rag.advisor import advise_run, validate_advisor_response
+from api.rag.advisor import (
+    _normalize_candidate,
+    advise_run,
+    validate_advisor_response,
+)
 from api.rag.retrieval import KnowledgeRetriever
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -94,6 +98,50 @@ class ValidationTests(unittest.TestCase):
             validate_advisor_response(
                 self._candidate(knowledge_id="FAKE_999"), self.retrieved, self.payload
             )
+
+    def test_normalizes_observed_groq_json_object_shape(self):
+        record = self.retrieved[0]
+        normalized = _normalize_candidate({
+            "primary_problem": "heat_exposure",
+            "recommendations": [{
+                "id": record["argus_recommendation_id"],
+                "evidence_id": record["knowledge_id"],
+                "reason": "Shade addresses the reported heat metric.",
+                "rank": 1,
+            }],
+        })
+        result = validate_advisor_response(normalized, self.retrieved, self.payload)
+        self.assertEqual(
+            result["recommendations"][0]["argus_recommendation_id"],
+            record["argus_recommendation_id"],
+        )
+
+    def test_no_major_intervention_cannot_mix_with_actions(self):
+        shade = next(
+            item for item in self.retrieved
+            if item["argus_recommendation_id"] == "increase_shade"
+        )
+        calm = KnowledgeRetriever(
+            ROOT / "data" / "urban_interventions.json"
+        ).retrieve("low heat low rain no major intervention", 9)
+        calm_record = next(
+            item for item in calm
+            if item["argus_recommendation_id"] == "no_major_intervention"
+        )
+        retrieved = [shade, calm_record]
+        candidate = {
+            "primary_problem": {"category": "heat", "severity": "high", "target_id": None},
+            "recommendations": [
+                {
+                    "knowledge_id": item["knowledge_id"],
+                    "argus_recommendation_id": item["argus_recommendation_id"],
+                    "testable": True,
+                }
+                for item in retrieved
+            ],
+        }
+        with self.assertRaisesRegex(ValueError, "cannot accompany"):
+            validate_advisor_response(candidate, retrieved, self.payload)
 
 
 class AdvisorTests(unittest.TestCase):

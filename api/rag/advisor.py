@@ -15,6 +15,60 @@ ALLOWED_RECOMMENDATION_IDS = frozenset({
     "alternative_pedestrian_routes", "no_major_intervention",
 })
 MODEL_NAME = "openai/gpt-oss-120b"
+ADVISOR_RESPONSE_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "primary_problem": {
+            "type": "object",
+            "properties": {
+                "category": {"type": "string"},
+                "severity": {
+                    "type": "string",
+                    "enum": ["low", "moderate", "high", "unknown"],
+                },
+                "target_id": {"type": ["string", "null"]},
+                "evidence": {"type": "array", "items": {"type": "string"}},
+            },
+            "required": ["category", "severity", "target_id", "evidence"],
+            "additionalProperties": False,
+        },
+        "recommendations": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 3,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "rank": {"type": "integer"},
+                    "knowledge_id": {"type": "string"},
+                    "argus_recommendation_id": {
+                        "type": "string",
+                        "enum": sorted(ALLOWED_RECOMMENDATION_IDS),
+                    },
+                    "intervention": {"type": "string"},
+                    "reason": {"type": "string"},
+                    "target_metrics": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "tradeoffs": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "testable": {"type": "boolean"},
+                },
+                "required": [
+                    "rank", "knowledge_id", "argus_recommendation_id",
+                    "intervention", "reason", "target_metrics", "tradeoffs",
+                    "testable",
+                ],
+                "additionalProperties": False,
+            },
+        },
+    },
+    "required": ["primary_problem", "recommendations"],
+    "additionalProperties": False,
+}
 SYSTEM_PROMPT = """You are the Argus AI urban-planning decision-support advisor.
 Use simulation numbers only from simulator_evidence and intervention knowledge only
 from retrieved_knowledge. Do not invent metrics, locations, evidence, effectiveness,
@@ -53,6 +107,16 @@ def advise_run(
     try:
         retriever = retriever or KnowledgeRetriever(knowledge_path)
         retrieved = retriever.retrieve(build_retrieval_query(payload), top_k=top_k)
+        deterministic_ids = {
+            item.get("id")
+            for item in payload.get("recommendations") or []
+            if isinstance(item, dict)
+        }
+        if deterministic_ids - {"no_major_intervention"}:
+            retrieved = [
+                item for item in retrieved
+                if item["argus_recommendation_id"] != "no_major_intervention"
+            ]
         if not retrieved:
             return _deterministic_fallback(report, "The knowledge base returned no records.")
     except Exception as exc:  # noqa: BLE001 - availability must never break demo
@@ -89,7 +153,7 @@ def advise_run(
             call_payload = dict(request)
             if attempt:
                 call_payload["correction"] = f"Previous response was invalid: {error}. Return corrected JSON only."
-            candidate = _coerce_json(llm_callable(call_payload))
+            candidate = _normalize_candidate(_coerce_json(llm_callable(call_payload)))
             validated = validate_advisor_response(candidate, retrieved, payload)
             result = {
                 "source": "rag_llm", "advisor_mode": "rag_llm",
@@ -152,6 +216,9 @@ def validate_advisor_response(candidate: object, retrieved: list[dict], payload:
         })
     if not output:
         raise ValueError("at least one recommendation is required")
+    actions = {item["argus_recommendation_id"] for item in output}
+    if "no_major_intervention" in actions and len(actions) > 1:
+        raise ValueError("no_major_intervention cannot accompany another action")
     severity = primary.get("severity")
     if severity not in {"low", "moderate", "high", "unknown"}:
         severity = "unknown"
@@ -195,6 +262,37 @@ def _coerce_json(value: object) -> object:
     return value
 
 
+def _normalize_candidate(value: object) -> object:
+    """Normalize the earlier JSON-object shape before applying strict validation."""
+    if not isinstance(value, dict):
+        return value
+    normalized = dict(value)
+    primary = normalized.get("primary_problem")
+    if isinstance(primary, str):
+        normalized["primary_problem"] = {
+            "category": primary,
+            "severity": "unknown",
+            "target_id": None,
+            "evidence": [],
+        }
+    recommendations = normalized.get("recommendations")
+    if isinstance(recommendations, list):
+        rows = []
+        for raw in recommendations:
+            if not isinstance(raw, dict):
+                rows.append(raw)
+                continue
+            row = dict(raw)
+            if "knowledge_id" not in row and isinstance(row.get("evidence_id"), str):
+                row["knowledge_id"] = row["evidence_id"]
+            if "argus_recommendation_id" not in row and isinstance(row.get("id"), str):
+                row["argus_recommendation_id"] = row["id"]
+            row.setdefault("testable", True)
+            rows.append(row)
+        normalized["recommendations"] = rows
+    return normalized
+
+
 def _groq_call(payload: dict) -> object:
     try:
         from groq import Groq  # type: ignore
@@ -208,6 +306,13 @@ def _groq_call(payload: dict) -> object:
         ],
         temperature=0.3, max_completion_tokens=2048, top_p=1,
         reasoning_effort="medium", stream=False,
-        response_format={"type": "json_object"},
+        response_format={
+            "type": "json_schema",
+            "json_schema": {
+                "name": "argus_advisor_response",
+                "strict": True,
+                "schema": ADVISOR_RESPONSE_SCHEMA,
+            },
+        },
     )
     return completion.choices[0].message.content
