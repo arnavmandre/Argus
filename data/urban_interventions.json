@@ -11,9 +11,9 @@
     "tradeoffs": ["installation space", "maintenance requirements"],
     "argus_recommendation_id": "increase_shade",
     "target_metrics": ["heat_stress", "comfort"],
-    "source_title": "Evidence source pending review",
-    "source_url": "",
-    "source_status": "NEEDS_SOURCE"
+    "source_title": "Benefits of Trees and Vegetation — US EPA",
+    "source_url": "https://www.epa.gov/heatislands/benefits-trees-and-vegetation",
+    "source_status": "VERIFIED"
   },
   {
     "id": "HEAT_002",
@@ -27,9 +27,9 @@
     "tradeoffs": ["may require prioritizing a subset of corridors"],
     "argus_recommendation_id": "increase_shade",
     "target_metrics": ["heat_stress", "crowding"],
-    "source_title": "Evidence source pending review",
-    "source_url": "",
-    "source_status": "NEEDS_SOURCE"
+    "source_title": "Benefits of Trees and Vegetation — US EPA",
+    "source_url": "https://www.epa.gov/heatislands/benefits-trees-and-vegetation",
+    "source_status": "VERIFIED"
   },
   {
     "id": "RAIN_001",
@@ -43,9 +43,9 @@
     "tradeoffs": ["civil works and maintenance would need engineering assessment"],
     "argus_recommendation_id": "improve_drainage",
     "target_metrics": ["rain_impact", "flood_risk"],
-    "source_title": "Evidence source pending review",
-    "source_url": "",
-    "source_status": "NEEDS_SOURCE"
+    "source_title": "Mitigate Flooding — US EPA",
+    "source_url": "https://www.epa.gov/green-infrastructure/mitigate-flooding",
+    "source_status": "VERIFIED"
   },
   {
     "id": "RAIN_002",
@@ -59,9 +59,9 @@
     "tradeoffs": ["site-specific hydraulic design is outside Argus"],
     "argus_recommendation_id": "improve_drainage",
     "target_metrics": ["rain_impact", "walking_likelihood"],
-    "source_title": "Evidence source pending review",
-    "source_url": "",
-    "source_status": "NEEDS_SOURCE"
+    "source_title": "Mitigate Flooding — US EPA",
+    "source_url": "https://www.epa.gov/green-infrastructure/mitigate-flooding",
+    "source_status": "VERIFIED"
   },
   {
     "id": "CROWD_001",
