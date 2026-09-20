@@ -13,6 +13,8 @@ if /I "%~1"=="force" set "FORCE=-Force"
 
 echo.
 echo  Argus AI - starting API, Omniverse Kit stream, and dashboard...
+echo  Kit is HEADLESS: no Omniverse editor window will appear.
+echo  Look for a console titled "Argus AI Kit Streaming" and Live in the browser.
 echo  Close the three service windows to shut everything down.
 echo.
 
